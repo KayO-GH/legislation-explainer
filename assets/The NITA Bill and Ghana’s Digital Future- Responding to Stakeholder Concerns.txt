@@ -1,0 +1,1292 @@
+00:13:21 Unknown
+Yep.
+
+
+00:13:56 Audrey - Moderator
+Honourable Minister, Board Chair, Acting Director, Board Members, and Management of NITA Industry players, ladies and gentlemen, good afternoon. My name is Audrey. I'll be your moderator for this session. On behalf of the Ministry, I'd like to welcome all of you to today's stakeholder engagement on the proposed Electronic Transactions Bill 2025. We're grateful to all of you for making the time.
+
+
+00:14:28 Audrey - Moderator
+Today's engagement is being led by the Ministry as part of a stakeholder consultation process that has been surrounding the proposed bill, as many of us, if not all of us Several issues, concerns, questions have emerged following discussions around the draft bill currently in circulation. So today's session is to be a detailed and constructive engagement that allows for clarification.
+
+
+00:15:00 Audrey - Moderator
+Stakeholder participation, and then a better understanding of both intent and implications of the proposed legislation. This is a hybrid engagement, I must say. So we have those present in the room, and we have those on X and Facebook Live. We'll be taking questions from both audiences, so when it's time our directors are Help us manage time and ensure broad participation.
+
+
+00:15:32 Audrey - Moderator
+We kindly ask that participants repeat the questions. Already have been addressed. So I'd like to go around quickly just to know who is in the room, and then we'll start. So I'll start from the right side of the minister.
+
+
+00:15:53 Estelle - Nita
+Good afternoon, everyone. My name is Estelle Akofi Osor, and I'm here as the board chair of Nita.
+
+
+00:16:03 Dr. Kevor - NITA
+My name is Dr Mark Oliver Kevo. I'm the acting director general for Nita.
+
+
+00:16:11 Multiple Speakers
+My name is Alec Biaso. I'm a member of the board I'm Nehemiah Atiga. I'm the CEO of Hathwa Tech. I'm
+
+
+00:16:25 Kingsley - Room
+Kinslea Brokwa. I'm a tech consultant.
+
+
+00:16:28 Felix - Room
+I'm Felix Sionyebwa, the Deputy Head of ITSIC Insurance, PLC.
+
+
+00:16:32 Kobby - Room
+I'm Kopisa Mfosta with Degas Foundation Africa. I'm Victor Blavo,
+
+
+00:16:40 Victor - Room
+Starrel founder.
+
+
+00:16:43 Samuel - Room
+Nini ni Samuel Tete, CEO zigur Limited.
+
+
+00:16:47 Kafui - Room
+Nini ni Doris Kofwey Ansinu, founder of Grado, and a product lead.
+
+
+00:16:53 Priscilla - Room
+Nini ni Priscila Ife Aban, CEO Radio Technologies.
+
+
+00:17:00 Kwabena - Room
+I am Kvabnawfe Kwaade Nkroma, IT Manager, Quantum LC Limited.
+
+
+00:17:06 Felix - Room
+My name is Derek Lye, I am a tech enthusiast.
+
+
+00:17:10 Victor - Room
+Peter Alwin, CEO of Caltribe.
+
+
+00:17:13 Rachel - Room
+I'm Rachel Walker from Association of Ghana Startups.
+
+
+00:17:18 Solomon - Room
+I'm Stolen Mona Jey from the Association of Ghana Startups.
+
+
+00:17:22 Christine - Room
+I'm Kristen Wilson, investor, and venture builder.
+
+
+00:17:28 Ethel - Room
+David Hatchfield, CTO of Yamachi
+
+
+00:17:33 Speaker 17
+Biotech.
+
+
+00:17:34 Matthew - Room
+I'm Matthew D'Aqua. I'm one of the service… well, I work for a service provider in Ghana.
+
+
+00:17:44 Fred - Room
+Ngoziwa, Ngoziwa.
+
+
+00:17:56 Audrey - Moderator
+Nini nilo, nilo. Nini nilo. Iyo ndi njiao, iyo indiyo inaadiliswa kwenye mpwede angupeleke pwede angupeleke kwenye mpwede angupeleke kwenye mpwelege angubo njiayo inaadiliswa kwenyi ngayon. So let's welcome Dr Kevok.
+
+
+00:18:33 Dr. Kevor - NITA
+Njoo. Wae nafaswa wae nafasa wanafaswa wae nafasa wanafaswa wae nafasa wanafaswa wanafaswa wanafaswa wanafasa wanafaswa wanafaswa Ndiyo, nilo, ndiyo. Ndiyo, ndiyo.
+
+
+00:19:18 Dr. Kevor - NITA
+ndi was established through an act at 771, we are all aware, and our role includes ICT regulation kwaadinasiyo na transformasiyo ya Degatar. Na kutoka kwaadiswa ya Transaction Act, inaazili kutoka kwaadiswa na Degatar Trust Ndiawa, ndiawa, ndiawa, ndiawa, ndiawa,
+
+
+00:19:59 Dr. Kevor - NITA
+ndiawa, tools includes setting up standards, registration, accreditation, certification, monitoring, compliance, recognition, and technical assurance as is common to most regulators, what most people are familiar with for a very long time a service provider to government, providing government agencies That is the ministry, department, agencies, and MMDs with internet connectivity applications and all that.
+
+
+00:20:46 Dr. Kevor - NITA
+That is what for a very long time we have been used to. But over time, we realized the risk of not enabling our regulatory powers. Over time, there are duplications of systems across ministry departments and agencies. There have been development of systems that are in silos. We do not talk to each other over time.
+
+
+00:21:17 Dr. Kevor - NITA
+There's a lot of investment, government investment in e-government, but because of the competency and capacity of those implementing them in the MDs and MMDs, most or some of these government projects failed. So there was the need to as part of coordinating government digital transformation enable or activate its regulatory role, which for a very long time have not been seen.
+
+
+00:21:54 Dr. Kevor - NITA
+So what have we been doing now? For the past year, we've instituted a strict technical clearance regime. where every ICT investment by any MDA, Ministry Department Agency, or MMDA must receive technical clearance from NITA to be sure that We don't already have the system in place.
+
+
+00:22:31 Dr. Kevor - NITA
+We want to be sure that we are not duplicating the system. We want to be sure that the system is interoperable. If the already existing primary, digital primary is not existing, how do you connect to it without reinventing the wheel? This is all to protect the public purse so that we don't departments and agencies do not replicate ICT or digital systems. Again, we want to be sure that the systems are secured, and we want to also be sure that they are inclusive.
+
+
+00:23:11 Dr. Kevor - NITA
+So these are some of the principles. The ministry is driving data localization policy, where we want as much as possible data that is generated within the country to stay in the country. So this requires that we enhance our regulatory capacity. So we are registering Our service providers, service providers to government.
+
+
+00:23:46 Dr. Kevor - NITA
+We are registering those who work on our systems in the various MDs and MMDs. That's the professional. And again. Because of experiences, I'm sure you have heard about the LEMS experience, where vendors lock government out when there are contractual issues. And all that. We want to make sure that NITA is involved in the full SELC, that is the system development life cycle, for every system that is being developed for governments.
+
+
+00:24:24 Dr. Kevor - NITA
+Now, all this also presents regulatory burden to governments or to the regulator, because now you need to send your personnel around to do audits. You need to verify the competencies of your professionals. To follow up with the full system development life cycle, you are doing UAT testing and all that from conceptualization to testing, you're doing it with their MDs, even though they have their vendors that are providing the service to them.
+
+
+00:25:06 Dr. Kevor - NITA
+You as a regulator, you are doing all of this. So it presents a regulatory burden for you, and that is the reason why we went to Parliament with the fees charges regime, such that those who are providing these services To cover our regulatory costs, they are charged a certain amount just to cover the regulatory costs for providing that service.
+
+
+00:25:39 Dr. Kevor - NITA
+And again, in the same way, the professionals who are in their MDS and MMDS, we want to give them the professional recognition, so that we can also monitor their progress in terms of their development, and also if they act unethically, we can withdraw Yeah.
+
+
+00:26:09 Dr. Kevor - NITA
+And that is how we came out with the structure, and there's a mess up For example, if you look at the approved fees and charges LI2512, a professional an ICT professional that is working with an MD or MMDA, is being charged annual renewal fee. of 150 guidelines for registration.
+
+
+00:26:42 Dr. Kevor - NITA
+So not the 6,000 and 12,000 that we have seen outside people. This is a public document. This is a public document that people can look at and then see what's in. The rest of the charges that we see somehow for the vendors who provide services So at this point, I will end here when we get to the questions and answers sessions. If you have questions, I will be here to provide responses.
+
+
+00:27:15 Dr. Kevor - NITA
+Thank you very much.
+
+
+00:27:19 Audrey - Moderator
+Thank you, Dr. Kevel, for that. We'll take brief remarks from the board chair, Madam Estelle Akohioswa.
+
+
+00:27:26 Estelle - Nita
+Thank you very much, and thank you everyone for your time and gathering here. I think some of you got invites quite late last night. I'm glad that we as the board are representing the board. I am here with two other board members. that did introduce themselves, Alan and George. So thank you for being with me. You know this morning I was We all do our Bible study in the morning, and Joshua 5 13 came to me, and it's where Joshua says are you for me or against me,
+
+
+00:27:57 Estelle - Nita
+and the man says neither I am here for God, and I like minutes, then I have very much aligned on that for God and country. We don't claim perfection, but that is the commitment that I can give you that the board of Nita. And we are a broad representation of people that know the sector well. I'm sure, I can see already many of you know myself, many of you know Alan. I'm sure some of you know George as well. So just want to give you that assurance that we take our responsibility very seriously,
+
+
+00:28:28 Estelle - Nita
+and I've actually been very impressed with the amount of work that the team at NETA and throughout the ministry, I know I also represent the private sector and obviously a citizen of Ghana as well. But there's a huge amount of work going on, and I just want to acknowledge I believe I stand to be corrected but I do think that this is one of the first times in Ghana that bills have been shared so publicly as they were being developed. And I want to commend the ministry for that, again I'm not claiming perfection in any way, but that the citizens of Ghana have this opportunity to comment is a good thing.
+
+
+00:29:07 Estelle - Nita
+And we take that feedback, all the feedback you've given us very seriously. I want to assure and Minister will probably speak more about this, but the bill is not done. There is so much work still to do on the bill before it even gets the cabinet. You all are wiser than me, so before it gets the cabinet or it goes to Parliament, even when it's a Parliament, you know again it gets opened up for public comment, and it's very likely that the document when it gets to that stage might even be very different from what we are looking at today.
+
+
+00:29:44 Estelle - Nita
+And the board has many iterations ahead of it with Nita, obviously and ultimately with the minister before that document, the bill goes all the way We spent several hours this morning with the minister and just making sure that as the board and as NITA management were really aligned and understand what his policy directive is, you know. And he was very clear to us, I'm sure he's going to talk about it more. But the important role of MNITA in making sure that our public sector, know, ICT initiatives, procurement all of that, that really drives the economy is done effectively.
+
+
+00:30:27 Estelle - Nita
+That's what NITA's core mandate is, and expanding that to also focus on critical infrastructure. And in my private sector had a C squared, you know that falls on us as well, but these are important really critical. National institutions, initiatives and programs that need to be properly enabled. And I like to use the word enabling and not even regulating. Because I know, again when my private sector hat whenever we hear regulation, we're like, but really regulation is meant to be about enabling.
+
+
+00:31:05 Estelle - Nita
+And that's what we are trying to be guided by. How do we enable this sector with this real focus around the public sector and critical infrastructure Get back to being a leader in the whole ecosystem, in the region. There's a lot of work to be done. So again just the wrap up really reassuring you that the board as I represent them as the chair.
+
+
+00:31:36 Estelle - Nita
+Really working very closely with NITA management and of course, with the minister's guidance as well to make sure that ultimately this bill is one that is good for the country. Thank you.
+
+
+00:31:52 Audrey - Moderator
+Thank you Madam Chair. I see that many questions online already, and I promise we will come to you very soon. We'll take one more presentation from the Honorable Minister, he's going to give us the broad policy direction, and then some of the regulatory actions that happen. So, what the future like, Honorable Minister.
+
+
+00:32:17 Hon. Sam George
+Hi, good afternoon everyone, it's a pleasure to engage with you this afternoon both in the room and online, I am aware we are live on X and on Facebook as well. We're going to try to do this as interactively as possible. We would lay out a few things here for you, deal with a lot of the issues that have been raised already And then we would take questions from people in the room and from both platforms online as well,
+
+
+00:32:53 Hon. Sam George
+so that there is active participation both in room and online. Now, let me say that I've followed extensively the conversations that have happened and the commentary that has been put out there. Board Chair made the point This is actually a novel approach that we're taking at the ministry and I'm extremely proud about the work we've done here at the ministry.
+
+
+00:33:26 Hon. Sam George
+The chief director, the director-admin, My director RSIM is not here. She's currently representing me in Harare at the Vipera Falls in Zimbabwe, at an ITU meeting. But, Barbara Barnes is one director I would want to mention. been my lead on the legislative review process and this is not the only legislation we're working on. We are working on 15 pieces of legislation It's the
+
+
+00:33:56 Hon. Sam George
+first time that the ministry is seeing such an overhaul and I
+
+
+00:34:01 Hon. Sam George
+think it is extremely important that we do that. Barbara has led this process very extensively with four different law firms that are doing multiple things I think that is important and I give credit to the team.
+
+
+00:34:14 Hon. Sam George
+I must state that I'm exceedingly happy with the quality of work that's been done by the team. But one thing we've done is to flip the script. And maybe the reason why I've been able to do that is because for 80 years, I served this a member and deputy ranking on the parliamentary select committee. And I did see how legislation, especially the Cybersecurity Act of 2020, Act 1038 was passed. Normally the ministry would work on its draft take that draft to cabinet,
+
+
+00:34:46 Hon. Sam George
+get that draft approved by cabinet work with the Attorney General and the only time that the industry really gets to see the bill is when it's put before Parliament and it's sent to the Parliamentary Select Committee At that point in time Parliament will most times open for inputs a period of 7 or 14 days maximum and that's the only time you have to make an input. The committee is at liberty to decide whether they would have in-person presentations or they would take your memos and interpret them. This time I've decided to flip the script.
+
+
+00:35:21 Hon. Sam George
+The cabinet, after giving a policy direction to the agencies under the ministry, the zero drafts that were produced, We published all the zero drafts and said, make your inputs. I honestly believe that that is meant to deepen our governance, and not to bastardize the institution that's actually trying to deepen the governance. What we've done is to say to you that this is the zero draft. Bring your inputs, have your say.
+
+
+00:35:53 Hon. Sam George
+We've had at least four stakeholder engagement. It's not as though there'd be no stakeholder engagement. stakeholder engagement on this bill. Apart from that, we've now said we received hundreds of memos of taking those memos on board. And so I'm explaining all of this, that when people take the zero draft that was put out and suggest that the ministry is passing that law, That is so far away from the fact and the truth.
+
+
+00:36:28 Hon. Sam George
+Because what you have is a zero draft. We received a number, I think if I'm not mistaken, we are on either version 4.0 or 5.0 of this particular bill with the legal firms. But what we've done is with taking all of your inputs and all of that are being shipped as we speak this week, the ministry sending 10 cabinet memos on 10 of the 15 legislation. The Nita memo, the Nita bill is not even one of the 10. So again, the word out there that this is before Parliament and we've passed a bill or we're implementing a bill can not be factual.
+
+
+00:37:11 Hon. Sam George
+fifth iteration has still not even been approved by the ministry because after all the work Barbara and her team does it comes to my desk and I go through it, vet it I take it to cabinet where I now go through the scrutiny of cabinet. From engage with our AGs department before we now go to the scrutiny of parliament. Parliament will do its independence That report and that draft is now put before the plenary for clause by clause consultation.
+
+
+00:37:51 Hon. Sam George
+So I appreciated that not everyone will understand the lawmaking process, but I'm taking my time to that we have not something has been implemented. Now that takes me to the question of so what is being implemented today? Act 771 and act 772 were passed in 2008. And from where I sit, those were the important pieces of legislation.
+
+
+00:38:25 Hon. Sam George
+And I give credit to people who worked on Act 771. because I thought they were forward, they were visionary. Because when you look at what the landscape in Ghana was in 2008. And for those who I've seen a lot of the comments. I set up my first private enterprise whilst I was still in the university in 2003, it was an IT firm. So being a practitioner as well since 2003 when I was on KNUST campus. In 2008, I know what the ecosystem looked like.
+
+
+00:38:56 Hon. Sam George
+And to read the dictates of those two legislations, Electronic Transactions Act and the NITA Act, you could clearly see the foresight of those who passed the law in 2000. and what their intent was. However, we know that between 2008 and today, you're talking about 18 years, the industry has grown in leaps and bounds. But portions of Act 771 and 772 are still very important, but may not necessarily have been implemented. When you read those acts, you realize that those laws were passed to set up a regulator for the ICT industry.
+
+
+00:39:35 Hon. Sam George
+And so today, the Director General has implemented regulatory functions under Act 771 and Act 772. These have absolutely nothing to do with the proposed amendments which are being considered. So again and I asked the team to be on I'll be grateful if you could put the NITA website on the page. I'd want, for those of us in the room, to go through, so that I'm not just speaking off the top of my head.
+
+
+00:40:09 Hon. Sam George
+Yeah, so that's the NITA website, and I'm hoping that those who are online can follow. There's a section that says services. Can you put it on the services? Yes, and then the first, the first, yeah that one. I think it says regulatory services. Good. It's quite a distance. I'm unable to read from there. Maybe I should just go on myself and see, go underneath our website myself, just a minute.
+
+
+00:40:43 Hon. Sam George
+So that I can read exactly what is there. But, for those of you who are closer to it, I'm sure you can see it and read it. Basically, it's the regulatory services portal under the website. It talks about what is being done. And I see that it references we're waiting for it to load. I see that it references…
+
+
+00:41:21 Hon. Sam George
+Okay, I think I have it now. So good.
+
+
+00:41:25 Hon. Sam George
+Thank you regulatory services. So it says that the National Information Technology Agency As the regulator of the Ghanaian ICT sector, is empowered by Section 2 of the Act, Act 771, to regulate all information, communication technology matters within the country. And then it goes round on to give you all the narrative. Now, can we go back to the link at the top?
+
+
+00:41:56 Hon. Sam George
+under the services under services. Yeah services, then we have regulation of IT professionals.
+
+
+00:42:02 Unknown
+Yes,
+
+
+00:42:06 Hon. Sam George
+Now, background. As part of his activities, the agency intends to regulate IT professionals and certify IT suppliers and vendors Now this is critical for you to pay attention. Who provide IT services? and equipment to ministries, departments, agencies, metropolitan municipal district assemblies in the fulfillment of government's I can't see that now.
+
+
+00:42:44 Hon. Sam George
+Can you… Ultimate! Government's ultimate strategy goal of ensuring a secure, robust and interoperable government infrastructure for communication, network services, internet and web services. And he goes on… But the most important thing here is this: when you go to the website, the individuals that Nita says it is certifying are vendors to MDAs and MMDA.
+
+
+00:43:20 Hon. Sam George
+Now I've seen all kinds of articles, and all kinds of suggestions that whether you are a phone repairer or whether to build softwares as a hobby, NITA is licensing you. That's the NITA website. It is clearly stated there that if you offer a service to government You must be certified, and I think that we must come to that place where we appreciate that we can have a digital Wild West.
+
+
+00:43:50 Hon. Sam George
+It must be regulated. You offer a service to government. Government must identify and certify the persons who run those services. Please scroll down. Let's see what the price in is, because again, I've seen that people say we are asking a web developer who earns $3,000 to pay $6,000. Please go scroll down, scroll down. I want to see what the fees are. Yes, so application prizes, IT graduate who is, again, don't forget, offering a service to government.
+
+
+00:44:22 Hon. Sam George
+The fee there is what? 150 Ghana cedis. That's the application fee, and that's the annual renewal fee. If we go down to IT practitioner It is what? 300 cities for the application fee. The annual renewal is, I think, also 300 cities up, right? 150. Now, when you go down to The next one is what?
+
+
+00:44:53 Hon. Sam George
+IT professional. That's also 300 CDs, renewal 150. IT technician The fees 300, renewal is 150 CDs. So these are actually the prizes. That have been put up there, and then the application form. So again, just so that we are clear to both those in the room and those online, any suggestion that Nita is looking to charge a web developer or some IT per say 6,000 cities or 25,000 cities.
+
+
+00:45:35 Hon. Sam George
+Can not be said to be honest and factual. This is what is on the NITA website. Now, can we go back again to the top of the page and on the services, yeah, they now have regulation of IT service providers. Again, the background, please make it big. As part of these activities, the agency intends to regulate IT professionals and certify IT suppliers and vendors who provide IT services.
+
+
+00:46:06 Hon. Sam George
+And equipment once again to MDAs, Ministries, Departments and Agencies and MMDAs Municipal Metropolitan District Assemblies, and then please scroll up, let me see what the category of IT service providers are Please go, go. Good. Business and productivity software and licensing services. The fee is 12,000 for registration application. The renewal is 6,000.
+
+
+00:46:37 Hon. Sam George
+As industry players, you know that there is no service provider today in Ghana, that is offering a productivity software to any government agency that is charging them anything less than $20,000. And I'm being very charitable with that. Many of those software you offer to government are in the hundreds of thousands of dollars. And so if someone has such a turnover with government, and we're saying that your annual fee is equivalent of $1,000 literally, You're charging government hundreds of thousands of dollars.
+
+
+00:47:14 Hon. Sam George
+For us to be able to say that yes, you can offer that service, you're paying a one-off fee of a thousand dollars and an annual renewal of about five hundred dollars I'm trying to understand how that could be said to be fleecing the ecosystem. Computer and peripheral equipment, please scroll up. Please go up a bit so I can get for anyone who's supplying computers. And we just did 20,000 laptops at the Ministry.
+
+
+00:47:44 Hon. Sam George
+So the service provider who offered or supplied us those equipment will have to pay a thousand Ghana cities as registration fee. And then it's what? Six hundred as an annual renewal. Now, imagine someone who supplied. 20,000 laptops to our ministry. Being asked to pay 1,000 Ghana cities, literally $100. That's literally the cost of… I got Microsoft license on one of those laptops.
+
+
+00:48:14 Hon. Sam George
+So again, how is it that a service provider who is offering and selling laptops, and equipment, ICT equipment, two governments has been asked to pay a thousand dollars, a thousand Ghana cities, and we say that my electronic equipment, now let's go up please Please scroll up. Now you're offering a critical database and protected systems. So the Ministry of Foreign Affairs yesterday rolled out an e-governance e-visa platform.
+
+
+00:48:49 Hon. Sam George
+Now, by virtue of the work that we did, we have an idea what the cost of that procurement is, what infrastructure behind that e-visa system is, Now if you ask that service provider who's charged a very handsome fee, which is standard industry pricing. And for everyone sitting in this room, if you're providing a critical database to GRE, to SNIT, to foreign affairs, to immigration service.
+
+
+00:49:21 Hon. Sam George
+You know how many millions of dollars that's going to cost. You're being asked to pay 25,000 Ghana cities, $2,000 equivalent. as a flat fee to register and the renewal of $15,000, about 1,200 15,000 cities about $1,200. I'm trying to appreciate how that could be said, to be exorbitant for that level of service provider I mean, if you are providing that to a private sector player, come and pay this because don't forget this is restricted to persons offering services to government.
+
+
+00:50:02 Hon. Sam George
+To cybersecurity service providers, please scroll up. You are offering cyber security services to a government institution. Again, those projects run in the tens of millions of dollars. You're being asked to pay an application fee, which is a one-off fee of 30,000 Ghana cedis or $2,500. And then an annual renewal of 20,000, $1,600.
+
+
+00:50:33 Hon. Sam George
+Given what you charge government, can we as industry players honestly say that these fees do not represent a fair fee? That's the real question. Data analytics service providers and it goes on and on. And I mean, it's a whole slew of them and it's on the website so everybody can go and check. So the question here is if you offer these services to government Are we saying that this fees are exorbitant?
+
+
+00:51:04 Hon. Sam George
+That's a question I think that when we have our interactive session, I'd love to really hear. I'm sure many people may not have averted their mind to the fact that this was tailored at Pearson's offering services to MDAs and MMDAs. Now, all of this like I said is on the back of existing legislation. Now the ministry is doing its legislative reform and as part of the legislative reforms, we are doing it the slew of the whole suite 15 legislation.
+
+
+00:51:40 Hon. Sam George
+I would, I'll take the wind out of many of you sales by dealing with what I think are the critical issues that have come up. One of them has to do with the licensing regime that was proposed in the zero draft. Again, do not forget I've said we've had eye tracings of the bill After we put it out, and we got inputs, that zero draft said all ICT professional will be licensed, and I've seen a lot of conversation around that.
+
+
+00:52:14 Hon. Sam George
+Now, for the avoidance of any doubt, policy direction emanates from the ministry. The agencies have put up what their wish lists are, but like I said, we've received hundreds of memos which we have worked on. The policy direction is what you see being implemented today in the regulatory space. If you offer a service to the government of Ghana, the regulator will license you, will certify you.
+
+
+00:52:48 Hon. Sam George
+If you offer a service that is not directly to government, but is to a critical information infrastructure you will be licensed as well. So let me put that in perspective, you run a private data center. By your private data center provide services to banks who have been designated as critical information infrastructure, you need to be licensed and certified because you form a part of the critical information backbone.
+
+
+00:53:24 Hon. Sam George
+I hope I'm being clear. So you may be a service provider, automatically you must be certified, but even if you are private sector player but you offer services to a CII. And again, CIIs are designated by the minister responsible for communication not in an arbitrary manner and not based on the minister's own choice. Act 1038, the Cyber Security Act, spells out how the cyber security authority must designate and who they can designate as a CII.
+
+
+00:54:03 Hon. Sam George
+The Electronic Transactions Act as far back as 2008 also specifies critical computer systems and how they must be designated. The NCA act and the electronic communication act also designate critical communication systems, and how they must be designated. So it's not and will make their recommendations based on the legislated processes to the minister, for the minister to do the designation.
+
+
+00:54:49 Hon. Sam George
+So there is a whole legislative process that already exists. So relative to the issue of are you asking everybody to be licensed, this is the policy direction. And that has been taken in by the legislative drafting team, the lawyers, Barbara, who's leading from RSIM division and then the management and board in the current shape of the bill. So what I'll say to you is hold your horses.
+
+
+00:55:22 Hon. Sam George
+When we go to cabinet, and cabinet approves it. Then it will become a public document. Because don't forget I'm yet to go to cabinet with what we have now synthesized. from all the inputs that we have gotten from our four stakeholder engagements that we had. And so, a number of big tech companies have submitted their inputs. We received memos from across the world on all our bills. In fact, one of the bills I've had the American Chamber of Commerce and the U.S.
+
+
+00:55:55 Hon. Sam George
+Embassy come to me saying that they still have… I said look we gave almost four months for Anybody who has additional inputs, you wait. When Parliament opens that window, you can still put it in there through Parliament, but if we say we are going to wait for everybody's input, we'll never work on the legislative review. But I can assure you that the policy direction from the ministry is what you see being reflected today in the registration on the website. You offer a service to government, you must be certified.
+
+
+00:56:28 Hon. Sam George
+And we can not say that we don't understand why that's happening. You offer a service to a critical information infrastructure, you also must be certified. There are a few other issues. I see that the moderator is telling me my time is up, my ministry. But I'm being told by the moderator that my time is up. And it's because we want I made a point clear that I want to have a very interactive section. But maybe give me five more minutes. So that I because most of the things I'm dealing with I believe would deal with most of the questions that would come on The issue of the infraco There's been that questioning that why is Nita setting up an infraco?
+
+
+00:57:03 Hon. Sam George
+You're gonna compete with everybody Ladies and gentlemen, we've had an abnormality for 18 years. What I'm trying to do is fix that abnormality. The fact that an abnormality has been allowed to stay It was a reset agenda. The reset is not here to perpetuate abnormalities and irregularities, it's here to fix them.
+
+
+00:57:33 Hon. Sam George
+And what's that abnormality? Can any of you for want of just imagination, imagine that the NCA is running a telecom company and regulating the other telecom operator? That's what it has been. for 18 years. Government has its backbone infrastructure. That supports MDAs, the 380-kilometer Eastern Corridor fiber, our 160 LTE base stations, the National Data Center, metro fibers across the country.
+
+
+00:58:08 Hon. Sam George
+All of that is sitting with NETA. NETA is commercializing that infrastructure, so they are providing redundancy services to Google, they are providing redundancy services to MTN. So NETA is actually an operator. And he's supposed to be a regulator as well. How do you have a regulator and an operator in one entity? That's an abnormality that has been allowed for 18 years to continue. And all I'm saying as minister is that can not be right.
+
+
+00:58:39 Hon. Sam George
+So we're looking with the new bill to break up NITA into and make NITA a regulator properly so called, like the NCA is. And then the ministry is going to incorporate a limited liability company, wholly owned by the government of Ghana, to offer and manage the government's infrastructure. That company is not owned by NITA. It's owned by the government of Ghana through the Ministry of Communication. That company will also need to meet regulatory KPIs like any other infrastructure company that is operating in the private sector.
+
+
+00:59:16 Hon. Sam George
+That, in my belief, will help us make sure that company now begins to offer proper services to government agencies because I get a lot of complaints, Oh, NITA is not giving us connectivity. The connectivity is not good. Because how is the guy a referee and a player? Currently, the referee is wearing the jersey of Arsenal. Okotoko. I use Arsenal because we won the league. And now I'm saying that the referee must wear his jersey and let players wear their jersey.
+
+
+00:59:48 Hon. Sam George
+And this exists already in the ministry. We have a regulator called the Postal and Courier Services Commission. They regulate all postal entities in the country. But the government of Ghana Through the ministry owns a postal company called Ghana Post. The regulator regulates all the private DHL, FedEx, and regulates Ghana Post as well. When Ghana Post falls foul, the regulator fines Ghana Post. Do you get it?
+
+
+01:00:19 Hon. Sam George
+When Ghana Telecom operated, it was not run by NCA. It operated as a limited liability company with shares. And then NCA regulated Ghana Telecom alongside ScanCom at the time, Millicom, and all the other players. So that's all we are saying that let us stop this abnormality that exists where the regulator is also a player. Set up an independent government in Fraku, that would also be regulated and take care of government infrastructure.
+
+
+01:00:52 Hon. Sam George
+That's all. And I think that that's something that Well, I want to see what the contrary position to fixing that anomaly will be. Now the other thing… I think there's one more thing that has been on the table, is about ownership of businesses. So again, like I said, I met all the agents and give them policy direction and then said, go work with the lawyers.
+
+
+01:01:25 Hon. Sam George
+They all did their zero drafts. That's what you see. So the zero draft that came from NITA had the intention of protecting Ghanaian local indigenous businesses. And saying that some part of our processes must be left for Ghanaian businesses. And so, that's the proposal you see in the ownership provision. But again, like I said, with inputs and consultations from stakeholders In the version that we are in right now, that has been dealt with extensively.
+
+
+01:01:59 Hon. Sam George
+Because again, I still believe that we must protect some facets of this industry for Ghanaian businesses. I can't sit here and allow foreign businesses with their cheap capital to come in here and kill all the Ghanaian startups and tech businesses. Hell no! Then that would be poor oversight from the ministry. But in the same way, we're also looking to attract investment into our country. And so we're walking a very fine line. And I'm sure when we finally go to Parliament, you will see the beauty of what we have done that is able to create niched areas for Ghanaian businesses, allow for foreign investments to come in.
+
+
+01:02:43 Hon. Sam George
+Even if you are affording investment coming in and operating, how their provisions for knowledge transfer to look. I mean just ask yourself, do you think Estelle wants to lose her job? Estelle is the CEO of a foreign business. She's the board chair of NITA. If we were to pass the legislation the way it is today, it will mean that C-Squared has to leave Ghana or be owned by a Ghanaian business, which means that Estelle will start writing an application and beg to apply.
+
+
+01:03:18 Hon. Sam George
+So that's why I'm saying that There's a lot of work that has gone on. And you would realize where we've gotten to when we finally put out the final draft after cabinet approves it. So please, tech industry, hold your horses. Hold your horses. The last thing I'll talk about is the point that people have made, Oh the bill is quiet on cross-border data flows and data protection, we see only one line on AI. We are running an entire ecosystem.
+
+
+01:03:57 Hon. Sam George
+As part of our legislative review, The Data Protection Commission is also having a review of his legislation, and the Cyber Security Authority is having a review of his legislation. How do we then say that in the NITA Act, we must make specific regulatory positions on data protection? NITA is not a legal protection, that's the DPC. proposing to become the DPA.
+
+
+01:04:29 Hon. Sam George
+They will set the standards and Estelle was present at a meeting, I actually caused a meeting, in fact it was Easter right? We spent our Easter working as a committee, all the agencies of the ministry did not celebrate Easter literally. But the Easter weekend we all went into a retreat where I said all the agencies were doing their own thing. Now we sat with all the lawyers and everybody brought their work together, and at that meeting, we laid out the road map from the ministry, policy direction.
+
+
+01:05:02 Hon. Sam George
+Anything that has to do with data, protection, whether it's cross-border data flows whatever it is the data protection review would spell it out in their law. So anything related to data protection that NITA does would reference the data protection law. The Cyber Security Authority will take lead, regulator, on everything cyber security. NETA is supposed to take lead on everything that is an ICT equipment.
+
+
+01:05:34 Hon. Sam George
+What is an ICT equipment? Who's an ICT professional? NITA defines that in their law and that becomes reflective in the NCA Act. The electronic communication act is dealing with electronic equipment. for transmission and all. And we've said to NCA, You can't determine and define what an electronic communication equipment should be. NITA will do that. because NITA is dealing as the regulator of IT equipment and peripheral equipment. So there are unique pieces of legislation that deal with everything else.
+
+
+01:06:07 Hon. Sam George
+What you will see is a repetition in every one of those legislations and you have regulatory overlaps. So what we've done is to synthesize and streamline everybody's role. The last thing on AI is the emerging technologies bill. We have an emerging technologies bill that doesn't deal with just AI. deals with AI, deals with quantum computing, blockchain, IoT. machine learning, it's an expansive legislation. So you do not expect to then deal with AI in the NITA Act when there is an emerging technologies bill, that again, the implementing agency is NITA.
+
+
+01:06:47 Hon. Sam George
+So you want a section in the bill. We're giving you a whole law. What will you ask for? You could have asked for better. And then when it comes to innovation, you just have one component in the bill for innovation but the ministry's also working on an innovation and startup bill. That innovation and startup bill now spells out all the benefits for startups. Because you see, let's be clear in this country today, everybody says they are a startup. There are legal frameworks for who a startup is.
+
+
+01:07:22 Hon. Sam George
+Whether it is in the US, whether it is in the EU, whether it is in the UK or wherever it is in the world that is advanced that you want to look at, they have definitions for who a start-up is. There are legal frameworks around who is a startup and what benefits does a startup have. And you can't remain a startup for 10 years. There are businesses that have been operating for years in this country and they say they are startups. Some of them have even operated 20 years. They still say they are startups. So the question is, who is a startup? The Innovation and Startup Bill spells out who a startup is, the innovation sandboxes, regulatory sandboxes, Boxes, benefits that accrue to a startup, what financial reliefs by way of taxation accrue to a startup, and for how long can you be a startup?
+
+
+01:08:13 Hon. Sam George
+All of these are spelled out in that legislation. So you can not expect that in this legislation, we will then deal exhaustively with startup. So please, you want to understand what we're doing? You would see the full slew of what we are doing, that the full suite of legislative work we are doing you need to read them complementarily to appreciate the work that is happening. But I think I've gone well over the duration. But I think that it has dealt with many of the questions that have already been asked.
+
+
+01:08:47 Hon. Sam George
+But I would, and that shows you that I read everything. And the responses on social media, I mean I type them, I'm the one who types them. Nobody manages it for me, I do it myself. And so I read your comments. I read every one of them, the articles, everything. And I'm grateful that you have shown such interest. I'm grateful for the good, the bad, and the ugly, because trust me there's some very good stuff out there that I've read. There's some very bad stuff as well.
+
+
+01:09:18 Hon. Sam George
+And there's the downright ugly that I've read. But I've read all of them and we take them in our stride. What we would emphasize here is that, we know where we are going. We believe that it is important that we regulate the space properly, and we would do that with you as industry stakeholders. Thank you.
+
+
+01:09:43 Audrey - Moderator
+Thank you honorable Minister. So we're going to have the interactive session where we'll ask the questions. I said earlier that we should try as much as possible not to repeat questions that have been answered already We saw online one question that kept coming up, and the Annabel Minister has responded to it, but I would just like to repeat it in case you missed it The licensing is for those providing services to government institutions.
+
+
+01:10:13 Audrey - Moderator
+Or to critical information in infrastructure. Please, it's not open for everyone. I know people have said, but it says in the draft bill blah, blah, blah. We did say it is the zero draft. So please, we are not going to respond to that particular question anymore because it has been answered, but we'll take any others. We'll start from the room. We'll take five questions from the room. After the fifth question, the Honorable Minister and the acting DG will respond.
+
+
+01:10:45 Audrey - Moderator
+Then we will go to X. For five questions. So X, please have your questions ready. We'll take five questions. They respond, come back to the room and then go to Facebook. Any questions in the room? Yes, okay, coming. Please tell us your name, and then before you ask your question.
+
+
+01:11:10 Miishe Addy - Room
+Good afternoon, everyone. I'm Misha Addy from Jetstream. First of all, thank you to the minister and thank you to the chairwoman for your extraordinary transparency. I don't see this anywhere else in the world, and I think it's really a special thing that the ministry has published a draft bill and asked for input, and taken that input and read it for us all to comment on. So thank you very much for the great governance. The question I had really is about the 1% gross revenue tax and whether we're considering making that more progressive.
+
+
+01:11:42 Miishe Addy - Room
+I think a lot of the entrepreneurs in the ecosystem today especially women are very often trying to break even in their first few years of being a true startup, and I'm wondering if there's an opportunity for us to make that tax more forgiving.
+
+
+01:12:04 Kafui - Room
+Right. Hello, I'm Kafwi Yibu. My question is for the minister. Let me just go ahead and read. What's the current state of this? You share the broad strokes received so far from the four stakeholder sessions?
+
+
+01:12:25 Hon. Sam George
+Thank you, Honorable Minister. My name is Sambo Tete. My company provides core banking software for core banking applications for microfinance institutions. In the time where we don't have a licensing regime like this, the Bank of Ghana would request that They give you a no objection letter to be able to provide services and then products of financial institutions.
+
+
+01:12:57 Hon. Sam George
+Do companies like this, do we also fall in getting license for the institution and that service providers? Thank you.
+
+
+01:13:27 Kingsley - Room
+I think I want to echo, thank you very much for this level of transparency. I had a question on the M & A and sort of approval for M & A's, is that also just limited to companies that are doing business with government or with critical infrastructure, or is that Sorry. Or is that for people in the IT space?
+
+
+01:13:57 Solomon - Room
+Thank you very much for the clarification. My name is Solomon Ejei, I sit as the president for the Association of Ghana Startups. So yes, I'm happy you touched on the startup bill as well. Again, my question is how would the NETA bill complement the startup bill to ensure that startups get what they need to grow beyond borders, to scale beyond borders right? Again, my other concern is you mentioned that we have what a fifth level now. Can we share this fifth draft possibly?
+
+
+01:14:28 Solomon - Room
+Same way we had a zero draft out there. I don't know without this was shared or was leaked. I don't know, but then can we use the same medium? Well yes, I remember when we had the start-up bill started. We actually had a website for the bill. So every series of video was published. All the stages were published online. People made in-between now, the bills they have. Even though the bill had been sent to the minister I see you waiting for feedback on that. But even then, the website is active. People submit a comment to the bill.
+
+
+01:14:58 Solomon - Room
+So can we have access to the feed drafts so that If there are comments that we can make, because now it looks like all that we are talking about is around the zero draft. But you have the fifth draft. We don't know what is in the fifth draft. Can we get access to it?
+
+
+01:15:12 Audrey - Moderator
+Thank you. Thank you. We'll take responses from
+
+
+01:15:20 Hon. Sam George
+Thank you very much. And thanks for the compliments
+
+
+01:15:25 Hon. Sam George
+on our transparency. It feels good to get some compliments after the bashing. The first question was about whether we would consider the 1% on gross, whether we would do something for women?
+
+
+01:15:43 Hon. Sam George
+Again, like I said there's been a lot of work and
+
+
+01:15:47 Hon. Sam George
+you're asking if we could do something for female startups or female tech led businesses I can say to you that from the consultations we've done, that entire 1%, whether you are female or male, and well only male and female if you have any other gender That's one, you know, some judge won't listen to you. So if you're male, if you are male or female, so long as your tech business in Ghana I can tell you on authority that, in the current drafting of the bill, that 1% doesn't exist because once you're doing the licensing,
+
+
+01:16:19 Hon. Sam George
+that 1% doesn't exist in there. So, so um… That because my… I mean, and like I said with the conversations we've had Once you're paying your license fee, you're licensed in there, you're already licensed, you're paying your annual renewal. It is assumed that whatever you are going to pay is subsumed in there as part of your license. So, there will be no additional 1% paid whether you are a female or male-led tech startup.
+
+
+01:16:50 Hon. Sam George
+I think that the second question on the state of the zero draft ties in with your last question as well. Let me just say this, you know, they say when you give people an inch, they'll take a mile. We've shared the zero draft. And the reason why we share the Zerodra was because we wanted inputs. We believe that all those inputs, we've taken them, and if you remember, and let me just address that it wasn't leaked. We published them on our website.
+
+
+01:17:22 Hon. Sam George
+Actually, we put QR codes, both on the ministry's website and on every one of our agencies that was having a review. It was a direct policy direction, put it out. And I can tell you there are African countries that have come to us to take our drafts because they're also going to use them to do their reviews. Because why we did that was because we believe that across the continent we must begin to benchmark our legislation. And Ghana was the only one doing this massive legislative overhaul. And so we thought that we should share it for the common good, let people take the zero draft, tweak it to your own national circumstances, but at least you see the pillars around which Ghana is doing what we're doing.
+
+
+01:18:03 Hon. Sam George
+So it wasn't leaked, we put it out. Now, we've gotten the feedback. Now that feedback is supposed to be a consultative process. Some of those feedbacks formed the basis of the engagements and the tones for the consultative stakeholder engagements that we had. If you keep publishing, you'll keep getting feedback. You would not move to the next phase, which is to go to cabinet.
+
+
+01:18:33 Hon. Sam George
+And so that's what I'm saying to you that, you would not even have seen the bill previously. Before this reset agenda, you would not have seen the bill. You'd have heard of it in parliament. What is there is what you will see. We're giving you The draft and I mean, the bill is about what? Almost 90 sections. Almost 90 sections from all I've heard, the problems are with less than just about five sections. Five or six sections. So it means that even the zero draft was a very good job.
+
+
+01:19:07 Hon. Sam George
+And I'm saying to you that we've done various eye tracings, there have been engagements as to can we tweak this? How does this sit? Then you have another stakeholder engagement and the tweak still requires further tweaking. And we are getting to that place where I'm expecting the final draft. You mentioned innovation and startup bill. I'm addressing both together because the innovation and startup bill like I said, the cabinet memos have been developed. They've come to me. I'm doing my final read of it. before I take it to cabinet. So once I get to cabinet, it's part of the 10 that I'm sending to cabinet.
+
+
+01:19:42 Hon. Sam George
+So hold your horses. I'm confident that Without any hitch, in the next month or two we should be able to cross the cabinet and then the AG and then put it before Parliament. Because what I see sent to cabinet. Most of the bills that I have right now, the states they are in, are literally my final iterations of the bill. Whatever I'm sending to cabinet, cabinet documentation, even under RTI, is exempt information.
+
+
+01:20:14 Hon. Sam George
+You know that. So until cabinet has reviewed it what we are sending to them. And what I'm going to send the cabinet, if I put it out for the public again to look at it and make your input before I send to cabinet, I may be breaching my oath as a member of cabinet. So we've given you the bill, and like I said, it is not a shut door. When cabinet approves it and I lay it before parliament, there is another consultative process that is open for you there.
+
+
+01:20:46 Hon. Sam George
+So you will still see and still have an opportunity if all the work we've done is still so near. you can still make an input when it gets to the parliamentary level. So unfortunately that's a request I may not be able to accede to publish the current draft because, like I said, they are literally what we're sending to cabinet after their stakeholder engagement and iteration. Now the company that offers call backing or back services to banks, financial institutions who are in turn regulated by the Bank of Ghana.
+
+
+01:21:25 Hon. Sam George
+The Bank of Ghana itself has been designated CII by the Minister of Communication and so even the Bank of Ghana is going to have a system regulated by NETA when it comes to the areas that NETA's regulatory function will deal with. So yes, the Bank of Ghana does not have the technical competence to do the regulatory function that NITA is going to be performing when we set it up properly as a proper regulator,
+
+
+01:22:04 Hon. Sam George
+because even the Bank of Ghana The Bank of Ghana, don't forget, takes regulatory oversight from a number of agencies of this ministry, Data Protection Authority, the Data Protection Commission. still deals with the Bank of Ghana, the cybersecurity authority. We certified their FICSOC. So every system that they would run If it is not cyber-related, NITA will have to commission it. So even if your no-objection giver is subject to NITA's regulatory function means you as well who is providing a service to a CII.
+
+
+01:22:42 Hon. Sam George
+Don't forget I gave that you provide a service to a CII. You need to be certified by NITA because you form a critical part of the system. of that CII backbone. Okay? But I mean, Charlie, how much you would charge the banks? What we are charging is small. It's small, aha. Then how does the NETA bill oh sorry, the measures in acquisition and approval? If it's a private sector company You are offering your own service. Your service has nothing to do with a government agency, it has nothing to do with a CII, and you are doing your measures in acquisition.
+
+
+01:23:16 Hon. Sam George
+You just apply to the laws of Ghana. for all measures and opposition. However, if it involves a critical information infrastructure, we would want to know who is coming into the system because take for example you get your license today And then you are going to do a merger with a foreign, or you have been acquired by a foreign entity. The government will want to do its due diligence on who that foreign entity is, even radio frequency licenses. When NCA gives you a license to operate a radio frequency and you are selling to another person, it's illegal for you to sell without informing and getting the approval of the NCA radio frequency license.
+
+
+01:23:59 Hon. Sam George
+You understand? So then imagine you're offering a call service to a CII or to government, we're not going to stand in your way, we just want to be able to know who. Is coming into the ecosystem, are we okay with it? Is it coming from a jurisdiction where there may be some existing challenges between Ghana and? Then we'll draw your attention to that. So it's important that if you are doing an M & A, or a mergers and acquisition and the company to be merged or acquired.
+
+
+01:24:31 Hon. Sam George
+Offer services to government or as a service provider to a CII, you would have to notify NITA. And then how the NITA bill complements the innovations bill, clearly as a startup, you want to run your innovation sandboxes. NITA as part of their regulation, the new legislation has some provisions for innovation sandboxes, but In the bigger space of things, as a startup you want to know what the regulatory environment you are going to operate in is,
+
+
+01:25:01 Hon. Sam George
+and what we do today with the NITA Act when it's finally passed will give you better clarity to do your planning as a startup. So I think that both will work complementarily. Not just the Innovation and Startup Bill and Anita Act, but even the Emerging Technologies Bill because you may be a startup that is exploring solutions that are classified emerging technology. So you may be a startup that is exploring some solution that is AI driven. So again, the emerging technologies build. And let me just be clear that as a ministry we're doing all of this, and we want to complete all the legislative work we are doing.
+
+
+01:25:38 Hon. Sam George
+Then we're going to have what we call the umbrella law. And my choice of words is very careful. Umbrella law. Yeah. Some people didn't get it, but some who have got it. We're going to bring the umbrella law which is going to be our digital economy. What that will do is it will now become a one-stop legislation that will pick all the provisions of the various legislations, and you can find it in one place.
+
+
+01:26:10 Hon. Sam George
+You understand me? So that, and then what that does is, it creates the removal of repeat bureaucracies. So that you don't have to do the same thing multiple times, but you can't do that today when you've not finished your individual regulatory environment thing. So that's just going to be, like I said, an umbrella that will cover all the legislation that we're doing. So like I said, you have a start-up that is doing something with emerging technologies and you are dealing with ICT systems, and you're offering that service to a government agency.
+
+
+01:26:46 Hon. Sam George
+It's like a lot of things you have to do, but the DEA, the Digital Economy Act, would spell out to you what the intersection between the emerging technologies bill is with the NITA Act, and with the Innovation and Startup Bill. So then you see the one clear vision. So it's a journey we are on and I'm sure we'll get there. When we are done, I'm hopeful that it would add value to our industry and it would frame it better. The way today chartered accountants have a setting framed ecosystem in which they work You can finish, be a B.Com graduate but a chartered accountant is a chartered accountant because there's a framework around which they work.
+
+
+01:27:24 Hon. Sam George
+Even marketers, PR professionals they all have institutions. And maybe I'll just add that here. That that is actually where, so it was that policy direction that led to the zero draft that you saw certification of private sector as well. Because the policy direction was this, anyone offering to government will be certified and identified. But it's important that even in the private sector People must be able to say that this person I am recruiting or I'm employing to offer me a service Some kind of certification or peer recognition of his professional capacity.
+
+
+01:28:07 Hon. Sam George
+The way, today, PR professionals are known because of their fellowship or membership of the IPPR. Marketers are known, and that is voluntary in the private sector. But marketers are known by being members of the Chartered Institute of Marketing. Bankers, they have the Institute of Bankers. You've got a chamber of ICT professionals, and I think that they should take it up and begin to have some kind of certification because it's important.
+
+
+01:28:38 Hon. Sam George
+So that when anybody in the private sector even wants to employ a private sector player, there's a premium placed on someone who belongs to that institute. It's just like engineering. I'm an engineer by profession, my first degree. But I can't practice as an engineer because I'm not a member in good standing of the Ghana Institute of Engineers. But you get the point I'm making because GHIE has created that premium that is placed on engineers. So as we call ourselves ICT professionals, we shouldn't want to just operate in the wild west.
+
+
+01:29:10 Hon. Sam George
+The only way you can get true premium for your professional skill is when there is a certain structure that allows for your craft and your skill to be recognized and celebrated. Last point, David Ajayi, international architect, true of old. When he came to Ghana, one of his sins was that he didn't get accredited by the Ghana Institute of Architecture. You can get called to the British Bar. Ghanaian law is based on British law. You could have practice for 20 years in the UK.
+
+
+01:29:41 Hon. Sam George
+You can't come and practice before the courts in Ghana unless you get on to the rule of you get called to the bar here in Ghana as well. Professional bodies need a setting certification. If it is for government, Nita will do it. But I'm urging the industry through the Industry Forum to set up a setting certification as well for the private sector. It will add premium to what you are doing.
+
+
+01:30:04 Audrey - Moderator
+Thank you. Thank you, thank you. We're to X now. We have five people waiting to respond. We'll start with Hubert. Can we hear Hubert's question? It's very faint. Please go ahead.
+
+
+01:30:52 Hubert - X
+Yes, yes, yes. So I'm actually going to just go right into it. Most of the debates and most of the confusion that people in the tech industry is quite a bit if we were given access to the version of the bill, because most of the articles and
+
+
+01:31:41 Audrey - Moderator
+Okay, let's go to the next person. Um Sorry, my, so space closed for some reason, but we have some questions from Facebook, so we'll take those whilst we wait for space to come back.
+
+
+01:32:18 Audrey - Moderator
+Facebook, the first question from… Question from Daniel Enchi. Section 36 allows the authority to create any other categories of licenses, and section 101 allows regulations to define, expand, and modify what counts as business activity. Why should the scope of who needs a license be expandable after law is passed? That's the first question.
+
+
+01:32:49 Audrey - Moderator
+Second question from Facebook JT. What is the value proposition attached to this licensing and registration regime? I haven't heard any benefits locally and globally for these papers to be acquired.
+
+
+01:33:13 Unknown
+Yes.
+
+
+01:33:15 Audrey - Moderator
+The license and the registration. And the third question from Frank Kwaku Hartman. How do we prevent businesses that provide critical information services to the government from passing these licensing costs on to everyday, on to the everyday Ghanaian? Many stakeholders have expressed concern about NETA's capacity to take on a regulatory role, given that its primary mandate as a development agency over the past 18 years haven't always yielded the outcomes the industry hoped for.
+
+
+01:34:10 Audrey - Moderator
+What steps is the ministry taking to ensure NITA is adequately equipped technically, operationally, and institutionally to carry out effective and credible oversight of the sector? So that's all we have from Facebook for now.
+
+
+01:34:30 Hon. Sam George
+Thank you very much. Daniel, Aintree speaks about section 36 and section I think 101, 106 about what can be done by the agency.
+
+
+01:34:41 Hon. Sam George
+When Parliament Normally, and again let me just put this in the frame of what it is for lawmaking. There's a certain diction that is used when laws are made. So at times you will see that the law is made, but then some extra powers are reserved so that you don't because take for example, the cost of a legislative review is enormous.
+
+
+01:35:11 Hon. Sam George
+So we passed the bill today, and let's assume that the bill just focuses on AI. Five years down the road, there's a new emerging technology. That means we have to go back to Parliament again, and start the whole process to go and do an amendment. But normally you would leave what we call residual powers for the oversight agency. Most times the minister responsible to be able to make some of those amendments. However, because that power is in a legislation by Parliament.
+
+
+01:35:45 Hon. Sam George
+It's a subsidiary legislation It is subservient to the Constitution. And the Constitution in Article 296 says that anyone in whom such discretionary power is vested can not use it in an arbitrary manner. capricious, or malicious manner. So yes, such powers are reserved in the drafting of the legislation, so that for even administrative changes You don't have to keep going back to Parliament for each one of them.
+
+
+01:36:16 Hon. Sam George
+You can do that either through an ally, or by a ministerial directive, but that ministerial directive is guided by Article 296 of the Constitution. JT asks the benefits of the licensing regime. Huge benefits, huge benefit. As a minister, we're doing some work to expand the Ghana.gov platform. And that's really what opened my eyes to the plethora of different standards and protocols in our government ecosystem.
+
+
+01:36:53 Hon. Sam George
+A service provider is offering a service. to one ministry, another one is offering a service to another ministry. They are all doing their own things in their silence. And then it comes to a place where government needs those two ministries to interoperate, and both systems can not speak to each other. So for us as government, and when I say government, don't forget that anything government spends is your taxes. So if we spend it in a manner that is not efficient It deprives you of other social goods that that same tax will be put to.
+
+
+01:37:29 Hon. Sam George
+And I'll give you a typical example. There's one of those examples, and it's something that's a work in progress. You are aware that the DVLA is working towards rolling out new number plates. Those new number plates are RFID readable. The DVLA is under the Ministry of Transport. So the Ministry of Transport is supervising the DVLA to get a service provider, provide them RFID enabled number plate.
+
+
+01:38:05 Hon. Sam George
+Now, You are aware also that government has indicated its intention to bring back tools at a certain point in time, but not in the manner in which it was automated. Now that will mean that the tollbooths which will sit as property of the Ghana Highways Authority, which is under a different ministry, the Ministry of Roads and Highways must have RFID readers.
+
+
+01:38:36 Hon. Sam George
+to read the number plates when they get to the toll booth. Now Ghana Highways Authority is also going to do its own procurement under the Ministry of Roads and Highways, of cameras to read the number plates. Now, the person whose number plate is red will have to make that payment via a digital platform to a central pool. It will go to a mobile money wallet or a banking wallet, which is supervised both by the NCA and the Bank of Ghana.
+
+
+01:39:14 Hon. Sam George
+Two different ministries supervise those two agencies the Ministry of Finance, Ministry of Communication. So the synchronization of the RFID number plates to a mobile money wallet, to a SIM card is another integration that has to be looked at. Then you also have exempt numbers that don't pay taxes, that won't pay toll. For example, diplomatic corps and the diplomatic corps number plates are issued by the foreign ministry.
+
+
+01:39:51 Hon. Sam George
+So exemptions on the system have to be created for a certain crop of numbers that can be redid by the RFID camera to exempt and not bill an associated number, or mobile money wallet. Then you have foreign number plates who coming through the border, and as dealt with by immigrations and customs, who will be giving stickers. This is a number of ministries that are connected to just one operation.
+
+
+01:40:25 Hon. Sam George
+Now, imagine all of these ministries doing their own without a central technology agency, building their entire life cycle. with what the protocols are for interoperability, so that each of the ministries would do it. But the standards would have been set by somebody. And for those of you working corporate world, you can not have an HR manager wake up and just go and buy his own software, buy his own laptops. Accountants people do their own thing.
+
+
+01:40:57 Hon. Sam George
+Everybody submits it to the CTU. The CTO is responsible for ensuring that the entire ICT backbone of the company works. This ministry is the CTO of the government. And so all our systems must be interoperable. And the agency within the ministry that does that, or will do that for us is NITA. So that's where the benefits are. The benefits are huge. And when you operate in that space, knowing that you are certified if you don't have the certification, you can not bid for government jobs.
+
+
+01:41:32 Hon. Sam George
+It's the same way today you can't bid for a government job without SNID. You don't have any tax clearance, can you bid for a government job? No. So there are benefits. Frank asks, how do we prevent CIIs from passing on the cause? I think that may be respectfully a stretch. Okay, um, I use my brother in the room who offers services to financial institutions, and we ask him to pay 20 000 Ghana cedis for the whole year for registration.
+
+
+01:42:02 Hon. Sam George
+His renewal is about what? $11,000 or $10,000 or something. That is nothing compared to what he's making from offering services to a CII. And that service is to a CII, or a government agency. Even if he decides to embed that cost, it is to the CII. It's not going to be to a new private customer. So again I think that may be a bit of an overstretch in my estimation.
+
+
+01:42:37 Hon. Sam George
+It is Ben is asking of Nita's capacity to do his regulatory function. It is Ben. Sorry, that's the name. Before they say that the minister refers to somebody as it. That one too, they come and drag me for that one. Please, that's the person's name. He says his name is It is Ben. It is Ben NITAS core function, the premise of your question is actually flawed. NITAS core function is not operational.
+
+
+01:43:08 Hon. Sam George
+If you read Act 771, NITAS core function is to be a regulator. So what we are doing with this review is actually to take the load NITA has carried for 18 years off their back, so that NITA can become a proper regulator. But again, just to talk on the benefits of that. Again, this is international best practice. There is no service provider.
+
+
+01:43:39 Hon. Sam George
+to the Department of Defense in the U.S. or any U.S. government agents that is not licensed and certified and cleared. In some instances, we actually even need clearance from national security. I hope you understand what I'm talking about. So we can not say that because We are offering a service, oh, let's just no, no, no. You are getting access, you are managing critical information infrastructure. We need to know, who is that?
+
+
+01:44:09 Hon. Sam George
+That is having that level of access to government data. You know, so I think that this is what it is. NITA, it has been NITA is actually going to take off properly now because the burden that if carried as an operator is going to be taking off their back, and then we have a limited liability company run that service. And then NITA will be a regulator. And I believe that NITA look, the NITA guys, we have some of the finest engineers at NITA. The problem is the training they have, the exposure they have.
+
+
+01:44:43 Hon. Sam George
+Private sector, you've been pushing my guys because we don't pay them half as much as we should pay them. And that's why we want to make sure that as a regulator, they carry out their proper regulatory function. And they renumerate their staff in the right manner so that we can retain the right sets of competency. So when a NITAR regulator stands up and is coming to your building, like the way our parents were afraid of tankers because they know that they're coming to make sure that you are doing it pepepe.
+
+
+01:45:17 Hon. Sam George
+In the digital world, we can not have ifs and buts, even though you can have those in your algorithms. But you must your service delivery, your SLAs all have uptimes of 99.9%. Which some are 99.7. OK. That sounds like a radio station. But I think that it's important that we have a setting standard regime that is deployed across the whole of government.
+
+
+01:45:51 Hon. Sam George
+Thank you.
+
+
+01:45:53 Audrey - Moderator
+Thank you. Let's go to X and return to the room because they are ready. So, Hubert?
+
+
+01:46:02 Hubert - X
+So continue to ask my question, but before I do that, I'll use a few seconds to make a point I really calling the minister and Anita for this whole interactive session and actually inviting stakeholders to make their inputs. But I think publishing on a fake or old version of the bill on news official websites and then inviting opinions and comments on that. And then turning around to see that, that's actually a cake and there is the latest version is a bit unfortunate because if you posted the latest version I think All these debates and confusions and everything would have been avoided.
+
+
+01:46:43 Hubert - X
+I actually had 13 questions.
+
+
+01:46:46 Multiple Speakers
+I realize.
+
+
+01:46:55 Audrey - Moderator
+Just type the rest out, so pick them up and respond to you.
+
+
+01:46:58 Hubert - X
+Yes, I perfectly understood. I'm just trying to make a point that based on the archaic version of the bill. I had questions, but the minister hasn't answered them
+
+
+01:47:09 Multiple Speakers
+which means that the latest
+
+
+01:47:10 Hubert - X
+version is actually more progressive than that cake version if that was actually published on Which means that probably been resolved is that. The director general of Nita has actually has the power is to appoint inspectors. Who can actually enter into any premises and seize an arrest, and do all kinds of things without a set warrant or an arrest warrant which I think you know, it's a bit unfair and unconstitutional.
+
+
+01:47:53 Hubert - X
+So I hope the minister is able to tell us that the latest version or the latest Test drafts actually deals with this kind of overreach and human rights speeches. Thank you very much.
+
+
+01:48:08 Audrey - Moderator
+Okay. Thank you, Hubert. We're going to Nana Bwateing.
+
+
+01:48:16 Nana Boateng - X
+Yes, um, I think yes. So good evening, honorable minister and Nita leadership and everyone here. So I, I, I found a few bits. I have the same questions that he asked because if they updated bill can not be circulated, and so it goes to cabinet and made publicly available. Then we can't really make any comments on it because we all came here because of the Zero documents.
+
+
+01:48:54 Nana Boateng - X
+So I found with Hubert's, I don't really have any question. So wait for that data drafts.
+
+
+01:49:03 Audrey - Moderator
+Thank you, Nona. But Stefan, thank you. Stefan, after Stefan we have Figsbets and then lastly Datsun. Please have your question ready. Question. Thank you.
+
+
+01:49:16 Stefan - X
+All right, thank you very much for
+
+
+01:49:25 Audrey - Moderator
+Stephanie, please go ahead.
+
+
+01:49:28 Stefan - X
+OK, I will say that thank you very much for giving me the opportunity to speak. As with what my colleagues have said before, many of these discussions that we've had online would not have occurred if One, we had simply been told that the person that was out there was no longer what was under consideration. However, what we want to understand is that Is the minister saying that in this new version of the bill, private institutions are completely The reason I ask that is there are five substantive subsections of the current bill proposal that refer to either taxing the private industry on gross revenue or regulating both private enterprise and private professionals.
+
+
+01:50:18 Stefan - X
+If the minister is saying this is a key, keep committing and guaranteeing to us that these things will not make it into the final bill because these are the issues We have so in order for us to say, okay, we understand this. We need to know if he's guaranteeing us that he's not in the bill so that we understand the safety. The reason is there are some things that have been said that we need to correct. He's mentioned things like we are operating outside the industry, just operates sort of without any certification, and one of the examples that was given was like academics Sorry, like accountants or marketers, et cetera.
+
+
+01:50:56 Stefan - X
+However, that fully ignores the fact that ICT or IT as an industry is an extremely broad industry made up of sub Professionals and within such sub professions, they all have their own standardizations and certifications. For example, if someone wants to do networking, they have to go and get certificates in networking. Nobody is going to hire you to come do networking for them unless you have a CCNA at the very least. unless they are interning you.
+
+
+01:51:27 Stefan - X
+So these are things that we need to bear in mind that the private industry already has ways within which it regulates itself. especially in those sub-professions. But what makes our industry unique and special is how broad we are, and how much we cover in terms of where we apply. It goes from individuals all the way to huge telcos and multinational companies. But finally, I just want to say would we get that commitment from the minister that we are safe from this which is quite egregious proposal?
+
+
+01:51:59 Stefan - X
+And this would not make it into the final bill.
+
+
+01:52:01 Multiple Speakers
+Thank you very much. Okay, Stephan.
+
+
+01:52:02 Audrey - Moderator
+Thank you. Fix bit. Fix your question.
+
+
+01:52:07 FixBit - X
+Thank you. Thank you. Thank you. And this is not a final thing. And we are mostly concerned about the licensing, licensing of products and many other things. But it seems from the ministers and comments These are not the actual, this will not enter into the actual view.
+
+
+01:52:42 FixBit - X
+So, like considering how the examples in terms of the certification, what are the things I talked about? Every single company, every professional company is not licensed and certified by the government. If you use example like the charter tax contract, use example…
+
+
+01:53:04 Audrey - Moderator
+Please can we get to the question?
+
+
+01:53:07 FixBit - X
+Architecture, if you go to the nursing…
+
+
+01:53:12 Audrey - Moderator
+Please give us the question.
+
+
+01:53:15 FixBit - X
+So my question is related to cybersecurity. Does that also apply to cyber security? Is the government only regulating
+
+
+01:53:33 Unknown
+I'm not. And I have not received any standards and proof of the public.
+
+
+01:53:47 FixBit - X
+So, if they have found us, we should also follow the standard of only regulating people offering public services to the government. Okay,
+
+
+01:53:57 Multiple Speakers
+thanks, we get
+
+
+01:53:59 Audrey - Moderator
+your question. Thank you. from Mac Jordan. Then we'll be done with X and will return to the room when we come to the room I think I saw Selom's hand up any others kindly raise your hand so we can note
+
+
+01:54:17 Hon. Sam George
+Is there any question coming up?
+
+
+01:54:20 Hon. Sam George
+All right, so let's have the question.
+
+
+01:54:27 Audrey - Moderator
+Follow up please, let's hear your question.
+
+
+01:54:41 Speaker 17
+Yes, yes. Thank you. Yes, I wanted to so 1st, we clearly understand that the draft that we've all been reacting to wasn't a final draft but for me my takeaway here is. The press releases that came from NITA and even the minister's response to some of the things that were raised, it did not Suggest, but you don't give the push of the minister has given us today that all this draft is not a final draft. You know, especially by the licensing conversation and you know.
+
+
+01:55:13 Speaker 17
+services that needed to be rendered to governments who fall under that and all of that. So I'm just worried and surprised that Um, there releases 3 or 4 page releases from data and the minister did not suggest that this draft is not a final draft, but I get them to hear it or hear about it today. So if we can get an assurance that. That when the final draft is done, we can equally have access to it and read it as well as concerns like some of the some of my colleagues have raised that we know that okay, we are on the same page because if we have to.
+
+
+01:55:52 Speaker 17
+So, if we have to assume that this is what is going to be that we have a problem. So, if we can have Final draft, and funny enough, the final draft was discovered. It wasn't actually publicly available. It was very well wanted to dig deep into. Ndi, ndi, ndi. I think we have something to work with in the future.
+
+
+01:56:27 Speaker 17
+Thank you.
+
+
+01:56:29 Audrey - Moderator
+The last comment from ex-McJordan.
+
+
+01:56:37 Mac-Jordan - X
+Mwabarati, mabarati kwa njia. Mwabiri, anawangu kutubu anawanguni wa mabarati mabarati mabarati anawanguni Wasi creature professional society organization and people working in the ecosystem before the bill is laid before parliament. And how will stakeholders feedback Ndia ola kwa hivyo, nilo na mpwede.
+
+
+01:57:11 Mac-Jordan - X
+Ndiyo na mpwede. When is that going to happen? And also, is it possible to have all the bills published on an entire website? But at least we can have a feel for it and actually provide feedback because that's not what is happening. Aye, aye.
+
+
+01:57:32 Multiple Speakers
+Thank you very much, your question has been
+
+
+01:57:36 Hon. Sam George
+asked, we've got the sense of it ladies and gentlemen
+
+
+01:57:43 Hon. Sam George
+Nini edge ina kwa nilifo, walaunwa. Kwa nafasin kwa komenti wanafasina nafasin kwa edge ina. Nini wanafu nafasa nina kwa nilifo na mpwana data wangu wa kutoka Ndi naa anawazana kutubu naa inaabudu. Ndiawa, nina wanafanyi wanafu. Ndiyawe nafanyi wanafu, walaunwa ni yonye yote Ndiyo, Ndiyo 2025, Ndiyo 2025, Mwabarati wa komunikasi ya kufuri 15 ino So if Wanae it is, um, Hubert or Stefan.
+
+
+01:58:40 Hon. Sam George
+Someone said they are now seeing the bill, and we are now putting it out. Oleley claims that they just discovered it. Please, what have you been doing? You are late to the ball! We published this in September. We asked for feedback, we gave a deadline for feedback. In fact, when we published, we gave two weeks Ndiyo, nini kutubo ministry na mpoto na ekstensiyon na mpoto ni wale na chrismos wale na january Ndiawezelele, nili 4 mbili, kwa fadback.
+
+
+01:59:18 Hon. Sam George
+In those 4 months, people were not paying attention. Inputs from stakeholders, and since january, we've had stakeholder engagement on the back of that. If you have now come to the ball, you join is like joining a watch q You don't come and say because you came late, they should come and the hajja should go and cook the wachey again. Wachey ndiye, nyoi abesiho. You've come to join the queue.
+
+
+01:59:50 Hon. Sam George
+When is your turn? You will buy your own. Nini ni nilo mpya kwa mpya kwa nilo mpya. where you'd have stakeholder consultation ad infinitum without any end, stakeholder consultation comes to an end at a certain place, and let's be clear The bills that you see on the NITA website were not just published yesterday or today,
+
+
+02:00:20 Hon. Sam George
+they were published in September last year. So you've had enough time to make your input, but like I said, the door is not shut. Wait and see what is laid before Parliament. If you have any inputs there, you submit them to Parliament, the Ministry will subject itself to Parliament and the oversight of Parliament because we as a Ministry also get oversight from Parliament. I've dealt extensively with the issue of publishing the draft that I am sending to cabinet, and I've said, That is not possible.
+
+
+02:01:00 Hon. Sam George
+Because that will be me breaching my oath, it's as though I'm putting a cabinet memo in the public domain. I can not do that. So, but I say to you with taking on board all the issues, Hubert asked a specific question about the inspectors that the DGR appoints. The DG would have the power to appoint inspectors, just like the same way standards authority last week.
+
+
+02:01:32 Hon. Sam George
+They appointed their own inspectors, they went and inspected places, and shut them down. That's the same way that DG will do it, however it will be done in accordance with law. A warrant will be obtained from the courts. before any such action is taken. So yes, the DG will reserve those powers to enforce his regulatory action, but it will be done in conformity with our regulatory and the legal regime we have in Ghana.
+
+
+02:02:02 Hon. Sam George
+But let me repeat, Hubert, we did not publish an old legislation. At the time we published in September, it was fresh. and we gave two extensions for stakeholder input, and stakeholders did make their input. Now Stefan spoke about The different standards and how IT professionals are special and different. Yes, we are special, but we're not different. It is If you understand how other regimes work and let me use the Ghana Institute of Engineers, for example.
+
+
+02:02:43 Hon. Sam George
+Does Stefan know how many different fields of engineering we have? So then should we have a Ghana Institute of Mechanical Engineers? A Ghana Institute of Civil Engineers? A Ghana Institute of because each of those engineers even agri-engineering, we have agri-engineers who are soil and water engineers. That's what I did. Then we have agri-mechanization engineers. So even within one field of engineering, you have multiple faces.
+
+
+02:03:13 Hon. Sam George
+When you take chemical engineers, they had multiple faces. When you go to tech and you study electrical electronics like Dr. Makevo did he was my mate in KNUST we were both in College of Engineering together. You can not assume that all engineers, all electronic engineers and electrical engineers are the same, yet we are able to have a Ghana Institute of Engineers. So please, let's not behave as though ICT professionals we draw from us and we are special, no.
+
+
+02:03:46 Hon. Sam George
+The accreditation and standardization will remain irrespective of which specialization you have or the other because you see else then you say that What people are asking us to have is a digital wild west. Let everybody roam free and do what they want to do. Well, sorry, that's why regulators exist. And like I said, if we look at the regime I said the Ghana Institute of ICT Professional to look at doing, like the CIMA, like the IPPR and Co.
+
+
+02:04:20 Hon. Sam George
+Those things are voluntarily joined. However, there is benefit in joining because then take for example today, electricians per the building code, any contractor doing any building of a setting standard or working for government, all your laborers, your electricians, your masons, they must all be NVTI certified. Masons and electricians, they must all have NVTI. to do a certain kind of work in Ghana today, in the civil engineering field.
+
+
+02:04:52 Hon. Sam George
+So let's not paint a picture that what we are trying to do is so distant and is going to create no, no, no it won't. It would bring standardization. and clarity to our field where we work. Fixbit asks whether government is also dealing with cyber security like this? Fitbit, please go and read the cyber security law. The draft was also put out in September. If in May, you are asking me about it, that means you haven't read the bill. But again, that one too has gone through. The cybersecurity one is one of the ones we are sending to cabinet hopefully by end of this week and There are clear delineations on how already the current cybersecurity law 1038,
+
+
+02:05:33 Hon. Sam George
+Act 1038, you've got various tiers of providers, tier one, tier two, tier three and what they can do. If you are not a tier one cyber security firm, you can not provide services to a CII. And as Minister, I have authorized fines for even government agencies. because the Director General of Cyber Security brought requests for authorization to find government agencies. And I said proceed because there were government agencies we had designated as CIIs who went and took services from Tier 3 operators.
+
+
+02:06:06 Hon. Sam George
+And that's in breach of the law. So whether you are a government agency or a private agency, if you breach the law, the law is no respecter of who your owner is. Whether your owner is the government of Ghana or Banabas Nilaye, we don't care. We'll find you. So long as you breach the law, you will be fined. So then McJordan asked whether there were going to be broader consultation. I'm sure Parliament will open the room for that and so McJordan, I'm sure you'll be able to take advantage of the parliamentary consultations from the ministry, our consultation phase is done.
+
+
+02:06:43 Audrey - Moderator
+Thank you So let's just the room, let's make it brief. OK? I already identified you. Selom, then pope just in case you forgot to see her, Derek. Then Nehemiah, Priscilla and Akosia take in Ghana. So that's it.
+
+
+02:07:18 Matthew - Room
+Good afternoon, Honorable Minister and everybody. Yeah, thanks for the opportunity. My name is Selom Brantir. I think that there are a few things that we need to note. The ICT industry is one where If there is a lot of over-regulation, it tends to create an environment that as much as you want to create a well-paved road with good intentions, you might end up putting too many stumbling blocks in the way of many organizations that are specialized in actually delivering a service to spend half of their time doing compliance activities.
+
+
+02:07:55 Matthew - Room
+So that is very key for me as one of the areas that we need to look at if we want to have 15 or 13 different laws on this, there would be a point, a critical inflection point People have to spend so much time trying to comply with so many different directives that the core mandate of what they need to do is lost. I think one of the areas we need to look at very carefully also is the fact that If Nita is going to be doing all of these lines and things, then it means that there has to be some kind of white paper.
+
+
+02:08:32 Matthew - Room
+that determines, for example, what the main criterion is or the passing criterion is to get the licensing to be able to work for any government institution so that people are clear about what needs to be done, and it is not used as a point of exclusion to ensure that people are deliberately failed. It might not be your not be in your regime. That others are used, I mean this licensing thing is used as a point to exclude people who could have other qualified, provide certain services for certain that a white paper needs to be done.
+
+
+02:09:12 Matthew - Room
+If there is an examination criteria, it needs to be published by NITA to ensure that it is done. Finally, I believe that Ghanaian ICT companies would also want to spread across the African region, especially when we have the AFCCC, FA and all of that. If we decide that we are locking this down, others could also have reciprocal laws to lock us out. In the IT industry, we are looking at borderless deployment so that if I come up with an innovation in Ghana, gain from that innovation in any other country.
+
+
+02:09:49 Matthew - Room
+What are the assurances that this would not make us also excluded in other markets with the what do you call it excuse that we even have laws like that in this country?
+
+
+02:10:04 Felix - Room
+Honourable Minister, thank you. Because you mentioned my name. I would not direct the arrow back to you. First, to say also that we commend this whole setup. I think this has been useful, just that I do not understand why he didn't do this on Saturday, because if he did this on Saturday, he would be making money by now. But I just have a few things to say. I mean, everybody has gone around that table. I think you've tackled… What I probably would say, 60% of the heat that was associated with this whole engagement, which is the whole idea of people being private people, just being in their homes, being in their garage.
+
+
+02:10:39 Felix - Room
+facing licenses and then the steep license figures that have been flowing around their social media and the rest. I just wanted to just tackle a few things. I appreciate the purpose of the transparency and everything, but I couldn't do it, because I've been around for a while and I don't usually see it this way. What I just wanted to say was that, because there's a document 4.0 and 5.0, I'm here, I click document on X. The challenge for a lot of people has been that there's a gap that has been created, and when gaps are created, misinformation takes the stage.
+
+
+02:11:12 Felix - Room
+That's how come yesterday government passed eLevy and this morning government stopped passing eLevy. That's the whole thing about misinformation. So I appreciate the whole concept, but I just feel like if there was a way that the process could handhold the public so that those were there. I saw them as early as October last year, started flagging it for people to look at it, and if we could handhold the people through the process where As and when the comments keep coming, the consultation processes went through to December and the rest,
+
+
+02:11:44 Felix - Room
+these inputs were even flagged before finally what looks like your final draft, we don't know what they will look like, but before you go to Parliament, we can tackle all of those Uh, uh, rules that enable that you can go to cabinet with something that the public hasn't seen, that would have been useful. So right now it's like. Way ahead of us, we are all behind the watch EQ, and that's where a lot of the arguments and the rants and boo-ha-ha has been about. The final point for me I'll just talk about two things which is what Selom was trying to do with the whole idea of too many regulators.
+
+
+02:12:17 Felix - Room
+The bill is useful, I think it helps sanitize the space. Nobody's against regulation, everybody's against over-regulation of innovation, and that's where the concerns have been. Too many regulators in a space, Fintech has to deal with central bank, data protection, NITA. Okay, there's another one, cyber security, and then suddenly before you know we have so many regulators that you have to deal with. So regulatory fatigue, regulatory IB charge regulatory confusion and all of those things. That's one of the major issues that we need to tackle so that I mean even for cost of doing business so that if I have to start paying things to different regulators it all fits into what my final cost is going to look like then the final point before they take the microphone from me I'm glad to know that at least that 1% on top line revenue is off.
+
+
+02:13:01 Felix - Room
+There's one day as well that nobody has mentioned which is fines. No, no regulator wants to just fine anybody but if I have to fine people to pay salary I'll fine. So if we can please look at some of the lines there so I think that will be useful thank you
+
+
+02:13:17 Audrey - Moderator
+Thank you. Nehemiah, I know you are next but Akosia and Priscilla are down here so let me just…
+
+
+02:13:23 Priscilla - Room
+Hello everybody my name is Priscilla I'm the CEO of Redwood Technologies We are health tech of Redwood technologies. We are held tech base here. Okay, so I noticed that during your submission you went through the verification for what that license and should be. However, there was no clear-cut segmentation for who qualifies as a consultant, a practitioner or technician. So, when we now bring that into emerging technologies, especially now with then they will essentially take the leap.
+
+
+02:13:57 Priscilla - Room
+How then would these certifications be applied for the license of such individuals especially within the startup space? Okay, we understand that some of these licenses apply specifically to the government's decisions. However, even within the gen AI and ML, we've not even hit the status yet. So if we're now asking for certain licenses, how then do we now essentially come back and say, OK, well, there's a new addendum here. You have to come back and relicense ourselves. Do we essentially price ourselves out of the market after we've done our initial licensing?
+
+
+02:14:33 Akosua - Room
+I'll stand up because I'm all the way back here. Hi, I'm Akosua Anabil, founder of Tech in Ghana and I've got to say that the convening of industry and government and public sector is like a dream come true to me. It's great to be here and thank you Minister. I'm just gonna take this from a slightly different angle, I think it's obvious that there's no ill intention from government towards industry, it's obvious that industry are not against strong digital regulation, but over the past week the narratives online haven't just been local right?
+
+
+02:15:04 Akosua - Room
+It's also been like an international conversation maybe not publicly but it's something that goes out to global tech ecosystems, foreign direct investors and all the others from a macro level. So thinking about the next 13 or so bills that are coming out, I think how can we avoid false narratives from being escalated? and how do we protect Ghana's reputation globally for those of us who are trying to position us as a strong ecosystem globally, how do we avoid that whilst we wash our laundry basically.
+
+
+02:15:40 Akosua - Room
+So I would say that similar to what Derek was saying or alluding to what Derek was saying about closing like that gap, that big gap If there's a way in which conveners like Tekangana or others can help or support us step in just wanted to say that we are here to do that. There's people like Ethel that keep us together in the meantime but if there There are ways in which we could then, you know, to make that point and let you know that we are there for that. Thank you.
+
+
+02:16:09 Audrey - Moderator
+Last one from Nehemiah.
+
+
+02:16:15 Speaker 6
+Thank you very much. To be fair to the Minister and the Ministry, these bills have been out there for a while, and some of us have been involved in the process. We've engaged there, and if you're part of that process at certain instances, you get a document of the update to review and see what has been done and For those of us who are part of groupings like TechConnect and IIPBDH, we get some of these updates. But these things are also put on the ministry's website, on NITA website.
+
+
+02:16:47 Speaker 6
+I think sometimes we don't go looking, if you're interested in something, you probably would want to look around and see what is happening, and that gives us an opportunity to engage And I'm not trying to say the ministry is perfect, but I think we have to be fair to them in terms of some of their work that they've done. My question to the minister will have to do with penal sanctions. If we can throw more light on the current state of that in the bill, we'll be happy. So we don't end up in jail at any point in time.
+
+
+02:17:18 Audrey - Moderator
+Thank you.
+
+
+02:17:24 Hon. Sam George
+Because she's a lady, let's take one question.
+
+
+02:17:35 Christine - Room
+Where is the most updated bill, and then the ministry saying but we've shared it with you for six months. It's also animations, it's influencers, it's conveners, it's making sure that there's a lot of intentional attention to make sure that the content is accessible, and it's accessible to everyone. People have access to the information, because truth be told, I first heard about this bill, and then had to go back and trace and see everything that had been happening for the past six months,
+
+
+02:18:09 Christine - Room
+but i heard about it earlier this week because of a casual post that somebody made on a WhatsApp group, not through intentional discovery. And then I traced back and saw, as you mentioned here, that it's been around for a while. People have been talking about it. But it took me three hours to find all of the different pieces of information. But it should have been the case that if I went to your Twitter page, I would have seen everything there. If I went to the website, I would have been directed. So I think everyone has the right intentions But I do think that from a kind of stakeholder engagement point of view, we could do a little bit better, because not everyone is super sophisticated.
+
+
+02:18:47 Christine - Room
+And not everyone is going to have that three hours to be able to sort of scan and fully appreciate all the work that you all have done. Thank you.
+
+
+02:18:55 Unknown
+Thank you.
+
+
+02:19:01 Hon. Sam George
+Thank you very much for those. I'll start with that. We'll take that as feedback on maybe doing a bit more PR. I'm one of the most active
+
+
+02:19:18 Hon. Sam George
+government officials on social media. In fact, I get accused of being too active and of putting too much information. It's true! They're saying people are next! They said that I'm talking too much, you are doing too much. So why we also don't talk? We are being told we're not talking enough. So it gives me the feeling of the man and his son on the donkey. But we take it as feedback. We'll see what more communication we can do.
+
+
+02:19:51 Hon. Sam George
+You try to put out, people say oh, we are not interested in this just do it. And then they say we didn't see it, but we'll take it as feedback and see how. I will work on it. Now, Selim and Derek spoke about overregulation. Let's be pretty clear. I don't in fact, I can't see not even meta or Google will be susceptible to all 15 legislations.
+
+
+02:20:23 Hon. Sam George
+It's impossible, because some of the legislation deals with the reform of Ghana Metro Agency. I mean, so I don't see how there's any one company, Selom we are not listening to me. You are talking in the background, and you write something else or X. I'm responding directly to your question. And you are busy chatting. with another guy, not even a lady. No, no, no.
+
+
+02:20:54 Hon. Sam George
+Selom is my friend. So Selom, pay attention. Someone should write names of noise makers. If you're stuck here again, write it. There is no way any tech firm, like I said, not even the biggest tech firms will be affected by the duplicity or multiplicity of laws that we're doing. Because look, we're doing new legislation for Ghana-Metio. And people don't understand how big this ministry is and the number of agencies under the ministry. There are 11 different agencies, the metrological agency's under us.
+
+
+02:21:26 Hon. Sam George
+Okay, so we're doing a review of their legislation. So that's one of the 15 I'm talking about. Data harmonization, for example, is not necessarily targeted large… In fact, it is not targeted at a private sector. It's for government. The private sector That's a new legislation, because what that does is it mandates every data processor in the government ecosystem to connect to a central hub. so that when you need information, you don't have to go chasing each of the 48 data regulators we have in the country. You can make a request to a central repository, and because there are API calls from all 48 to that central repository, We can give you all the information you need in one go, but that's a that's one of the 15.
+
+
+02:22:06 Hon. Sam George
+It's supposed to facilitate the work you do So it won't be over regulation of you, even though it counts as the 15 postal and courier services. For example, is a new legislation we are doing, because in their case they're looking to add the logistics bit of it. So there are multiple legislation, but they are not all necessary. They are all tech enabled. but they are not necessarily all ICT. Do you get it? We're not bringing any new legislation outside of what exists today.
+
+
+02:22:41 Hon. Sam George
+Today, in this ministry if you are a tech player, you know you have to interface with NETA, data protection, cyber security. If you are a telecom operator or you are in the radio broadcasting space, NTA gets involved. We are not introducing any new bureaucracy. It's those existing legislation that we are only doing what? Reviewing, because some of the legislation are 18 years, 23 years. That's all we're doing. So there's no new they're new legislations that are coming in. are still going to be under the same bureaucracy.
+
+
+02:23:12 Hon. Sam George
+So emerging tech, for example… And many of you have asked the question, what's the ministry's position on AI? What's the regulatory space for AI? That's what the Imagine Tech bill does, it deals with that. That's going to be implemented by NITA. Then you have the innovation and startup bill. What are you doing for startups? What are you doing for innovators? That's also going to be run and run by the Ghana digital companies which already exist. So you realize that even though it appears it's a multiplicity of legislation, we're actually enforcing and making it easier.
+
+
+02:23:45 Hon. Sam George
+And don't forget in my earlier presentation I don't know if you had come in then I spoke about a digital economy overriding umbrella law. that will spell out all the synergies and make it easy once you pick it as like a one stop shop, it shows you everything that you do. We can't do that now until you are done with all the legislation you are doing, then you put all of that together in a tied up document, do you understand me? So I get the sense that it may appear like 15 laws over regulation, no, no, no, no. We're actually trying to see and Esther will bear me out when I met them,
+
+
+02:24:19 Hon. Sam George
+when I met the four law firms that are working on this and all the 11 agencies, I said to them What I am doing as minister, has one underlying motive: facilitate ease of doing business and break down bureaucracies.
+
+
+02:24:41 Hon. Sam George
+That's what I said to them.
+
+
+02:24:43 Hon. Sam George
+So we do not, by any stretch, want to bring in new bureaucracies even with the AI strategy launch. Ask them. They came to me with the ministry prepared a document, policy document with a number of bureaucrats. I scrapped it. From three bureaucrats, I scrapped it down to one and said that one should be able to do everything the three were going to do. There was sound logic behind the three, but I thought that… Why have three? Three things, if you can have one agency that would have three divisions.
+
+
+02:25:14 Hon. Sam George
+So I deal with one, one, one, and then it takes care of everything so… Trust me, we want to do what you are asking for. That's actually our minds are in the same direction and like you said I'm again I can boldly say that it is for the first time under the Mahama administration that any Ghanaian tech business can boldly say that the government held your hand and took you to another African country.
+
+
+02:25:44 Hon. Sam George
+It's never happened before. It's happening for the first time under President Mahamud. We took 12 businesses as part of 12 tech CEOs, Ghanaian tech CEOs as part of the president's delegation. purposely to have a meeting in Zambia. In three days, we signed 60 million. I was on an official assignment in Geneva. The president of Zambia wanted a Ghanaian tech business. The president asked me, leave what you were doing at the ITU, fly from Geneva to Ethiopia, Lusaka and take this business so that they know that the government of Ghana is backing that business to go into that country.
+
+
+02:26:22 Hon. Sam George
+So we are all for expanding Ghanaian tech businesses into the sub-region. And so we will not do anything that makes us we will not be xenophobic. No. Trust me, we will not be digitally xenophobic. However, we also will not be overly open. Because what I don't want is for the tech community to now rise up in arms and say even their maintenance and construction of websites are foreign companies have taken it.
+
+
+02:26:54 Hon. Sam George
+We need to provide a certain niche that our Ghanaian tech businesses, that we want to take out, must flourish in because I can't take you out if you've not established competence in your country. What story are we going to sell? The businesses I took out, I took them on the back of the work they have done here in Ghana. So we will grow you here. But we can only grow you when we also create protections for you because trust me, you may have a startup, but your service you're offering a big tech company from Denmark, that has huge capital behind it.
+
+
+02:27:29 Hon. Sam George
+would kick you out of the ballpark if I said you should all compete on an even playing field. So as Minister, we would look at all of those and try to… We've created the niche areas where we'll protect our Ghanaian businesses to grow. You understand me? So, it's a fine balance we're working between growing our businesses but also protecting you well enough to grow. Now, who said why did I not do this on Saturday? If I did all of this on Saturday what will Not done today, but listen, and Ollily also asked that question about…
+
+
+02:28:10 Hon. Sam George
+The response on Saturday from Nita that I shared, that Nita posted, the response responded to the questions that were asked. People said fees were being charged on the back of a future legislation, the response picked every claim and responded to that. I can't dance calypso to reggae, so we responded to the question that was put out.
+
+
+02:28:41 Hon. Sam George
+And then after doing that response, we decided that okay look, now like my lady friend here said, we will own the communication of this and that's why we're having this platform I could have as well sat down and just said, Well, all they've said is not true. I know that they are talking about, you say, What is it? A cake. They're talking about an old version. When we go to Parliament they will see. I could have just kept quiet. I mean, a non-minded anybody, but we decided let's own the narrative, let's situate the conversation in the right context, but that goes to Akosu Yanobil's point.
+
+
+02:29:23 Hon. Sam George
+You see, and this is a heartfelt comment I'm going to make to our tech ecosystem. When the goats and don't forget that Abie Fusini was my ranking member, so I learned a number of proverbs from him when the goat thought that it was defacing the wall He didn't know he was hurting his backside.
+
+
+02:29:55 Hon. Sam George
+He was pooping all over the wall and scratching, but by the time he got home, the whole place was red. When the tech ecosystem thinks that they are attacking Sam George, and we are dragging Sam George, not me, you're doing. It's all of us. It's Ghana. Akosua sits in the UK, does a lot of good work in the UK. I've seen what she does. I've met her on international platforms, so if you take misinformation, facts that are not true and decide to run with them because there is an agenda, let's drag him.
+
+
+02:30:30 Hon. Sam George
+I know Draghi Miu, we are destroying our international image, our own image. Because if you have not taking the time to appreciate the thing, but you just go for clickbait and rage bait. Oh I'll just throw the tweet and everybody hashtag kill the bill. Which build are you killing? Version 1.0 or version 5.0? The Akec one is already dead, so you are killing a dead thing! You understand me?
+
+
+02:31:01 Hon. Sam George
+So, so, and that's why I'm saying that. And listen, I've always said this. People say, Oh, Sam's clapbacks. Listen. I respond to at least every week, I respond to at least a hundred tweets on X. Most times you will see one or two that would trend. Ask yourself why the 98 did not trend? If you come and ask me a sensible question, I'll give you a sensible answer.
+
+
+02:31:36 Hon. Sam George
+She come and insult me. I'll give you a sensible answer by reminding that I'm a gun boy. You get it. So I mean and yeah, I've seen Pope's got on him several times on his post as well, so the way you frame your question determines the kind of answer you get. Most times we ignore them. Most times we ignore them, but you see, the point needs to be made that Dekorum is not a one-way street.
+
+
+02:32:08 Hon. Sam George
+It's not a one-way street, and today I'm minister, I wasn't minister four years ago, and I won't be minister for the rest of my life, and so we must all respect each other because before I became minister, I had a life I lived. So people should not also get carried away and think that, oh, he's minister, and so you will just throw anything at the person because again, at times I'll go and look at the person's profile. I just shake my head.
+
+
+02:32:39 Hon. Sam George
+I say, but it's all good. Now Prisla asked about new sectors that will come up, for example, new areas. That was one of the questions I answered earlier on with residual powers that are left in the legislation, so you can not You can not necessarily think and predict all future developments relative to the lifespan.
+
+
+02:33:12 Hon. Sam George
+administrative function neater, so tomorrow if there is a new consultancy field that opens, okay? They will then pass that fee to that license because we can't just own and write what the fees are. Anything you see that is being charged, we first and foremost went to the Ministry of Finance had a rigorous defense of it there.
+
+
+02:33:45 Hon. Sam George
+Most times finance will slash it, sometimes they themselves will even raise it. Then from finance, you now go to the subsidiary legislation committee in parliament. Again another defense there finance may have raised something You go there, they will slash it. Finance may have slashed something. You go there and the MPs will tell you no, this thing you are doing. We think it should be more expensive. Raise the price. So there are two layers to the pricing structure, outside of what even the ministry does on its own, and I'm taking my time to explain this because I believe that many people don't even understand.
+
+
+02:34:21 Hon. Sam George
+the work that goes into this whole fees and charges thing, so it's not an arbitrary thing. If we charge a fee that Parliament has not approved, it's illegal. We'll get sanctioned. I can get sanctioned by Parliament. So we can't do that. Anything you see on the website was approved by Ministry of Finance and then by Parliament before we were able to charge it. And like you said, on the false narratives bit I think that collectively we all need to begin to to own up and speak up, okay?
+
+
+02:35:01 Hon. Sam George
+So for example, Derek and I'm calling my, the people I know personally so don't think that I'm putting them on the spot. You knew we had posted these bills since, for example, September, October. People were commenting about it, painting a picture as though this is a build they just discovered. Like Mungo Park or Christopher Columbus. But you could have easily also in your commentary on this, whilst you took us on for whatever you may feel we had not done right, also positioned the conversation to say look, As for this one, this is what it is.
+
+
+02:35:46 Hon. Sam George
+Nehemiah, are you too? You should have helped us to rebuild the walls! You know, because my plea here Is that in dealing with the communication, it can't just be Sam George, it can't just be even the ministry. For those of you who are players who know what the fact is Also, speak up.
+
+
+02:36:16 Hon. Sam George
+Position the conversation. You see, when we are able to situate what the issues are and separate the issues from the tangentials, it allows us to have a proper productive conversation. I hope you get what I'm saying. And if I come, and someone is doing a tangential, and I'm trying to even explain to your person, Hey, because you're a minister. But if an industry player who knows what the fact is situates that, The worst that will happen is when I retweet it, they will say I've paid you.
+
+
+02:36:46 Hon. Sam George
+That is the latest happening. But bottom line is sorry? And so on the penal sanctions, Nehemiah, the penal sanctions are things that, again, we've looked at and it's still work in progress. Because again, one of the things I believe ought to be done which the lawyers are working on before we go to cabinet with is if you look at the licensing they are tiered.
+
+
+02:37:21 Hon. Sam George
+The licensing is tiered. So long as you have a tiered approach to licensing, you would also have a tiered approach to sanctions. Because I think that's one of the things I've seen also out there. That I use sanctioning a startup like the same way as sanctioning a big tech company. Absolutely not possible, because if you look at anything that has a tiered regulatory framework also has a tiered sanction. The sanctions match the licensing and the regulatory framework, you understand me.
+
+
+02:37:53 Hon. Sam George
+So be rest assured. And I'm confident that the industry will be proud and happy with what cabinet will approve. Even if you are not, you'll still have the opportunity to engage with whatever we put out when we put it before Parliament. But again, please continue to engage us. The ministry runs an open door policy. We are always available. There's several people who did not do a post.
+
+
+02:38:25 Hon. Sam George
+They came into my DM and asked me for clarity on the matter. There are people who also did a post and tagged me, and asked for clarity. And I did provide same. But like I keep saying, let's have constructive engagement. That for me is the most important thing, because like I told you, my first business was a tech business. Business is still there. When I leave this chair and this seat and maybe I leave Parliament one day It's one of the areas I still hope to make earnings from.
+
+
+02:39:03 Hon. Sam George
+Absolutely! Absolutely, I'll be regulated at that time. Even today, my business will still be regulated. But the bottom line for me is that I want to be able to live here knowing that I contributed to the growth of the ecosystem and industry. And so I don't do what I do with the team that I have here from a place of malice or a place of ill will. It's simply to make sure that we leave an ecosystem that is better placed.
+
+
+02:39:35 Hon. Sam George
+Trust me, three years ago this would not have happened.
+
+
+02:39:39 Hon. Sam George
+You know.
+
+
+02:39:41 Hon. Sam George
+So it shows you the progress we've made. It shows you where we are. It would still get better. I'm not going to sit here and say that we are perfect at what we're doing. We'll make mistakes. And when we do, don't drag us, correct us. When you have suggestions, don't start agenda, send it to us, and let's engage on them. So I want to thank all of you for taking time out.
+
+
+02:40:13 Hon. Sam George
+Like Derek said, you'd have been making money somewhere else. But yeah, all of you would have been making money somewhere else, but it's important we've done this, because this is critical for the sustained making of money. That you want to do, but the ministry remains open to work with you, will continue to collaborate with you, and if at any point in time you need to get in touch with us, the handles are there. you know how to reach us, either electronically or in person.
+
+
+02:40:46 Hon. Sam George
+Please feel free to come here, and let's work together. I want to thank you so much and say that we'll continue to do this, as I always say, for God and country. Unfortunately, when I speak, maybe I'll end with my emoji. But thank you so much for your time. To those who joined us on Facebook and X, thank you so much. We deeply appreciate your input. For those who have questions That may still not have been answered. Please type them in the thread. The team is going to extract all the questions,
+
+
+02:41:18 Hon. Sam George
+and we would reach out to you directly with responses to those questions, because I want to believe that even though this may have been very exhaustive, there must still be one or two questions people may have out there that we didn't deal with. The team is going to pick any questions that I put in the thread, and we'll work with it. Thank you very much, my name remains Sam George. I've done this for God and country. Lion emoji, Ghana flag emoji, thank you.
+
+
+02:41:46 Hon. Sam George
+Hashtag she won't see.
+
+
+02:41:51 Hon. Sam George
+Thank you, ladies and gentlemen.
+
+> Generated by WayinVideo | https://wayin.ai/wayinvideo/

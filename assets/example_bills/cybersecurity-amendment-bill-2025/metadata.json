@@ -1,0 +1,10 @@
+{
+  "generated_at": "2026-06-01T11:48:29.371678+00:00",
+  "provider": "qwen",
+  "model": "Qwen/Qwen3-32B:cheapest",
+  "source_url": "https://www.csa.gov.gh/resources/Cybersecurity%20%28Amendment%29%20Draft%20Bill%202025%20final%2015102025.pdf",
+  "document_hash": "d879a4473b3631906b7c4e965195d53f4693a722ce7644e187ab76fca33ef763",
+  "chunk_size": 350,
+  "chunk_overlap": 60,
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2"
+}
