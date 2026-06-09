@@ -16,7 +16,6 @@ from services import ingest
 from services.providers import get_default_api_key, instantiate_client, list_providers, validate_api_key
 from services.rag_pipeline import (
     AnalysisResult,
-    answer_query,
     answer_query_from_full_document,
     build_cached_document_artifacts,
     generate_analysis_progress,
@@ -132,6 +131,12 @@ APP_CSS = """
 }
 #analysis-output {
     min-height: 100px;
+}
+#chat-question-row {
+    align-items: flex-start;
+}
+#ask-button button {
+    border-radius: 0.6rem !important;
 }
 #status-output,
 #chat-status {
@@ -407,7 +412,7 @@ def _format_chat_entry(answer_text: str, citations: list[dict[str, Any]], *, pro
     if provenance == "analysis_based":
         prefix = "_Based on the summary and analysis._\n\n"
     elif provenance == "full_document":
-        prefix = "_Deeper full-document answer._\n\n"
+        prefix = "_Full-document answer._\n\n"
 
     if not citations:
         return prefix + answer_text
@@ -701,17 +706,16 @@ def ask_question(
         return
 
     question_text = question.strip()
-    yield chat_history, session_state, "Searching analysis for an answer...", _deeper_answer_updates(False), ""
+    yield chat_history, session_state, "Reading the full document for an answer...", _deeper_answer_updates(False), ""
 
     try:
         provider_client = instantiate_client(
             record["api_config"]["provider"],
             record["api_config"]["api_key"],
         )
-        yield chat_history, session_state, "Searching analysis for an answer...", _deeper_answer_updates(False), ""
-        answer = answer_query(
+        yield chat_history, session_state, "Reading the full document for an answer...", _deeper_answer_updates(False), ""
+        answer = answer_query_from_full_document(
             provider_client,
-            AnalysisResult.model_validate(record["analysis"]) if record.get("analysis") else None,
             record.get("vector_store"),
             question_text,
             doc_text=record.get("doc_text"),
@@ -731,9 +735,8 @@ def ask_question(
         {"role": "assistant", "content": _format_chat_entry(answer.answer, citations, provenance=answer.provenance)}
     ]
     record["chat_history"] = chat_history
-    record["pending_deeper_question"] = question_text if answer.deeper_answer_available else None
-    deeper_hint = answer.consent_prompt if answer.deeper_answer_available else ""
-    yield chat_history, session_state, "", _deeper_answer_updates(answer.deeper_answer_available), deeper_hint
+    record["pending_deeper_question"] = None
+    yield chat_history, session_state, "", _deeper_answer_updates(False), ""
 
 
 def run_deeper_answer(
@@ -891,15 +894,15 @@ def build_app() -> gr.Blocks:
                 with gr.Group(elem_id="chat-panel"):
                     gr.Markdown("## Ask Further Questions")
                     chatbot = gr.Chatbot(show_label=False)
-                    with gr.Row():
+                    gr.Markdown("Question")
+                    with gr.Row(elem_id="chat-question-row"):
                         with gr.Column(scale=6, min_width=0):
-                            gr.Markdown("Question")
                             question_input = gr.Textbox(
                                 label="Question",
                                 placeholder="What would you like to know?",
                                 show_label=False,
                             )
-                        ask_button = gr.Button("Ask", scale=1, variant="primary")
+                        ask_button = gr.Button("Ask", scale=1, variant="primary", elem_id="ask-button")
                     chat_status = gr.Markdown(elem_id="chat-status")
                     deeper_answer_button = gr.Button("Run deeper full-document answer", visible=False)
                     deeper_answer_hint = gr.Markdown("")
