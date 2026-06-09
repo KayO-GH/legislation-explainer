@@ -1,0 +1,84 @@
+{
+  "executive_summary": "The MDHI Bill 2025 aims to combat misinformation, disinformation, hate speech, and unauthorized disclosure of private/confidential information. It establishes a centralized Division with powers to enforce rules, impose sanctions, and collaborate with existing bodies like the National Media Commission. The bill balances constitutional rights (free speech, privacy) against public interest, with strict liability rules for publishers and internet intermediaries. Key provisions include due diligence requirements for media/influencers, prohibitions on commercializing false info, and sanctions like content removal, fines, and account takedowns.",
+  "bill_summary": [
+    "Regulates false information, hate speech, and unauthorized disclosure of private/confidential information",
+    "Establishes a Division with authority to enforce rules, impose sanctions, and collaborate with existing agencies",
+    "Balances constitutional rights (free speech, privacy) against public interest through proportionality tests",
+    "Imposes due diligence obligations on media, influencers, and internet intermediaries",
+    "Prohibits commercialization of false information and imposes liability for 'business misinformation'",
+    "Defines 'public interest' as a threshold for liability, including national security, public health, and electoral integrity",
+    "Creates specific rules for internet intermediaries (content moderation, algorithmic transparency)",
+    "Excludes children under 12 from liability but holds guardians accountable for their actions",
+    "Allows the Government and public institutions to enforce rights against misinformation targeting them"
+  ],
+  "implementation": [
+    {
+      "stakeholder": "Internet intermediaries",
+      "obligation": "Moderate content, comply with removal orders, and restrict algorithmic amplification of harmful content",
+      "implementation_burden": "Significant compliance costs for content moderation, legal risks from overblocking, and technical challenges in algorithmic transparency",
+      "risk_or_note": "Potential overreach in content removals without clear judicial oversight"
+    },
+    {
+      "stakeholder": "Media houses/influencers",
+      "obligation": "Adhere to higher due diligence standards for factual accuracy in publications",
+      "implementation_burden": "Increased editorial costs and liability exposure for unverified claims",
+      "risk_or_note": "Risk of stifling legitimate criticism if 'due diligence' is interpreted narrowly"
+    },
+    {
+      "stakeholder": "Public institutions",
+      "obligation": "Cooperate with the Division's investigations and enforce compliance with directives",
+      "implementation_burden": "Administrative burden to track and report misinformation targeting them",
+      "risk_or_note": "Potential for misuse of enforcement powers against dissenting voices"
+    },
+    {
+      "stakeholder": "Startups/SMEs",
+      "obligation": "Comply with content moderation and due diligence requirements",
+      "implementation_burden": "High compliance costs for small platforms with limited resources",
+      "risk_or_note": "Risk of being forced to remove content without clear legal guidance"
+    }
+  ],
+  "critique": [
+    {
+      "issue": "Vague definitions of 'misinformation' and 'disinformation'",
+      "why_it_matters": "Ambiguity could lead to overreach, chilling legitimate speech, and arbitrary enforcement",
+      "recommendation": "Include clear, objective criteria for distinguishing lawful speech from prohibited content"
+    },
+    {
+      "issue": "Lack of independent judicial oversight for the Division's decisions",
+      "why_it_matters": "Centralized authority risks political bias and lack of accountability",
+      "recommendation": "Establish an independent appellate body to review the Division's rulings"
+    },
+    {
+      "issue": "Broad 'public interest' standard for liability",
+      "why_it_matters": "Could be weaponized to suppress dissent or critical reporting",
+      "recommendation": "Define 'public interest' with specific, measurable criteria and judicial safeguards"
+    },
+    {
+      "issue": "No explicit protections for whistleblowers or investigative journalism",
+      "why_it_matters": "May deter reporting on corruption or misconduct",
+      "recommendation": "Include explicit exemptions for protected disclosures under whistleblower laws"
+    }
+  ],
+  "swot": {
+    "strengths": [
+      "Comprehensive framework to address misinformation and hate speech",
+      "Clear sanctions (e.g., content removal, fines) to deter harmful behavior",
+      "Collaboration with existing agencies (e.g., National Media Commission)"
+    ],
+    "weaknesses": [
+      "Risk of overbroad enforcement stifling free expression",
+      "Unclear appeal processes for affected parties",
+      "Potential for political misuse of 'public interest' provisions"
+    ],
+    "opportunities": [
+      "Improved media literacy programs through the Division's outreach",
+      "Enhanced public trust in institutions through better information governance",
+      "Standardized content moderation practices for internet intermediaries"
+    ],
+    "threats": [
+      "Suppression of legitimate criticism due to strict liability rules",
+      "High compliance costs for small businesses and startups",
+      "Centralization of power in the Division without sufficient checks"
+    ]
+  }
+}

@@ -77,8 +77,8 @@ def ingest_file(filename: str, file_bytes: bytes) -> str:
     return extract_text_from_text(file_bytes)
 
 
-def fetch_url_content(url: str) -> str:
-    response = requests.get(url, timeout=TIMEOUT_SECONDS)
+def fetch_url_content(url: str, timeout_seconds: int = TIMEOUT_SECONDS) -> str:
+    response = requests.get(url, timeout=timeout_seconds)
     response.raise_for_status()
     content_type = (response.headers.get("content-type") or "").lower()
     path = urlparse(url).path.lower()

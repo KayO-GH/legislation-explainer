@@ -1,0 +1,10 @@
+{
+  "generated_at": "2026-06-09T20:15:56.995846+00:00",
+  "provider": "qwen",
+  "model": "Qwen/Qwen3-14B:cheapest",
+  "source_url": "https://moc.gov.gh/wp-content/uploads/2023/03/MoCDTI-EMERGING-TECHNOLOGIES-DRAFT-BILL-2025-2.pdf",
+  "document_hash": "bc89d4f6cbc7703c6e4c31d90426cf4f0f93758b356a01f53316ca22f78ad6f2",
+  "chunk_size": 350,
+  "chunk_overlap": 60,
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2"
+}

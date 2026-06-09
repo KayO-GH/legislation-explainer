@@ -1,0 +1,83 @@
+{
+  "executive_summary": "The Ghana Domain Name Registry Act, 2025 establishes a centralized, non-profit registry to manage the .gh domain space, mandate its use for entities operating in Ghana, and create governance, licensing, and dispute-resolution frameworks. Key provisions include mandatory .gh domain registration for public-facing digital platforms, a single central registry, licensing of registrars, financial mechanisms for the Registry, and penalties for non-compliance.",
+  "bill_summary": [
+    "Establishes the Ghana Domain Name Registry as a non-profit body corporate with perpetual succession.",
+    "Mandates the use of .gh domains for all entities operating in Ghana, with exemptions for foreign-hosted entities.",
+    "Creates a single central registry for .gh domains, prohibiting unauthorized domain management.",
+    "Licensing requirements for registrars, including penalties for unlicensed operation.",
+    "Imposes financial obligations on the Registry, including tax exemptions and funding from the Digital Economy and Innovation Development Fund.",
+    "Establishes a Domain Name Registry Fund to support digital inclusion, capacity building, and internet governance projects.",
+    "Provides for dispute resolution mechanisms, including a Dispute Resolution Committee and court-enforceable actions.",
+    "Imposes penalties for non-compliance, including fines, license revocation, and exclusion from public procurement."
+  ],
+  "implementation": [
+    {
+      "stakeholder": "Entities operating in Ghana",
+      "obligation": "Register and maintain an active .gh domain for official websites and digital platforms within six months of the Act's enactment.",
+      "implementation_burden": "Costs of domain registration, website migration, and compliance with technical requirements.",
+      "risk_or_note": "Non-compliance risks fines, license revocation, and exclusion from public procurement."
+    },
+    {
+      "stakeholder": "Registrars",
+      "obligation": "Obtain a license from the Registry, adhere to technical and operational standards, and comply with audit and reporting requirements.",
+      "implementation_burden": "Application fees, ongoing compliance with Registry directives, and potential suspension/revocation of licenses for misconduct.",
+      "risk_or_note": "High penalties for unlicensed operation or non-compliance with Registry rules."
+    },
+    {
+      "stakeholder": "The Ghana Domain Name Registry",
+      "obligation": "Administer the .gh domain space, enforce mandatory registration, and manage the Domain Name Registry Fund.",
+      "implementation_burden": "Operational costs, governance of the Board, and enforcement of compliance through the Domain Compliance Unit.",
+      "risk_or_note": "Potential challenges in balancing public interest with private sector needs and ensuring technical infrastructure reliability."
+    },
+    {
+      "stakeholder": "Public institutions (e.g., government agencies)",
+      "obligation": "Integrate domain names into the DNS Security Operations Centre and comply with audit requirements.",
+      "implementation_burden": "Technical integration costs and periodic audits at prescribed fees.",
+      "risk_or_note": "Non-compliance may result in public exposure of breaches or enforcement actions."
+    }
+  ],
+  "critique": [
+    {
+      "issue": "Ambiguity in exemption criteria for foreign-hosted entities",
+      "why_it_matters": "Exemptions for entities not targeting Ghanaian users may be subject to interpretation, risking inconsistent enforcement.",
+      "recommendation": "Clarify criteria for exemptions in regulations to prevent disputes and ensure alignment with national digital sovereignty goals."
+    },
+    {
+      "issue": "High penalties for non-compliance may disproportionately affect SMEs",
+      "why_it_matters": "Fines up to 10,000 penalty units per year could cripple small businesses unable to afford compliance costs.",
+      "recommendation": "Introduce phased compliance timelines or financial assistance programs for SMEs to ease transition to .gh domains."
+    },
+    {
+      "issue": "Centralized control over domain management may stifle innovation",
+      "why_it_matters": "A single central registry could limit competition and reduce incentives for private sector investment in domain-related services.",
+      "recommendation": "Ensure the Registry's governance includes mechanisms for stakeholder input and periodic review of market dynamics."
+    },
+    {
+      "issue": "Lack of safeguards against regulatory capture in the Board's composition",
+      "why_it_matters": "The Board includes members nominated by government agencies and private entities, raising risks of conflicts of interest.",
+      "recommendation": "Mandate independent oversight of the Board's decision-making processes and public disclosure of conflicts of interest."
+    }
+  ],
+  "swot": {
+    "strengths": [
+      "Promotes national digital sovereignty by mandating .gh domain use for public-facing entities.",
+      "Establishes a centralized, secure domain management system with a DNS Security Operations Centre.",
+      "Provides funding mechanisms (e.g., Domain Name Registry Fund) to support digital inclusion and capacity building."
+    ],
+    "weaknesses": [
+      "Mandatory domain registration may increase operational costs for SMEs and startups.",
+      "Potential for regulatory overreach in enforcing compliance and managing the domain space.",
+      "Dependence on government funding and policy directives may limit the Registry's independence."
+    ],
+    "opportunities": [
+      "Enhanced digital infrastructure and cybersecurity through the DNS Security Operations Centre.",
+      "Increased local internet governance capacity via the Domain Name Registry Fund.",
+      "Potential for growth in local domain-related services (e.g., registrars, web hosting)."
+    ],
+    "threats": [
+      "Risk of stifling innovation and competition due to centralized domain management.",
+      "High penalties for non-compliance could deter foreign investment or digital presence in Ghana.",
+      "Challenges in enforcing mandatory domain use for entities with hybrid or international operations."
+    ]
+  }
+}

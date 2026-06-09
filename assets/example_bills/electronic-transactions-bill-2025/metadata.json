@@ -1,0 +1,10 @@
+{
+  "generated_at": "2026-06-09T20:15:16.085007+00:00",
+  "provider": "qwen",
+  "model": "Qwen/Qwen3-14B:cheapest",
+  "source_url": "https://nita.gov.gh/wp-content/uploads/2025/NITA-ETA-public-consultation-2025.pdf",
+  "document_hash": "bd90a4cffe2973adbb007e64b50ab9636e9bed68c7cc2f80370c74dacd689e4f",
+  "chunk_size": 350,
+  "chunk_overlap": 60,
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2"
+}
