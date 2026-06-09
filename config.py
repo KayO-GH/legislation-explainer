@@ -34,7 +34,7 @@ warnings.filterwarnings(
 
 SUPPORTED_PROVIDERS = ["qwen", "openai", "anthropic", "gemini", "cohere"]
 DEFAULT_PROVIDER: str = "qwen"
-DEFAULT_QWEN_MODEL = "Qwen/Qwen3-32B:cheapest"
+DEFAULT_QWEN_MODEL = "Qwen/Qwen3-14B:cheapest"
 DEFAULT_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
 OPENAI_REASONING_EFFORT = "medium"
 ANTHROPIC_THINKING_BUDGET = 2048
@@ -90,7 +90,7 @@ PROVIDER_METADATA: list[ProviderConfig] = [
     ProviderConfig(
         name="qwen",
         key_prefix=None,
-        display_name="Qwen3 32B",
+        display_name="Qwen3 14B",
         instructions=(
             "Use your Hugging Face token for the router-backed Qwen model. Leave blank to use HF_TOKEN from .env if configured."
         ),

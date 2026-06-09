@@ -383,6 +383,25 @@ def _format_analysis(analysis: AnalysisResult | None) -> str:
     )
 
 
+def _render_supporting_snippets(citations: list[dict[str, Any]]) -> str:
+    if not citations:
+        return ""
+
+    items = []
+    for item in citations:
+        ref_id = html.escape(str(item["ref_id"]))
+        snippet = html.escape(item["snippet"])
+        items.append(f"<li><strong>[ref{ref_id}]</strong> {snippet}</li>")
+
+    count = len(citations)
+    label = "snippet" if count == 1 else "snippets"
+    return (
+        f"<details><summary>Supporting {label} ({count})</summary>"
+        f"<ul>{''.join(items)}</ul>"
+        "</details>"
+    )
+
+
 def _format_chat_entry(answer_text: str, citations: list[dict[str, Any]], *, provenance: str = "analysis_based") -> str:
     prefix = ""
     if provenance == "analysis_based":
@@ -392,8 +411,7 @@ def _format_chat_entry(answer_text: str, citations: list[dict[str, Any]], *, pro
 
     if not citations:
         return prefix + answer_text
-    citations_text = "\n".join(f"- [ref{item['ref_id']}] {item['snippet']}" for item in citations)
-    return f"{prefix}{answer_text}\n\nSupporting snippets:\n{citations_text}"
+    return f"{prefix}{answer_text}\n\n{_render_supporting_snippets(citations)}"
 
 
 def _stream_chat_entry(
@@ -403,13 +421,21 @@ def _stream_chat_entry(
     *,
     provenance: str = "analysis_based",
 ):
-    formatted_answer = _format_chat_entry(answer_text, citations, provenance=provenance)
+    prefix = ""
+    if provenance == "analysis_based":
+        prefix = "_Based on the summary and analysis._\n\n"
+    elif provenance == "full_document":
+        prefix = "_Deeper full-document answer._\n\n"
+
+    formatted_answer = prefix + answer_text
     streamed_answer = ""
     for character in formatted_answer:
         streamed_answer += character
         yield base_history + [{"role": "assistant", "content": streamed_answer}]
         if CHAT_STREAM_DELAY_SECONDS:
             time.sleep(CHAT_STREAM_DELAY_SECONDS)
+    if citations:
+        yield base_history + [{"role": "assistant", "content": _format_chat_entry(answer_text, citations, provenance=provenance)}]
 
 
 def _deeper_answer_updates(visible: bool, label: str = "Run deeper full-document answer") -> gr.update:

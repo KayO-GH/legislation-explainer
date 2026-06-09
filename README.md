@@ -10,7 +10,7 @@ app_file: app.py
 pinned: false
 short_description: Simplify complex legislation that affects you!
 models:
-  - Qwen/Qwen3-32B
+  - Qwen/Qwen3-14B
 ---
 
 # Legislation Explainer
@@ -29,13 +29,9 @@ It is created for the Hugging Face Build Small Hackathon under the `Backyard AI`
 
 - Track: `Backyard AI`
 - Real user: Ghanaian citizens and digital-policy stakeholders who need a clearer view of a bill's practical effects.
-- Small-model constraint: default provider is `Qwen/Qwen3-32B:cheapest` through the Hugging Face router, staying within the hackathon's `<= 32B` model cap. I could go lower than 32B, but since this deals with legal documents I want the best cognition possible.
+- Small-model constraint: default provider is `Qwen/Qwen3-14B:cheapest` through the Hugging Face router, staying within the hackathon's `<= 32B` model cap while giving a better speed/cost tradeoff for this app.
 - Required surface: Gradio app, ready for Hugging Face Spaces through `app.py`.
-<<<<<<< HEAD
-- Submission assets still needed: Space link, short demo video, and social post.
-=======
 - GitHub repo: https://github.com/KayO-GH/legislation-explainer
->>>>>>> hf
 
 ## What It Does
 
@@ -52,7 +48,7 @@ It is created for the Hugging Face Build Small Hackathon under the `Backyard AI`
 
 ## Model And Provider Notes
 
-The hackathon-safe default is Qwen3 32B through the Hugging Face router. Bring-your-own provider support is a proposed future expansion and is currently commented out so the hackathon build stays focused on one documented `<= 32B` model path.
+The hackathon-safe default is Qwen3 14B through the Hugging Face router. Bring-your-own provider support is a proposed future expansion and is currently commented out so the hackathon build stays focused on one documented `<= 32B` model path.
 
 For future expansion, we will have a bring your own provider setting allowing users to connect to other models eg. from OpenAI, ANthropic, etc. if they so wish.
 
