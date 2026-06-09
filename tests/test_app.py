@@ -1,4 +1,4 @@
-from app import _empty_session, _format_chat_entry, _session_record, ask_question, _stream_chat_entry
+from app import _empty_session, _format_chat_entry, _session_record, _view_source_button_update, ask_question, rerun_summary, _stream_chat_entry
 from services.rag_pipeline import AnswerResult, Citation
 
 
@@ -63,3 +63,27 @@ def test_ask_question_uses_full_document_answers(monkeypatch) -> None:
     assert frames[-1][3]["visible"] is False
     assert frames[-1][4] == ""
     assert record["pending_deeper_question"] is None
+
+
+def test_rerun_summary_bypasses_precomputed_assets(monkeypatch) -> None:
+    calls: list[bool] = []
+
+    def fake_analyze_document(*args, force_refresh=False):
+        calls.append(force_refresh)
+        yield ("session", "status", "analysis", [], {"visible": False}, "")
+
+    monkeypatch.setattr("app.analyze_document", fake_analyze_document)
+
+    frames = list(rerun_summary(None, "https://example.com/bill.pdf", False, None, None, None, {"session_id": "abc"}))
+
+    assert calls == [True]
+    assert frames[-1][1] == "status"
+
+
+def test_view_source_button_update_tracks_url_presence() -> None:
+    disabled = _view_source_button_update("")
+    enabled = _view_source_button_update("https://example.com/bill.pdf")
+
+    assert disabled["interactive"] is False
+    assert enabled["interactive"] is True
+    assert enabled["value"] == "View source ↗"

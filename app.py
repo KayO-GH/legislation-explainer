@@ -66,6 +66,22 @@ APP_HEAD = """
   }
 
   window.__toggleSidebar = toggleSidebar;
+
+  function decorateRerunSummaryButton() {
+    const button = document.querySelector("#rerun-summary-button button");
+    if (!button || button.dataset.decorated === "true") {
+      return;
+    }
+    button.title = "Rerun summary";
+    button.setAttribute("aria-label", "Rerun summary");
+    button.dataset.decorated = "true";
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    decorateRerunSummaryButton();
+    const observer = new MutationObserver(decorateRerunSummaryButton);
+    observer.observe(document.body, { childList: true, subtree: true });
+  });
 })();
 </script>
 """
@@ -129,8 +145,34 @@ APP_CSS = """
     padding: 1rem;
     backdrop-filter: blur(12px);
 }
+#analysis-header-row {
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+#analysis-header-row .prose {
+    margin: 0;
+}
+#rerun-summary-shell {
+    flex: 0 0 auto;
+    width: auto !important;
+    min-width: 0 !important;
+}
 #analysis-output {
     min-height: 100px;
+}
+#rerun-summary-button {
+    width: auto;
+    min-width: 0;
+}
+#rerun-summary-button button {
+    min-width: 2rem;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border-radius: 0.6rem !important;
+    font-size: 0.95rem;
+    line-height: 1;
 }
 #chat-question-row {
     align-items: flex-start;
@@ -142,44 +184,22 @@ APP_CSS = """
 #chat-status {
     min-height: 1.5rem;
 }
-#view-document-shell {
+#view-source-button {
     margin-top: 0.5rem;
-}
-#view-document-shell .view-document-link,
-#view-document-shell .view-document-link-disabled {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.45rem;
     width: 100%;
-    min-height: 2.75rem;
-    padding: 0.7rem 1rem;
-    border-radius: 0.6rem;
-    border: 1px solid var(--button-secondary-border-color);
-    font-weight: 600;
-    text-decoration: none;
-    box-sizing: border-box;
 }
-#view-document-shell .view-document-link {
-    color: inherit;
-    background: var(--button-secondary-background-fill);
+#view-source-button button {
+    width: 100%;
+    min-width: 0;
+    border-radius: 0.6rem !important;
 }
-#view-document-shell .view-document-link:hover {
-    background: var(--button-secondary-background-fill-hover);
+#reset-button {
+    width: 100%;
 }
-#view-document-shell .view-document-link-disabled {
-    color: inherit;
-    background: var(--button-secondary-background-fill);
-    cursor: not-allowed;
-    pointer-events: none;
-}
-#view-document-shell .view-document-link-disabled svg {
-    opacity: 0.9;
-}
-#view-document-shell svg {
-    width: 0.95rem;
-    height: 0.95rem;
-    flex: 0 0 auto;
+#reset-button button {
+    width: 100%;
+    min-width: 0;
+    border-radius: 0.6rem !important;
 }
 #example-bills-heading {
     display: flex;
@@ -470,27 +490,9 @@ def _set_example_url(example_label: str | None) -> str:
     return EXAMPLE_BILL_URLS.get(example_label, "")
 
 
-def _render_document_link(url_value: str | None) -> str:
-    icon = (
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" '
-        'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-        '<path d="M14 5h5v5"></path>'
-        '<path d="M10 14 19 5"></path>'
-        '<path d="M19 14v5h-14v-14h5"></path>'
-        "</svg>"
-    )
-    if not url_value or not url_value.strip():
-        return (
-            '<span class="view-document-link-disabled">'
-            f'<span>View source</span>{icon}'
-            "</span>"
-        )
-    safe_url = html.escape(url_value.strip(), quote=True)
-    return (
-        f'<a class="view-document-link" href="{safe_url}" target="_blank" rel="noopener noreferrer">'
-        f'<span>View source</span>{icon}'
-        "</a>"
-    )
+def _view_source_button_update(url_value: str | None) -> gr.update:
+    has_url = bool(url_value and url_value.strip())
+    return gr.update(value="View source ↗", interactive=has_url)
 
 
 def _analysis_stage_message(stage: str) -> str:
@@ -515,6 +517,7 @@ def analyze_document(
     qwen_key: str | None,
     custom_key: str | None,
     session_state: dict[str, Any] | None,
+    force_refresh: bool = False,
 ):
     session_state = session_state or _empty_session()
     record = _session_record(session_state)
@@ -535,7 +538,7 @@ def analyze_document(
         return
 
     precomputed = get_precomputed_example_artifacts(url_value)
-    if precomputed is not None:
+    if precomputed is not None and not force_refresh:
         record.clear()
         record.update(
             {
@@ -690,6 +693,27 @@ def analyze_document(
     yield session_state, "", analysis_output, [], _deeper_answer_updates(False), ""
 
 
+def rerun_summary(
+    uploaded_file: str | None,
+    url_value: str | None,
+    use_advanced: bool,
+    provider_label: str | None,
+    qwen_key: str | None,
+    custom_key: str | None,
+    session_state: dict[str, Any] | None,
+):
+    yield from analyze_document(
+        uploaded_file,
+        url_value,
+        use_advanced,
+        provider_label,
+        qwen_key,
+        custom_key,
+        session_state,
+        force_refresh=True,
+    )
+
+
 def ask_question(
     question: str | None,
     session_state: dict[str, Any] | None,
@@ -786,7 +810,7 @@ def reset_session(session_state: dict[str, Any] | None):
     if session_state and session_state.get("session_id"):
         _GRADIO_SESSION_CACHE.pop(session_state["session_id"], None)
     empty = _empty_session()
-    return empty, None, None, "", _render_document_link(""), ANALYSIS_PLACEHOLDER, [], "", "", _deeper_answer_updates(False), ""
+    return empty, None, None, "", _view_source_button_update(""), ANALYSIS_PLACEHOLDER, [], "", "", _deeper_answer_updates(False), ""
 
 
 def build_app() -> gr.Blocks:
@@ -848,8 +872,8 @@ def build_app() -> gr.Blocks:
                 gr.Markdown("Document URL")
                 url_value = gr.Textbox(label="Document URL", placeholder="https://example.com/bill", show_label=False)
                 analyze_button = gr.Button("Run analysis", variant="primary")
-                view_document_link = gr.HTML(_render_document_link(""), elem_id="view-document-shell")
-                reset_button = gr.Button("Reset session")
+                view_source_button = gr.Button("View source ↗", variant="secondary", interactive=False, elem_id="view-source-button")
+                reset_button = gr.Button("Reset session", elem_id="reset-button")
                 status_output = gr.Markdown(elem_id="status-output")
                 use_advanced = gr.State(False)
                 provider_label = gr.State(PROVIDER_LABEL_BY_NAME[DEFAULT_PROVIDER])
@@ -888,7 +912,11 @@ def build_app() -> gr.Blocks:
 
             with gr.Column(scale=2, elem_id="main-panel"):
                 with gr.Group(elem_id="analysis-panel"):
-                    gr.Markdown("# Summary Highlights")
+                    with gr.Row(elem_id="analysis-header-row"):
+                        with gr.Column(scale=1, min_width=0):
+                            gr.Markdown("# Summary Highlights")
+                        with gr.Column(scale=0, min_width=0, elem_id="rerun-summary-shell"):
+                            rerun_summary_button = gr.Button("↺", elem_id="rerun-summary-button", variant="secondary")
                     analysis_output = gr.Markdown(ANALYSIS_PLACEHOLDER, elem_id="analysis-output")
 
                 with gr.Group(elem_id="chat-panel"):
@@ -922,15 +950,38 @@ def build_app() -> gr.Blocks:
         example_selector.change(
             lambda example_label: (
                 _set_example_url(example_label),
-                _render_document_link(_set_example_url(example_label)),
+                _view_source_button_update(_set_example_url(example_label)),
             ),
             inputs=[example_selector],
-            outputs=[url_value, view_document_link],
+            outputs=[url_value, view_source_button],
         )
-        url_value.input(_render_document_link, inputs=[url_value], outputs=[view_document_link])
-        url_value.change(_render_document_link, inputs=[url_value], outputs=[view_document_link])
+        url_value.input(_view_source_button_update, inputs=[url_value], outputs=[view_source_button])
+        url_value.change(_view_source_button_update, inputs=[url_value], outputs=[view_source_button])
         analyze_button.click(
             analyze_document,
+            inputs=[uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state],
+            outputs=[
+                session_state,
+                status_output,
+                analysis_output,
+                chatbot,
+                deeper_answer_button,
+                deeper_answer_hint,
+            ],
+        )
+        view_source_button.click(
+            None,
+            inputs=[url_value],
+            js="""
+            (url) => {
+              if (url && url.trim()) {
+                window.open(url.trim(), "_blank", "noopener,noreferrer");
+              }
+            }
+            """,
+        )
+        rerun_summary_button.click(
+            rerun_summary,
             inputs=[uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state],
             outputs=[
                 session_state,
@@ -964,7 +1015,7 @@ def build_app() -> gr.Blocks:
                 uploaded_file,
                 example_selector,
                 url_value,
-                view_document_link,
+                view_source_button,
                 analysis_output,
                 chatbot,
                 status_output,
