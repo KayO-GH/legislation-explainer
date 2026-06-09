@@ -1,3 +1,18 @@
+---
+title: Legislation Explainer
+emoji: 📚
+colorFrom: gray
+colorTo: indigo
+sdk: gradio
+sdk_version: 4.44.1
+python_version: '3.12'
+app_file: app.py
+pinned: false
+short_description: Simplify complex legislation that affects you!
+models:
+  - Qwen/Qwen3-32B
+---
+
 # Legislation Explainer
 
 Legislation Explainer is a Gradio app for helping regular people understand public-interest legislation and how it affects them.
@@ -16,7 +31,11 @@ It is created for the Hugging Face Build Small Hackathon under the `Backyard AI`
 - Real user: Ghanaian citizens and digital-policy stakeholders who need a clearer view of a bill's practical effects.
 - Small-model constraint: default provider is `Qwen/Qwen3-32B:cheapest` through the Hugging Face router, staying within the hackathon's `<= 32B` model cap. I could go lower than 32B, but since this deals with legal documents I want the best cognition possible.
 - Required surface: Gradio app, ready for Hugging Face Spaces through `app.py`.
+<<<<<<< HEAD
 - Submission assets still needed: Space link, short demo video, and social post.
+=======
+- GitHub repo: https://github.com/KayO-GH/legislation-explainer
+>>>>>>> hf
 
 ## What It Does
 
