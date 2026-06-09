@@ -233,6 +233,11 @@ APP_CSS = """
     box-shadow: none !important;
 }
 """
+APP_LAUNCH_KWARGS = {
+    "theme": APP_THEME,
+    "css": APP_CSS,
+    "head": APP_HEAD,
+}
 
 _GRADIO_SESSION_CACHE: dict[str, dict[str, Any]] = {}
 
@@ -732,7 +737,7 @@ def reset_session(session_state: dict[str, Any] | None):
 
 
 def build_app() -> gr.Blocks:
-    with gr.Blocks(title=APP_TITLE, css=APP_CSS, theme=APP_THEME, elem_id="app-shell", head=APP_HEAD) as demo:
+    with gr.Blocks(title=APP_TITLE, elem_id="app-shell") as demo:
         session_state = gr.State(_empty_session())
 
         gr.Markdown(f"# {APP_TITLE}")
@@ -835,7 +840,7 @@ def build_app() -> gr.Blocks:
 
                 with gr.Group(elem_id="chat-panel"):
                     gr.Markdown("## Ask Further Questions")
-                    chatbot = gr.Chatbot(type="messages", show_label=False)
+                    chatbot = gr.Chatbot(show_label=False)
                     with gr.Row():
                         with gr.Column(scale=6, min_width=0):
                             gr.Markdown("Question")
@@ -930,4 +935,4 @@ app = demo
 
 
 if __name__ == "__main__":
-    app.launch()
+    app.launch(**APP_LAUNCH_KWARGS)

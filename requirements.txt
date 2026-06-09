@@ -1,9 +1,9 @@
-gradio==4.44.1
+gradio==6.17.3
 langchain==0.1.17
 langchain-community==0.0.36
 faiss-cpu==1.8.0
 sentence-transformers==2.7.0
-pydantic==2.6.4
+pydantic>=2.7.0
 requests==2.31.0
 readability-lxml==0.8.1
 lxml_html_clean>=0.4.3
