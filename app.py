@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import html
+import time
 from pathlib import Path
 from uuid import uuid4
 from typing import Any
@@ -37,6 +38,7 @@ PROVIDER_LABEL_BY_NAME = {name: display for name, display, _ in PROVIDER_OPTIONS
 ANALYSIS_PLACEHOLDER = "Run an analysis to populate this section."
 EXAMPLE_BILL_LABELS = example_bill_titles()
 EXAMPLE_BILL_URLS = example_bill_urls_by_title()
+CHAT_STREAM_DELAY_SECONDS = 0.004
 APP_THEME = gr.themes.Soft(
     primary_hue="sky",
     secondary_hue="slate",
@@ -394,6 +396,22 @@ def _format_chat_entry(answer_text: str, citations: list[dict[str, Any]], *, pro
     return f"{prefix}{answer_text}\n\nSupporting snippets:\n{citations_text}"
 
 
+def _stream_chat_entry(
+    base_history: list[dict[str, str]],
+    answer_text: str,
+    citations: list[dict[str, Any]],
+    *,
+    provenance: str = "analysis_based",
+):
+    formatted_answer = _format_chat_entry(answer_text, citations, provenance=provenance)
+    streamed_answer = ""
+    for character in formatted_answer:
+        streamed_answer += character
+        yield base_history + [{"role": "assistant", "content": streamed_answer}]
+        if CHAT_STREAM_DELAY_SECONDS:
+            time.sleep(CHAT_STREAM_DELAY_SECONDS)
+
+
 def _deeper_answer_updates(visible: bool, label: str = "Run deeper full-document answer") -> gr.update:
     return gr.update(visible=visible, value=label)
 
@@ -679,9 +697,12 @@ def ask_question(
         return
 
     citations = [citation.model_dump() for citation in answer.citations]
-    chat_history = chat_history + [
-        {"role": "user", "content": question_text},
-        {"role": "assistant", "content": _format_chat_entry(answer.answer, citations, provenance=answer.provenance)},
+    user_history = chat_history + [{"role": "user", "content": question_text}]
+    for partial_history in _stream_chat_entry(user_history, answer.answer, citations, provenance=answer.provenance):
+        yield partial_history, session_state, "", _deeper_answer_updates(False), ""
+
+    chat_history = user_history + [
+        {"role": "assistant", "content": _format_chat_entry(answer.answer, citations, provenance=answer.provenance)}
     ]
     record["chat_history"] = chat_history
     record["pending_deeper_question"] = question_text if answer.deeper_answer_available else None
@@ -721,8 +742,11 @@ def run_deeper_answer(
         return
 
     citations = [citation.model_dump() for citation in answer.citations]
+    for partial_history in _stream_chat_entry(chat_history, answer.answer, citations, provenance=answer.provenance):
+        yield partial_history, session_state, "", _deeper_answer_updates(False), ""
+
     chat_history = chat_history + [
-        {"role": "assistant", "content": _format_chat_entry(answer.answer, citations, provenance=answer.provenance)},
+        {"role": "assistant", "content": _format_chat_entry(answer.answer, citations, provenance=answer.provenance)}
     ]
     record["chat_history"] = chat_history
     record["pending_deeper_question"] = None
