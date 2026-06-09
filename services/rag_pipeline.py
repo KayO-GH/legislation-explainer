@@ -263,7 +263,7 @@ def load_vector_store(vector_store_dir: Path) -> FAISS:
 
 def hydrate_precomputed_example(asset: PrecomputedExampleAsset) -> CachedDocumentArtifacts:
     analysis = AnalysisResult.model_validate(asset.analysis_payload)
-    vector_store = load_vector_store(asset.bill.vector_store_dir)
+    vector_store = build_vector_store(asset.chunks)
     artifacts = CachedDocumentArtifacts(
         document_hash=asset.bill.document_hash or document_hash_for_text(asset.document_text),
         document_text=asset.document_text,

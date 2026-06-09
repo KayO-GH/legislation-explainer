@@ -23,13 +23,7 @@ from services.example_bills import EXAMPLE_BILL_MANIFEST_PATH, ExampleBill, load
 from services.ingest import fetch_url_content
 from services.precomputed_assets import write_precomputed_asset
 from services.providers import get_default_api_key, instantiate_client
-from services.rag_pipeline import (
-    build_vector_store,
-    document_hash_for_text,
-    generate_analysis_once,
-    save_vector_store,
-    split_into_chunks,
-)
+from services.rag_pipeline import document_hash_for_text, generate_analysis_once, split_into_chunks
 
 
 def _parse_args() -> argparse.Namespace:
@@ -68,7 +62,6 @@ def _has_complete_assets(bill: ExampleBill) -> bool:
         and bill.document_path.exists()
         and bill.chunks_path.exists()
         and bill.metadata_path.exists()
-        and bill.vector_store_dir.exists()
     )
 
 
@@ -113,8 +106,6 @@ def main() -> int:
             document_text = fetch_url_content(bill.source_url, timeout_seconds=args.fetch_timeout)
             chunks = split_into_chunks(document_text)
             analysis = generate_analysis_once(provider_client, document_text)
-            vector_store = build_vector_store(chunks)
-            save_vector_store(vector_store, bill.vector_store_dir)
 
             document_hash = document_hash_for_text(document_text)
             write_precomputed_asset(

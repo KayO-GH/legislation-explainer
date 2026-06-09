@@ -33,8 +33,6 @@ def load_precomputed_asset(bill: ExampleBill) -> PrecomputedExampleAsset | None:
         return None
     if not bill.chunks_path.exists():
         return None
-    if not bill.vector_store_dir.exists():
-        return None
 
     analysis_payload = json.loads(bill.analysis_path.read_text(encoding="utf-8"))
     document_text = bill.document_path.read_text(encoding="utf-8")
