@@ -314,6 +314,15 @@ APP_CSS = """
     #analysis-output table {
         min-width: 760px;
     }
+    #chat-question-row {
+        flex-direction: column;
+    }
+    #chat-question-row > *,
+    #ask-button,
+    #ask-button button {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
 }
 """
 APP_LAUNCH_KWARGS = {
