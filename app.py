@@ -160,6 +160,40 @@ APP_CSS = """
 }
 #analysis-output {
     min-height: 100px;
+    min-width: 0;
+    overflow-x: auto;
+}
+#analysis-output .prose,
+#analysis-output .md,
+#analysis-output .markdown {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    padding-bottom: 0.35rem;
+}
+#analysis-output table {
+    width: 100%;
+    min-width: 760px;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+#analysis-output .analysis-table-scroll {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    margin: 0.75rem 0 1.25rem;
+    padding-bottom: 0.35rem;
+}
+#analysis-output .analysis-table-scroll table {
+    margin: 0;
+}
+#analysis-output th,
+#analysis-output td {
+    vertical-align: top;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: anywhere;
 }
 #rerun-summary-button {
     width: auto;
@@ -259,6 +293,28 @@ APP_CSS = """
     background: transparent !important;
     box-shadow: none !important;
 }
+@media (max-width: 900px) {
+    #layout-shell {
+        flex-direction: column;
+    }
+    #sidebar-panel {
+        max-width: none;
+        width: 100%;
+        position: static;
+    }
+    #main-panel {
+        width: 100%;
+    }
+}
+@media (max-width: 640px) {
+    #analysis-panel,
+    #chat-panel {
+        padding: 0.8rem;
+    }
+    #analysis-output table {
+        min-width: 760px;
+    }
+}
 """
 APP_LAUNCH_KWARGS = {
     "theme": APP_THEME,
@@ -327,6 +383,10 @@ def _escape_md_cell(value: str) -> str:
     return str(value).replace("|", "\\|").replace("\n", " ").strip()
 
 
+def _escape_html_cell(value: str) -> str:
+    return html.escape(str(value).replace("\n", " ").strip())
+
+
 def _markdown_bullets(items: list[str]) -> str:
     if not items:
         return "-"
@@ -342,10 +402,21 @@ def _swot_attr(analysis: AnalysisResult, field: str) -> list[str]:
     return getattr(swot, field, []) if swot is not None else []
 
 
-def _format_table_rows(rows: list[list[str]], column_count: int) -> str:
-    if not rows:
-        return "| " + " | ".join(["—"] * column_count) + " |"
-    return "\n".join("| " + " | ".join(_escape_md_cell(cell) or "—" for cell in row) + " |" for row in rows)
+def _format_html_table(headers: list[str], rows: list[list[str]]) -> str:
+    table_rows = rows or [[""] * len(headers)]
+    header_html = "".join(f"<th>{_escape_html_cell(header) or '&mdash;'}</th>" for header in headers)
+    body_html = "".join(
+        "<tr>" + "".join(f"<td>{_escape_html_cell(cell) or '&mdash;'}</td>" for cell in row) + "</tr>"
+        for row in table_rows
+    )
+    return (
+        '<div class="analysis-table-scroll">'
+        "<table>"
+        f"<thead><tr>{header_html}</tr></thead>"
+        f"<tbody>{body_html}</tbody>"
+        "</table>"
+        "</div>"
+    )
 
 
 def _format_analysis(analysis: AnalysisResult | None) -> str:
@@ -389,21 +460,13 @@ def _format_analysis(analysis: AnalysisResult | None) -> str:
             "## Executive Summary\n" + executive_summary,
             "## Summary of the Bill\n" + bill_summary,
             "## Implementation Implications\n"
-            "| Stakeholder | Obligation | Burden | Risk / Note |\n"
-            "|---|---|---|---|\n"
-            + _format_table_rows(implementation_rows, 4),
+            + _format_html_table(["Stakeholder", "Obligation", "Burden", "Risk / Note"], implementation_rows),
             "## Critique\n"
-            "| Issue | Why it matters | Recommendation |\n"
-            "|---|---|---|\n"
-            + _format_table_rows(critique_rows, 3),
+            + _format_html_table(["Issue", "Why it matters", "Recommendation"], critique_rows),
             "## SWOT Analysis\n"
-            "| Strengths | Weaknesses |\n"
-            "|---|---|\n"
-            + _format_table_rows(swot_pair_rows, 2)
+            + _format_html_table(["Strengths", "Weaknesses"], swot_pair_rows)
             + "\n\n"
-            + "| Opportunities | Threats |\n"
-            + "|---|---|\n"
-            + _format_table_rows(swot_risk_rows, 2),
+            + _format_html_table(["Opportunities", "Threats"], swot_risk_rows),
         ]
     )
 

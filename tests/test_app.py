@@ -1,5 +1,5 @@
-from app import _empty_session, _format_chat_entry, _session_record, _view_source_button_update, ask_question, rerun_summary, _stream_chat_entry
-from services.rag_pipeline import AnswerResult, Citation
+from app import _empty_session, _format_analysis, _format_chat_entry, _session_record, _view_source_button_update, ask_question, rerun_summary, _stream_chat_entry
+from services.rag_pipeline import AnalysisResult, AnswerResult, Citation, ImplementationItem
 
 
 def test_format_chat_entry_wraps_supporting_snippets_in_details() -> None:
@@ -25,6 +25,28 @@ def test_stream_chat_entry_appends_collapsible_snippets_after_text_stream() -> N
 
     assert frames[-2][-1]["content"] == "_Based on the summary and analysis._\n\nAnswer text"
     assert "<details><summary>Supporting snippet (1)</summary>" in frames[-1][-1]["content"]
+
+
+def test_format_analysis_wraps_tables_for_horizontal_scroll() -> None:
+    result = _format_analysis(
+        AnalysisResult(
+            executive_summary="Summary",
+            bill_summary=["Point"],
+            implementation=[
+                ImplementationItem(
+                    stakeholder="Operators",
+                    obligation="Register | comply",
+                    implementation_burden="Costs",
+                    risk_or_note="<review>",
+                )
+            ],
+        )
+    )
+
+    assert result.count('class="analysis-table-scroll"') == 4
+    assert "<table>" in result
+    assert "Register | comply" in result
+    assert "&lt;review&gt;" in result
 
 
 def test_ask_question_uses_full_document_answers(monkeypatch) -> None:
