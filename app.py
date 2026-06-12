@@ -598,12 +598,31 @@ def _analysis_available(record: dict[str, Any]) -> bool:
     return bool(record.get("analysis"))
 
 
-def _question_placeholder_updates(record: dict[str, Any]) -> tuple[gr.update, gr.update]:
-    is_busy = bool(record.get("is_answering"))
+def _question_placeholder_updates(record: dict[str, Any], *, clear_input: bool = False) -> tuple[gr.update, gr.update]:
+    question_input_update: dict[str, Any] = {"interactive": True}
+    if clear_input:
+        question_input_update["value"] = ""
     return (
-        gr.update(interactive=not is_busy),
-        gr.update(interactive=not is_busy),
+        gr.update(**question_input_update),
+        gr.update(interactive=True),
     )
+
+
+def _stage_question(
+    question: str | None,
+    session_state: dict[str, Any] | None,
+    chat_history: list[dict[str, str]] | None,
+) -> tuple[str, str, list[dict[str, str]], str, dict[str, Any]]:
+    staged_question = question or ""
+    session_state = session_state or _empty_session()
+    record = _session_record(session_state)
+    question_text = staged_question.strip()
+    if not question_text:
+        return "", "", (chat_history or _displayed_chat_history(record)), _queue_status_text(record), session_state
+    if record.get("is_answering"):
+        _enqueue_question(record, question_text)
+        return "", "", _displayed_chat_history(record), _queue_status_text(record), session_state
+    return question_text, "", (chat_history or _displayed_chat_history(record)), _queue_status_text(record), session_state
 
 
 def _chat_control_updates(record: dict[str, Any], *, is_busy: bool) -> tuple[gr.update, ...]:
@@ -641,16 +660,12 @@ def _displayed_chat_history(
 
 
 def _queue_status_text(record: dict[str, Any]) -> str:
-    queue_size = len(record.get("message_queue", []))
-    if queue_size == 0:
+    queue: list[dict[str, Any]] = list(record.get("message_queue", []))
+    if not queue:
         return ""
-    if record.get("is_answering") and record.get("active_message_id"):
-        if queue_size == 1:
-            return "Answering 1 of 1."
-        return f"Answering 1 of {queue_size}. {queue_size - 1} queued."
-    if queue_size == 1:
-        return "1 queued."
-    return f"{queue_size} queued."
+    lines = ["Queued:"]
+    lines.extend(f"{index}. {item['question']}" for index, item in enumerate(queue, start=1))
+    return "\n".join(lines)
 
 
 def _enqueue_question(record: dict[str, Any], question_text: str) -> None:
@@ -703,6 +718,7 @@ def _handle_uploaded_source_change(
     session_state = session_state or _empty_session()
     record = _session_record(session_state)
     status_message = _flush_message_queue(record, "Queued questions were cleared because the source changed.")
+    record["chat_history"] = []
     if not uploaded_file:
         return (
             session_state,
@@ -735,6 +751,7 @@ def _handle_url_source_change(
     session_state = session_state or _empty_session()
     record = _session_record(session_state)
     status_message = _flush_message_queue(record, "Queued questions were cleared because the source changed.")
+    record["chat_history"] = []
     cleaned_url = (url_value or "").strip()
     if not cleaned_url:
         return (
@@ -766,6 +783,7 @@ def _handle_example_source_change(
     session_state = session_state or _empty_session()
     record = _session_record(session_state)
     status_message = _flush_message_queue(record, "Queued questions were cleared because the source changed.")
+    record["chat_history"] = []
     url_value = _set_example_url(example_label)
     return (
         session_state,
@@ -1234,7 +1252,7 @@ def ask_question(
     record = _session_record(session_state)
     chat_history = chat_history or _displayed_chat_history(record)
     if not question or not question.strip():
-        yield chat_history, session_state, "", _deeper_answer_updates(False), "", *_chat_control_updates(record, is_busy=bool(record.get("is_answering")))
+        yield chat_history, session_state, _queue_status_text(record), _deeper_answer_updates(False), "", *_chat_control_updates(record, is_busy=bool(record.get("is_answering")))
         return
 
     source_prep_error = _prepare_record_for_question(
@@ -1261,7 +1279,9 @@ def ask_question(
             _queue_status_text(record),
             _deeper_answer_updates(False),
             "",
-            *_chat_control_updates(record, is_busy=True),
+            *_source_control_updates(False),
+            *_analysis_action_updates(False),
+            *_question_placeholder_updates(record),
         )
         return
 
@@ -1276,7 +1296,9 @@ def ask_question(
             _queue_status_text(record),
             _deeper_answer_updates(False),
             "",
-            *_chat_control_updates(record, is_busy=True),
+            *_source_control_updates(False),
+            *_analysis_action_updates(False),
+            *_question_placeholder_updates(record),
         )
 
         try:
@@ -1306,7 +1328,9 @@ def ask_question(
                 message if not record.get("message_queue") else _queue_status_text(record),
                 _deeper_answer_updates(False),
                 "",
-                *_chat_control_updates(record, is_busy=False),
+                *_source_control_updates(True),
+                *_analysis_action_updates(_analysis_available(record)),
+                *_question_placeholder_updates(record),
             )
             continue
 
@@ -1317,7 +1341,9 @@ def ask_question(
                 _queue_status_text(record),
                 _deeper_answer_updates(False),
                 "",
-                *_chat_control_updates(record, is_busy=True),
+                *_source_control_updates(False),
+                *_analysis_action_updates(False),
+                *_question_placeholder_updates(record),
             )
 
         citations = [citation.model_dump() for citation in answer.citations]
@@ -1336,7 +1362,9 @@ def ask_question(
             _queue_status_text(record),
             _deeper_answer_updates(False),
             "",
-            *_chat_control_updates(record, is_busy=False),
+            *_source_control_updates(True),
+            *_analysis_action_updates(_analysis_available(record)),
+            *_question_placeholder_updates(record),
         )
 
 
@@ -1418,6 +1446,7 @@ def build_app() -> gr.Blocks:
     with gr.Blocks(title=APP_TITLE, elem_id="app-shell") as demo:
         session_state = gr.State(_empty_session())
         source_kind = gr.State(None)
+        queued_question = gr.State("")
 
         gr.Markdown(f"# {APP_TITLE}")
         gr.Markdown(APP_DESCRIPTION)
@@ -1526,7 +1555,7 @@ def build_app() -> gr.Blocks:
 
                 with gr.Group(elem_id="chat-panel"):
                     gr.Markdown("## Ask Further Questions")
-                    chatbot = gr.Chatbot(show_label=False)
+                    chatbot = gr.Chatbot(show_label=False, autoscroll=False)
                     gr.Markdown("Question")
                     with gr.Row(elem_id="chat-question-row"):
                         with gr.Column(scale=6, min_width=0):
@@ -1647,15 +1676,25 @@ def build_app() -> gr.Blocks:
             ],
         )
         ask_button.click(
+            _stage_question,
+            inputs=[question_input, session_state, chatbot],
+            outputs=[queued_question, question_input, chatbot, chat_status, session_state],
+            queue=False,
+        ).then(
             ask_question,
-            inputs=[question_input, uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state, chatbot, source_kind],
+            inputs=[queued_question, uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state, chatbot, source_kind],
             outputs=[chatbot, session_state, chat_status, deeper_answer_button, deeper_answer_hint, uploaded_file, example_selector, url_value, analyze_button, reset_button, rerun_summary_button, clear_analysis_button, question_input, ask_button],
-        ).then(lambda: "", outputs=[question_input])
+        )
         question_input.submit(
+            _stage_question,
+            inputs=[question_input, session_state, chatbot],
+            outputs=[queued_question, question_input, chatbot, chat_status, session_state],
+            queue=False,
+        ).then(
             ask_question,
-            inputs=[question_input, uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state, chatbot, source_kind],
+            inputs=[queued_question, uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state, chatbot, source_kind],
             outputs=[chatbot, session_state, chat_status, deeper_answer_button, deeper_answer_hint, uploaded_file, example_selector, url_value, analyze_button, reset_button, rerun_summary_button, clear_analysis_button, question_input, ask_button],
-        ).then(lambda: "", outputs=[question_input])
+        )
         deeper_answer_button.click(
             run_deeper_answer,
             inputs=[session_state, chatbot],

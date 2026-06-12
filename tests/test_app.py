@@ -1,4 +1,4 @@
-from app import _displayed_chat_history, _empty_session, _format_analysis, _format_chat_entry, _handle_url_source_change, _session_record, _view_source_button_update, ask_question, clear_analysis, rerun_summary, _stream_chat_entry
+from app import _displayed_chat_history, _empty_session, _format_analysis, _format_chat_entry, _handle_example_source_change, _handle_url_source_change, _session_record, _stage_question, _view_source_button_update, ask_question, clear_analysis, rerun_summary, _stream_chat_entry
 from services.rag_pipeline import AnalysisResult, AnswerResult, Citation, ImplementationItem
 
 
@@ -25,6 +25,30 @@ def test_stream_chat_entry_appends_collapsible_snippets_after_text_stream() -> N
 
     assert frames[-2][-1]["content"] == "_Based on the summary and analysis._\n\nAnswer text"
     assert "<details><summary>Supporting snippet (1)</summary>" in frames[-1][-1]["content"]
+
+
+def test_stage_question_clears_visible_input() -> None:
+    session_state = _empty_session()
+
+    staged = _stage_question("Queued follow-up", session_state, [])
+
+    assert staged[0] == "Queued follow-up"
+    assert staged[1] == ""
+
+
+def test_stage_question_enqueues_immediately_while_busy() -> None:
+    session_state = _empty_session()
+    record = _session_record(session_state)
+    record["message_queue"] = [{"id": "active", "question": "Current question", "status": "answering"}]
+    record["active_message_id"] = "active"
+    record["is_answering"] = True
+
+    staged = _stage_question("Queued follow-up", session_state, [])
+
+    assert staged[0] == ""
+    assert staged[1] == ""
+    assert staged[3] == "Queued:\n1. Current question\n2. Queued follow-up"
+    assert record["message_queue"][1]["question"] == "Queued follow-up"
 
 
 def test_format_analysis_wraps_tables_for_horizontal_scroll() -> None:
@@ -80,7 +104,7 @@ def test_ask_question_uses_full_document_answers(monkeypatch) -> None:
     frames = list(ask_question("What does the bill require?", None, None, False, None, None, None, session_state, []))
 
     assert calls == [(record["vector_store"], "Full bill text")]
-    assert "Answering 1 of 1." == frames[0][2]
+    assert "Queued:\n1. What does the bill require?" == frames[0][2]
     assert "<details><summary>Supporting snippet (1)</summary>" in frames[-1][0][-1]["content"]
     assert frames[-1][3]["visible"] is False
     assert frames[-1][4] == ""
@@ -131,7 +155,7 @@ def test_ask_question_bootstraps_source_document_without_analysis(monkeypatch) -
     assert "<details><summary>Supporting snippet (1)</summary>" in frames[-1][0][-1]["content"]
 
 
-def test_ask_question_locks_controls_during_active_answer(monkeypatch) -> None:
+def test_ask_question_locks_source_controls_but_keeps_queue_input_enabled(monkeypatch) -> None:
     session_state = _empty_session()
     record = _session_record(session_state)
     record.update(
@@ -163,8 +187,8 @@ def test_ask_question_locks_controls_during_active_answer(monkeypatch) -> None:
     assert answering_frame[9]["interactive"] is False
     assert answering_frame[10]["interactive"] is False
     assert answering_frame[11]["interactive"] is False
-    assert answering_frame[12]["interactive"] is False
-    assert answering_frame[13]["interactive"] is False
+    assert answering_frame[12]["interactive"] is True
+    assert answering_frame[13]["interactive"] is True
 
     final_frame = frames[-1]
     assert final_frame[5]["interactive"] is True
@@ -174,6 +198,28 @@ def test_ask_question_locks_controls_during_active_answer(monkeypatch) -> None:
     assert final_frame[9]["interactive"] is True
     assert final_frame[12]["interactive"] is True
     assert final_frame[13]["interactive"] is True
+
+
+def test_ask_question_clears_input_when_queued_behind_active_answer(monkeypatch) -> None:
+    session_state = _empty_session()
+    record = _session_record(session_state)
+    record.update(
+        {
+            "api_config": {"provider": "qwen", "api_key": "hf_test_token"},
+            "vector_store": object(),
+            "doc_text": "Full bill text",
+            "chat_history": [],
+            "message_queue": [{"id": "active", "question": "Current question", "status": "answering"}],
+            "is_answering": True,
+            "active_message_id": "active",
+        }
+    )
+
+    frames = list(ask_question("Queued follow-up", None, None, False, None, None, None, session_state, []))
+
+    assert len(frames) == 1
+    assert frames[0][2] == "Queued:\n1. Current question\n2. Queued follow-up"
+    assert frames[0][12]["interactive"] is True
 
 
 def test_url_source_change_flushes_queued_questions() -> None:
@@ -188,11 +234,23 @@ def test_url_source_change_flushes_queued_questions() -> None:
     result = _handle_url_source_change("https://example.com/next-bill.pdf", session_state)
 
     assert result[5] == "Queued questions were cleared because the source changed."
-    assert result[4] == [{"role": "assistant", "content": "Earlier answer"}]
+    assert result[4] == []
     assert record["message_queue"] == []
     assert record["active_message_id"] is None
     assert record["is_answering"] is False
     assert record["pending_deeper_question"] is None
+    assert record["chat_history"] == []
+
+
+def test_example_source_change_clears_existing_chat_history() -> None:
+    session_state = _empty_session()
+    record = _session_record(session_state)
+    record["chat_history"] = [{"role": "assistant", "content": "Earlier answer"}]
+
+    result = _handle_example_source_change("National Information Technology Authority Bill, 2025", session_state)
+
+    assert result[4] == []
+    assert record["chat_history"] == []
 
 
 def test_rerun_summary_bypasses_precomputed_assets(monkeypatch) -> None:
