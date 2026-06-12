@@ -10,9 +10,7 @@ app_file: app.py
 pinned: false
 short_description: Simplify complex legislation that affects you!
 models:
-  - nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16
-  - nvidia/llama-nemotron-embed-vl-1b-v2
-  - nvidia/llama-nemotron-rerank-1b-v2
+  - Qwen/Qwen3-14B
 ---
 
 # Legislation Explainer
@@ -31,7 +29,7 @@ It is created for the Hugging Face Build Small Hackathon under the `Backyard AI`
 
 - Track: `Backyard AI`
 - Real user: Ghanaian citizens and digital-policy stakeholders who need a clearer view of a bill's practical effects.
-- Small-model constraint: default generation uses `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16`, with Nemotron retriever and reranker models for grounded QA.
+- Small-model constraint: default generation uses `Qwen/Qwen3-14B:cheapest` through the Hugging Face router, staying within the hackathon's `<= 32B` model cap while keeping deployment simple.
 - Required surface: Gradio app, ready for Hugging Face Spaces through `app.py`.
 - GitHub repo: https://github.com/KayO-GH/legislation-explainer
 
@@ -50,13 +48,13 @@ It is created for the Hugging Face Build Small Hackathon under the `Backyard AI`
 
 ## Model And Provider Notes
 
-The default QA stack is now Nemotron-first:
+The hackathon-safe default is Qwen3 14B through the Hugging Face router.
 
-- Generator: `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16`
-- Retriever: `nvidia/llama-nemotron-embed-vl-1b-v2`
-- Reranker: `nvidia/llama-nemotron-rerank-1b-v2`
+- Default generator: `Qwen/Qwen3-14B:cheapest`
+- Default credential path: `HF_TOKEN`
+- Default provider: `qwen`
 
-The generator uses an OpenAI-compatible endpoint, so it can run through the Hugging Face router when available or through a Modal-hosted / NIM-style deployment when you want a dedicated path. The retriever also uses an OpenAI-compatible embeddings endpoint. The reranker uses a separate HTTP endpoint so it can be pointed at a hosted Nemotron reranking service.
+Nemotron support remains optional for experimentation through the alternate provider path, but it is not the default app configuration.
 
 ## Local Run
 
@@ -65,53 +63,18 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Set these environment variables for the default Nemotron stack:
+Set these environment variables for the default Qwen path:
+
+- `HF_TOKEN`
+
+Optional Nemotron environment variables are still supported for non-default experimentation:
 
 - `NEMOTRON_API_KEY`
-- `NEMOTRON_BASE_URL` optional, defaults to `https://router.huggingface.co/v1`
-- `NEMOTRON_RETRIEVER_API_KEY` optional, defaults to `NEMOTRON_API_KEY`
-- `NEMOTRON_RETRIEVER_BASE_URL` optional, defaults to `NEMOTRON_BASE_URL`
-- `NEMOTRON_RERANKER_API_KEY` optional, defaults to `NEMOTRON_API_KEY`
-- `NEMOTRON_RERANKER_URL` optional but recommended for the dedicated reranker path
-
-`HF_TOKEN` still works as a fallback credential for Hugging Face-routed Nemotron endpoints.
-
-## Modal Deployment For Nemotron
-
-Hugging Face currently lists no hosted Inference Provider for `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16`, so the practical path for the generator is to self-host it. This repo includes [modal_nemotron_service.py](/Users/Kwadwo/Documents/PROJECTS/HF-Build-Small/legislation-explainer/modal_nemotron_service.py), a standalone Modal deployment using SGLang's OpenAI-compatible server.
-
-1. Install and authenticate Modal locally.
-2. Create a Modal secret named `huggingface-secret` that contains your `HF_TOKEN`.
-3. From [`legislation-explainer/`](/Users/Kwadwo/Documents/PROJECTS/HF-Build-Small/legislation-explainer/), deploy:
-
-```bash
-pip install modal
-modal setup
-modal secret create huggingface-secret HF_TOKEN=hf_xxx
-modal deploy modal_nemotron_service.py
-```
-
-After deploy, point the app at the Modal endpoint:
-
-```bash
-export NEMOTRON_API_KEY=modal-placeholder-key
-export NEMOTRON_BASE_URL=https://YOUR_MODAL_URL/v1
-```
-
-Why the placeholder key works: the app's Nemotron client only needs an OpenAI-compatible key value to satisfy the SDK. The Modal service itself authenticates to Hugging Face through the Modal secret, not through the runtime app key.
-
-Recommended first use:
-
-- Keep the generator on Modal via `NEMOTRON_BASE_URL`.
-- Leave the retriever and reranker on their own hosted endpoints if you have them.
-- If you do not yet have hosted retriever or reranker coverage, the app will fall back to local MiniLM embeddings and skip hosted reranking.
-
-Useful deployment knobs:
-
-- `NEMOTRON_MODAL_GPU` defaults to `H100`
-- `NEMOTRON_MODAL_MIN_CONTAINERS` defaults to `0`
-- `NEMOTRON_MODAL_CONTEXT_LENGTH` defaults to `32768`
-- `NEMOTRON_MODAL_TARGET_INPUTS` defaults to `8`
+- `NEMOTRON_BASE_URL`
+- `NEMOTRON_RETRIEVER_API_KEY`
+- `NEMOTRON_RETRIEVER_BASE_URL`
+- `NEMOTRON_RERANKER_API_KEY`
+- `NEMOTRON_RERANKER_URL`
 
 ## Space Deployment
 

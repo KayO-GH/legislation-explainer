@@ -33,7 +33,7 @@ warnings.filterwarnings(
 )
 
 SUPPORTED_PROVIDERS = ["nemotron", "qwen", "openai", "anthropic", "gemini", "cohere"]
-DEFAULT_PROVIDER: str = "nemotron"
+DEFAULT_PROVIDER: str = "qwen"
 DEFAULT_NEMOTRON_MODEL = "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16"
 DEFAULT_QWEN_MODEL = "Qwen/Qwen3-14B:cheapest"
 DEFAULT_CHUNK_TOKENIZER_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
@@ -105,8 +105,8 @@ PROVIDER_METADATA: list[ProviderConfig] = [
         key_prefix=None,
         display_name="Nemotron Nano 30B",
         instructions=(
-            "Use NEMOTRON_API_KEY for the generator and optionally NEMOTRON_RETRIEVER_* / "
-            "NEMOTRON_RERANKER_* settings for hosted Nemotron retrieval and reranking."
+            "Use NEMOTRON_API_KEY for a self-hosted or external OpenAI-compatible Nemotron endpoint. "
+            "This is optional and no longer the default app path."
         ),
     ),
     ProviderConfig(

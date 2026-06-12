@@ -127,7 +127,7 @@ def test_ask_question_bootstraps_source_document_without_analysis(monkeypatch) -
     assert calls == [("vector-store", "Fresh source text")]
     assert record["doc_text"] == "Fresh source text"
     assert record["vector_store"] == "vector-store"
-    assert record["api_config"]["provider"] == "nemotron"
+    assert record["api_config"]["provider"] == "qwen"
     assert "<details><summary>Supporting snippet (1)</summary>" in frames[-1][0][-1]["content"]
 
 
