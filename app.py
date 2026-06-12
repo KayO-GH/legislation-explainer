@@ -54,8 +54,12 @@ APP_THEME = gr.themes.Soft(
     button_secondary_background_fill_hover="#eef6f8",
 )
 APP_HEAD = """
+<meta name="google" content="notranslate">
 <script>
 (() => {
+  document.documentElement.lang = "en";
+  document.documentElement.classList.add("notranslate");
+
   function toggleSidebar() {
     const sidebar = document.getElementById("sidebar-panel");
     if (!sidebar) {
@@ -359,6 +363,10 @@ def _record_defaults() -> dict[str, Any]:
         "message_queue": [],
         "is_answering": False,
         "active_message_id": None,
+        "source_generation": 0,
+        "is_analyzing": False,
+        "active_analysis_generation": None,
+        "analysis_cancelled_message": "",
     }
 
 
@@ -379,6 +387,26 @@ def _replace_record(record: dict[str, Any], **updates: Any) -> dict[str, Any]:
     record.update(_record_defaults())
     record.update(updates)
     return record
+
+
+def _advance_source_generation(record: dict[str, Any]) -> int:
+    next_generation = int(record.get("source_generation", 0)) + 1
+    record["source_generation"] = next_generation
+    return next_generation
+
+
+def _analysis_is_current(record: dict[str, Any], generation: int) -> bool:
+    return bool(record.get("is_analyzing")) and record.get("active_analysis_generation") == generation and record.get("source_generation") == generation
+
+
+def _committed_analysis_output(record: dict[str, Any]) -> str:
+    payload = record.get("analysis")
+    if not payload:
+        return ANALYSIS_PLACEHOLDER
+    try:
+        return _format_analysis(AnalysisResult.model_validate(payload))
+    except Exception:  # noqa: BLE001
+        return ANALYSIS_PLACEHOLDER
 
 
 def _resolve_provider(use_advanced: bool, provider_label: str | None) -> str:
@@ -584,6 +612,14 @@ def _analysis_action_updates(enabled: bool) -> tuple[gr.update, gr.update]:
     )
 
 
+def _analysis_stop_updates(visible: bool) -> gr.update:
+    return gr.update(visible=visible, interactive=visible)
+
+
+def _answer_stop_updates(visible: bool) -> gr.update:
+    return gr.update(visible=visible, interactive=visible)
+
+
 def _source_control_updates(enabled: bool) -> tuple[gr.update, gr.update, gr.update, gr.update, gr.update]:
     return (
         gr.update(interactive=enabled),
@@ -608,6 +644,149 @@ def _question_placeholder_updates(record: dict[str, Any], *, clear_input: bool =
     )
 
 
+def _combined_control_updates(
+    record: dict[str, Any],
+    *,
+    source_enabled: bool,
+    analysis_actions_enabled: bool,
+    stop_analysis_visible: bool,
+    stop_answer_visible: bool,
+) -> tuple[gr.update, ...]:
+    return (
+        *_source_control_updates(source_enabled),
+        *_analysis_action_updates(analysis_actions_enabled),
+        _analysis_stop_updates(stop_analysis_visible),
+        *_question_placeholder_updates(record),
+        _answer_stop_updates(stop_answer_visible),
+    )
+
+
+def _idle_control_updates(record: dict[str, Any]) -> tuple[gr.update, ...]:
+    return _combined_control_updates(
+        record,
+        source_enabled=True,
+        analysis_actions_enabled=_analysis_available(record),
+        stop_analysis_visible=False,
+        stop_answer_visible=False,
+    )
+
+
+def _analysis_busy_control_updates(record: dict[str, Any]) -> tuple[gr.update, ...]:
+    return _combined_control_updates(
+        record,
+        source_enabled=False,
+        analysis_actions_enabled=False,
+        stop_analysis_visible=True,
+        stop_answer_visible=False,
+    )
+
+
+def _answer_busy_control_updates(record: dict[str, Any]) -> tuple[gr.update, ...]:
+    return _combined_control_updates(
+        record,
+        source_enabled=False,
+        analysis_actions_enabled=False,
+        stop_analysis_visible=bool(record.get("is_analyzing")),
+        stop_answer_visible=True,
+    )
+
+
+def _summary_control_updates(
+    record: dict[str, Any],
+    *,
+    source_enabled: bool,
+    analysis_actions_enabled: bool,
+    stop_analysis_visible: bool,
+) -> tuple[gr.update, ...]:
+    return (
+        *_source_control_updates(source_enabled),
+        *_analysis_action_updates(analysis_actions_enabled),
+        _analysis_stop_updates(stop_analysis_visible),
+    )
+
+
+def _summary_idle_control_updates(record: dict[str, Any]) -> tuple[gr.update, ...]:
+    return _summary_control_updates(
+        record,
+        source_enabled=True,
+        analysis_actions_enabled=_analysis_available(record),
+        stop_analysis_visible=False,
+    )
+
+
+def _summary_busy_control_updates(record: dict[str, Any]) -> tuple[gr.update, ...]:
+    return _summary_control_updates(
+        record,
+        source_enabled=False,
+        analysis_actions_enabled=False,
+        stop_analysis_visible=True,
+    )
+
+
+def _summary_frame(
+    session_state: dict[str, Any],
+    status: str,
+    analysis_output: str,
+    record: dict[str, Any],
+    controls: tuple[gr.update, ...],
+    *,
+    deeper_visible: bool = False,
+    deeper_hint: str = "",
+) -> tuple[Any, ...]:
+    return (
+        session_state,
+        status,
+        analysis_output,
+        *controls,
+        _deeper_answer_updates(deeper_visible),
+        deeper_hint,
+    )
+
+
+def _analysis_frame(
+    session_state: dict[str, Any],
+    status: str,
+    analysis_output: str,
+    chatbot: list[dict[str, str]],
+    chat_status: str,
+    record: dict[str, Any],
+    controls: tuple[gr.update, ...],
+    *,
+    deeper_visible: bool = False,
+    deeper_hint: str = "",
+) -> tuple[Any, ...]:
+    return (
+        session_state,
+        status,
+        analysis_output,
+        chatbot,
+        chat_status,
+        *controls,
+        _deeper_answer_updates(deeper_visible),
+        deeper_hint,
+    )
+
+
+def _chat_frame(
+    chatbot: list[dict[str, str]],
+    session_state: dict[str, Any],
+    chat_status: str,
+    record: dict[str, Any],
+    controls: tuple[gr.update, ...],
+    *,
+    deeper_visible: bool = False,
+    deeper_hint: str = "",
+) -> tuple[Any, ...]:
+    return (
+        chatbot,
+        session_state,
+        chat_status,
+        _deeper_answer_updates(deeper_visible),
+        deeper_hint,
+        *controls,
+    )
+
+
 def _stage_question(
     question: str | None,
     session_state: dict[str, Any] | None,
@@ -619,16 +798,17 @@ def _stage_question(
     question_text = staged_question.strip()
     if not question_text:
         return "", "", (chat_history or _displayed_chat_history(record)), _queue_status_text(record), session_state
-    if record.get("is_answering"):
+    if record.get("is_answering") or record.get("is_analyzing"):
         _enqueue_question(record, question_text)
         return "", "", _displayed_chat_history(record), _queue_status_text(record), session_state
     return question_text, "", (chat_history or _displayed_chat_history(record)), _queue_status_text(record), session_state
 
 
 def _chat_control_updates(record: dict[str, Any], *, is_busy: bool) -> tuple[gr.update, ...]:
+    source_enabled = not is_busy and not bool(record.get("is_analyzing"))
     return (
-        *_source_control_updates(not is_busy),
-        *_analysis_action_updates(_analysis_available(record) and not is_busy),
+        *_source_control_updates(source_enabled),
+        *_analysis_action_updates(_analysis_available(record) and source_enabled),
         *_question_placeholder_updates(record),
     )
 
@@ -675,6 +855,7 @@ def _enqueue_question(record: dict[str, Any], question_text: str) -> None:
             "id": uuid4().hex,
             "question": question_text,
             "status": "queued",
+            "source_generation": record.get("source_generation", 0),
         }
     )
 
@@ -684,8 +865,116 @@ def _flush_message_queue(record: dict[str, Any], reason: str | None = None) -> s
     record["message_queue"] = []
     record["is_answering"] = False
     record["active_message_id"] = None
+    record["is_analyzing"] = False
+    record["active_analysis_generation"] = None
     record["pending_deeper_question"] = None
     return reason if had_pending and reason else ""
+
+
+def _can_drain_message_queue(record: dict[str, Any]) -> bool:
+    return (
+        bool(record.get("message_queue"))
+        and not bool(record.get("is_analyzing"))
+        and bool(record.get("api_config"))
+        and bool(record.get("doc_text") or record.get("vector_store"))
+    )
+
+
+def _drain_message_queue(record: dict[str, Any]):
+    while _can_drain_message_queue(record):
+        current = record["message_queue"][0]
+        question_generation = current.get("source_generation")
+        if question_generation != record.get("source_generation"):
+            return
+        current["status"] = "answering"
+        record["is_answering"] = True
+        record["active_message_id"] = current["id"]
+        current_message_id = current["id"]
+        yield (
+            _displayed_chat_history(record),
+            _queue_status_text(record),
+            _answer_busy_control_updates(record),
+            False,
+            "",
+        )
+
+        try:
+            provider_client = instantiate_client(
+                record["api_config"]["provider"],
+                record["api_config"]["api_key"],
+            )
+            answer = answer_query_from_full_document(
+                provider_client,
+                record.get("vector_store"),
+                current["question"],
+                doc_text=record.get("doc_text"),
+            )
+        except Exception:  # noqa: BLE001
+            if (
+                question_generation != record.get("source_generation")
+                or record.get("active_message_id") != current_message_id
+                or not record.get("message_queue")
+                or record["message_queue"][0].get("id") != current_message_id
+            ):
+                return
+            message = "We couldn't answer that question right now. Please try again."
+            _show_error(message)
+            record["chat_history"] = list(record.get("chat_history", [])) + [
+                {"role": "user", "content": current["question"]},
+                {"role": "assistant", "content": message},
+            ]
+            record["message_queue"].pop(0)
+            record["active_message_id"] = None
+            record["is_answering"] = False
+            yield (
+                _displayed_chat_history(record),
+                message if not record.get("message_queue") else _queue_status_text(record),
+                _idle_control_updates(record),
+                False,
+                "",
+            )
+            continue
+
+        for partial_answer in _stream_answer_content(answer.answer, provenance=answer.provenance):
+            if (
+                question_generation != record.get("source_generation")
+                or record.get("active_message_id") != current_message_id
+                or not record.get("message_queue")
+                or record["message_queue"][0].get("id") != current_message_id
+            ):
+                return
+            yield (
+                _displayed_chat_history(record, answering_content=partial_answer),
+                _queue_status_text(record),
+                _answer_busy_control_updates(record),
+                False,
+                "",
+            )
+
+        citations = [citation.model_dump() for citation in answer.citations]
+        final_answer = _format_chat_entry(answer.answer, citations, provenance=answer.provenance)
+        if (
+            question_generation != record.get("source_generation")
+            or record.get("active_message_id") != current_message_id
+            or not record.get("message_queue")
+            or record["message_queue"][0].get("id") != current_message_id
+        ):
+            return
+        record["chat_history"] = list(record.get("chat_history", [])) + [
+            {"role": "user", "content": current["question"]},
+            {"role": "assistant", "content": final_answer},
+        ]
+        record["message_queue"].pop(0)
+        record["active_message_id"] = None
+        record["is_answering"] = False
+        record["pending_deeper_question"] = None
+        yield (
+            _displayed_chat_history(record),
+            _queue_status_text(record),
+            _idle_control_updates(record),
+            False,
+            "",
+        )
 
 
 # Proposed future expansion: restore bring-your-own provider help text and
@@ -717,6 +1006,7 @@ def _handle_uploaded_source_change(
 ) -> tuple[dict[str, Any], gr.update, gr.update, gr.update, str | None, list[dict[str, str]], str, gr.update, str]:
     session_state = session_state or _empty_session()
     record = _session_record(session_state)
+    _advance_source_generation(record)
     status_message = _flush_message_queue(record, "Queued questions were cleared because the source changed.")
     record["chat_history"] = []
     if not uploaded_file:
@@ -750,6 +1040,7 @@ def _handle_url_source_change(
 ) -> tuple[dict[str, Any], gr.update, gr.update, str | None, list[dict[str, str]], str, gr.update, str]:
     session_state = session_state or _empty_session()
     record = _session_record(session_state)
+    _advance_source_generation(record)
     status_message = _flush_message_queue(record, "Queued questions were cleared because the source changed.")
     record["chat_history"] = []
     cleaned_url = (url_value or "").strip()
@@ -782,6 +1073,7 @@ def _handle_example_source_change(
 ) -> tuple[dict[str, Any], str, gr.update, str | None, list[dict[str, str]], str, gr.update, str]:
     session_state = session_state or _empty_session()
     record = _session_record(session_state)
+    _advance_source_generation(record)
     status_message = _flush_message_queue(record, "Queued questions were cleared because the source changed.")
     record["chat_history"] = []
     url_value = _set_example_url(example_label)
@@ -829,7 +1121,11 @@ def analyze_document(
 ):
     session_state = session_state or _empty_session()
     record = _session_record(session_state)
+    analysis_generation = _advance_source_generation(record)
     _flush_message_queue(record)
+    record["is_analyzing"] = True
+    record["active_analysis_generation"] = analysis_generation
+    record["analysis_cancelled_message"] = ""
     record_api_config = record.get("api_config") or {}
     provider = record_api_config.get("provider") or _resolve_provider(use_advanced, provider_label)
     api_key = record_api_config.get("api_key") or _resolve_api_key(provider, use_advanced, qwen_key, custom_key)
@@ -837,16 +1133,14 @@ def analyze_document(
     if not is_valid:
         message = "Check the selected provider and API key, then try again."
         _show_warning(message)
-        yield (
+        record["is_analyzing"] = False
+        record["active_analysis_generation"] = None
+        yield _summary_frame(
             session_state,
             message,
             ANALYSIS_PLACEHOLDER,
-            [],
-            *_source_control_updates(True),
-            *_analysis_action_updates(False),
-            *_question_placeholder_updates(record),
-            _deeper_answer_updates(False),
-            "",
+            record,
+            _summary_idle_control_updates(record),
         )
         return
 
@@ -862,154 +1156,148 @@ def analyze_document(
             vector_store=precomputed.vector_store,
             doc_text=precomputed.document_text,
             source_url=active_url,
+            source_generation=record.get("source_generation", 0),
+            is_analyzing=False,
+            active_analysis_generation=None,
         )
-        yield (
+        yield _summary_frame(
             session_state,
             "Loaded precomputed analysis for this example bill.",
             _format_analysis(precomputed.analysis),
-            [],
-            *_source_control_updates(True),
-            *_analysis_action_updates(True),
-            *_question_placeholder_updates(record),
-            _deeper_answer_updates(False),
-            "",
+            record,
+            _summary_idle_control_updates(record),
         )
         return
+        return
 
-    yield (
+    yield _summary_frame(
         session_state,
-        "Loading and parsing document...",
+        "Generating analysis...",
         _analysis_stage_message("Loading and parsing document..."),
-        [],
-        *_source_control_updates(True),
-        *_analysis_action_updates(False),
-        *_question_placeholder_updates(record),
-        _deeper_answer_updates(False),
-        "",
+        record,
+        _summary_busy_control_updates(record),
     )
 
     try:
         document_text = _ingest_sources(active_file, active_url)
     except ingest.IngestionError as exc:
+        if not _analysis_is_current(record, analysis_generation):
+            return
         message = str(exc)
         _show_warning(message)
-        yield (
+        record["is_analyzing"] = False
+        record["active_analysis_generation"] = None
+        yield _summary_frame(
             session_state,
             message,
             ANALYSIS_PLACEHOLDER,
-            [],
-            *_source_control_updates(True),
-            *_analysis_action_updates(False),
-            *_question_placeholder_updates(record),
-            _deeper_answer_updates(False),
-            "",
+            record,
+            _summary_idle_control_updates(record),
         )
         return
     except Exception:  # noqa: BLE001
+        if not _analysis_is_current(record, analysis_generation):
+            return
         message = "We couldn't load that document. Check the link or upload the file directly and try again."
         _show_error(message)
-        yield (
+        record["is_analyzing"] = False
+        record["active_analysis_generation"] = None
+        yield _summary_frame(
             session_state,
             message,
             ANALYSIS_PLACEHOLDER,
-            [],
-            *_source_control_updates(True),
-            *_analysis_action_updates(False),
-            *_question_placeholder_updates(record),
-            _deeper_answer_updates(False),
-            "",
+            record,
+            _summary_idle_control_updates(record),
         )
         return
+    if not _analysis_is_current(record, analysis_generation):
+        return
 
-    yield (
+    yield _summary_frame(
         session_state,
-        "Preparing chunks and provider client...",
+        "Generating analysis...",
         _analysis_stage_message("Preparing chunks and provider client..."),
-        [],
-        *_source_control_updates(True),
-        *_analysis_action_updates(False),
-        *_question_placeholder_updates(record),
-        _deeper_answer_updates(False),
-        "",
+        record,
+        _summary_busy_control_updates(record),
     )
 
     try:
         provider_client = instantiate_client(provider, api_key or "")
     except Exception:  # noqa: BLE001
+        if not _analysis_is_current(record, analysis_generation):
+            return
         message = "We couldn't connect to the selected model provider. Check your API key and settings, then try again."
         _show_error(message)
-        yield (
+        record["is_analyzing"] = False
+        record["active_analysis_generation"] = None
+        yield _summary_frame(
             session_state,
             message,
             ANALYSIS_PLACEHOLDER,
-            [],
-            *_source_control_updates(True),
-            *_analysis_action_updates(False),
-            *_question_placeholder_updates(record),
-            _deeper_answer_updates(False),
-            "",
+            record,
+            _summary_idle_control_updates(record),
         )
         return
+    if not _analysis_is_current(record, analysis_generation):
+        return
 
-    yield (
+    yield _summary_frame(
         session_state,
-        "Building retrieval index...",
+        "Generating analysis...",
         _analysis_stage_message("Building retrieval index..."),
-        [],
-        *_source_control_updates(True),
-        *_analysis_action_updates(False),
-        *_question_placeholder_updates(record),
-        _deeper_answer_updates(False),
-        "",
+        record,
+        _summary_busy_control_updates(record),
     )
 
     try:
         _, chunks, vector_store = prepare_document_artifacts(document_text)
     except Exception:  # noqa: BLE001
+        if not _analysis_is_current(record, analysis_generation):
+            return
         message = "We couldn't prepare the document for analysis. Please try again."
         _show_error(message)
-        yield (
+        record["is_analyzing"] = False
+        record["active_analysis_generation"] = None
+        yield _summary_frame(
             session_state,
             message,
             ANALYSIS_PLACEHOLDER,
-            [],
-            *_source_control_updates(True),
-            *_analysis_action_updates(False),
-            *_question_placeholder_updates(record),
-            _deeper_answer_updates(False),
-            "",
+            record,
+            _summary_idle_control_updates(record),
         )
+        return
+    if not _analysis_is_current(record, analysis_generation):
         return
 
     try:
         analysis = AnalysisResult()
         for stage_message, partial in generate_analysis_progress(provider_client, document_text):
+            if not _analysis_is_current(record, analysis_generation):
+                return
             analysis = partial
-            yield (
+            yield _summary_frame(
                 session_state,
                 stage_message,
                 _format_analysis(partial),
-                [],
-                *_source_control_updates(True),
-                *_analysis_action_updates(True),
-                *_question_placeholder_updates(record),
-                _deeper_answer_updates(False),
-                "",
+                record,
+                _summary_busy_control_updates(record),
             )
     except Exception:  # noqa: BLE001
+        if not _analysis_is_current(record, analysis_generation):
+            return
         message = "We couldn't generate the bill analysis right now. Please try again."
         _show_error(message)
-        yield (
+        record["is_analyzing"] = False
+        record["active_analysis_generation"] = None
+        yield _summary_frame(
             session_state,
             message,
             ANALYSIS_PLACEHOLDER,
-            [],
-            *_source_control_updates(True),
-            *_analysis_action_updates(False),
-            *_question_placeholder_updates(record),
-            _deeper_answer_updates(False),
-            "",
+            record,
+            _summary_idle_control_updates(record),
         )
+        return
+    if not _analysis_is_current(record, analysis_generation):
         return
 
     build_cached_document_artifacts(
@@ -1019,6 +1307,11 @@ def analyze_document(
         vector_store=vector_store,
         source_url=active_url,
     )
+    queued_questions = list(record.get("message_queue", []))
+    for item in queued_questions:
+        item["source_generation"] = analysis_generation
+        if item.get("status") == "answering":
+            item["status"] = "queued"
     _replace_record(
         record,
         api_config={"provider": provider, "api_key": api_key},
@@ -1026,9 +1319,19 @@ def analyze_document(
         vector_store=vector_store,
         doc_text=document_text,
         source_url=active_url,
+        source_generation=record.get("source_generation", 0),
+        message_queue=queued_questions,
+        is_analyzing=False,
+        active_analysis_generation=None,
     )
     analysis_output = _format_analysis(analysis)
-    yield session_state, "", analysis_output, [], *_source_control_updates(True), *_analysis_action_updates(True), *_question_placeholder_updates(record), _deeper_answer_updates(False), ""
+    yield _summary_frame(
+        session_state,
+        "",
+        analysis_output,
+        record,
+        _summary_idle_control_updates(record),
+    )
 
 
 def _rerun_record_analysis(
@@ -1041,78 +1344,93 @@ def _rerun_record_analysis(
     document_text = record.get("doc_text")
     if not document_text:
         return
+    analysis_generation = _advance_source_generation(record)
     _flush_message_queue(record)
+    record["is_analyzing"] = True
+    record["active_analysis_generation"] = analysis_generation
+    record["analysis_cancelled_message"] = ""
 
-    yield (
+    yield _summary_frame(
         session_state,
-        "Preparing provider client...",
+        "Generating analysis...",
         _analysis_stage_message("Preparing provider client..."),
-        [],
-        *_source_control_updates(True),
-        *_analysis_action_updates(False),
-        *_question_placeholder_updates(record),
-        _deeper_answer_updates(False),
-        "",
+        record,
+        _summary_busy_control_updates(record),
     )
 
     try:
         provider_client = instantiate_client(provider, api_key or "")
     except Exception:  # noqa: BLE001
+        if not _analysis_is_current(record, analysis_generation):
+            return
         message = "We couldn't connect to the selected model provider. Check your API key and settings, then try again."
         _show_error(message)
-        yield (
+        record["is_analyzing"] = False
+        record["active_analysis_generation"] = None
+        yield _summary_frame(
             session_state,
             message,
             ANALYSIS_PLACEHOLDER,
-            [],
-            *_source_control_updates(True),
-            *_analysis_action_updates(False),
-            *_question_placeholder_updates(record),
-            _deeper_answer_updates(False),
-            "",
+            record,
+            _summary_idle_control_updates(record),
         )
         return
 
     try:
         analysis = AnalysisResult()
         for stage_message, partial in generate_analysis_progress(provider_client, document_text):
+            if not _analysis_is_current(record, analysis_generation):
+                return
             analysis = partial
-            yield (
+            yield _summary_frame(
                 session_state,
                 stage_message,
                 _format_analysis(partial),
-                [],
-                *_source_control_updates(True),
-                *_analysis_action_updates(True),
-                *_question_placeholder_updates(record),
-                _deeper_answer_updates(False),
-                "",
+                record,
+                _summary_busy_control_updates(record),
             )
     except Exception:  # noqa: BLE001
+        if not _analysis_is_current(record, analysis_generation):
+            return
         message = "We couldn't generate the bill analysis right now. Please try again."
         _show_error(message)
-        yield (
+        record["is_analyzing"] = False
+        record["active_analysis_generation"] = None
+        yield _summary_frame(
             session_state,
             message,
             ANALYSIS_PLACEHOLDER,
-            [],
-            *_source_control_updates(True),
-            *_analysis_action_updates(False),
-            *_question_placeholder_updates(record),
-            _deeper_answer_updates(False),
-            "",
+            record,
+            _summary_idle_control_updates(record),
         )
         return
+    if not _analysis_is_current(record, analysis_generation):
+        return
 
+    queued_questions = list(record.get("message_queue", []))
+    for item in queued_questions:
+        item["source_generation"] = analysis_generation
+        if item.get("status") == "answering":
+            item["status"] = "queued"
     record.update(
         {
             "api_config": {"provider": provider, "api_key": api_key},
             "analysis": analysis.model_dump(),
             "chat_history": [],
             "pending_deeper_question": None,
+            "message_queue": queued_questions,
+            "is_analyzing": False,
+            "active_analysis_generation": None,
         }
     )
-    yield session_state, "", _format_analysis(analysis), [], *_source_control_updates(True), *_analysis_action_updates(True), *_question_placeholder_updates(record), _deeper_answer_updates(False), ""
+    analysis_output = _format_analysis(analysis)
+    yield _summary_frame(
+        session_state,
+        "",
+        analysis_output,
+        record,
+        _summary_idle_control_updates(record),
+    )
 
 
 def rerun_summary(
@@ -1134,16 +1452,12 @@ def rerun_summary(
     if not is_valid:
         message = "Check the selected provider and API key, then try again."
         _show_warning(message)
-        yield (
+        yield _summary_frame(
             session_state,
             message,
             ANALYSIS_PLACEHOLDER,
-            [],
-            *_source_control_updates(True),
-            *_analysis_action_updates(False),
-            *_question_placeholder_updates(record),
-            _deeper_answer_updates(False),
-            "",
+            record,
+            _summary_idle_control_updates(record),
         )
         return
 
@@ -1174,6 +1488,7 @@ def clear_analysis(
 ):
     session_state = session_state or _empty_session()
     record = _session_record(session_state)
+    _advance_source_generation(record)
     _flush_message_queue(record)
     record["analysis"] = None
     record["chat_history"] = []
@@ -1183,11 +1498,63 @@ def clear_analysis(
         "",
         ANALYSIS_PLACEHOLDER,
         [],
-        *_source_control_updates(True),
-        *_analysis_action_updates(False),
-        *_question_placeholder_updates(record),
+        "",
+        *_idle_control_updates(record),
         _deeper_answer_updates(False),
         "",
+    )
+
+
+def stop_analysis(session_state: dict[str, Any] | None):
+    session_state = session_state or _empty_session()
+    record = _session_record(session_state)
+    _advance_source_generation(record)
+    record["is_analyzing"] = False
+    record["active_analysis_generation"] = None
+    record["analysis_cancelled_message"] = "Analysis stopped. No new summary was saved."
+    for item in record.get("message_queue", []):
+        item["status"] = "queued"
+        item["source_generation"] = None
+    return _analysis_frame(
+        session_state,
+        record["analysis_cancelled_message"],
+        _committed_analysis_output(record),
+        _displayed_chat_history(record),
+        _queue_status_text(record),
+        record,
+        _idle_control_updates(record),
+    )
+
+
+def stop_answer(
+    session_state: dict[str, Any] | None,
+    chat_history: list[dict[str, str]] | None,
+):
+    session_state = session_state or _empty_session()
+    record = _session_record(session_state)
+    history = list(record.get("chat_history") or [])
+    queue = list(record.get("message_queue", []))
+    active_message_id = record.get("active_message_id")
+    active_item = next((item for item in queue if item.get("id") == active_message_id), queue[0] if queue else None)
+    if active_item:
+        history.extend(
+            [
+                {"role": "user", "content": active_item["question"]},
+                {"role": "assistant", "content": "_Answer cancelled._"},
+            ]
+        )
+    record["chat_history"] = history
+    record["message_queue"] = []
+    record["is_answering"] = False
+    record["active_message_id"] = None
+    record["pending_deeper_question"] = None
+    controls = _analysis_busy_control_updates(record) if record.get("is_analyzing") else _idle_control_updates(record)
+    return _chat_frame(
+        _displayed_chat_history(record),
+        session_state,
+        "",
+        record,
+        controls,
     )
 
 
@@ -1232,6 +1599,7 @@ def _prepare_record_for_question(
         vector_store=vector_store,
         doc_text=document_text,
         source_url=active_url,
+        source_generation=record.get("source_generation", 0),
     )
     return None
 
@@ -1252,7 +1620,31 @@ def ask_question(
     record = _session_record(session_state)
     chat_history = chat_history or _displayed_chat_history(record)
     if not question or not question.strip():
-        yield chat_history, session_state, _queue_status_text(record), _deeper_answer_updates(False), "", *_chat_control_updates(record, is_busy=bool(record.get("is_answering")))
+        if _can_drain_message_queue(record):
+            for chatbot_frame, chat_status, controls, deeper_visible, deeper_hint in _drain_message_queue(record):
+                yield _chat_frame(
+                    chatbot_frame,
+                    session_state,
+                    chat_status,
+                    record,
+                    controls,
+                    deeper_visible=deeper_visible,
+                    deeper_hint=deeper_hint,
+                )
+            return
+        controls = _analysis_busy_control_updates(record) if record.get("is_analyzing") else _idle_control_updates(record)
+        yield _chat_frame(chat_history, session_state, _queue_status_text(record), record, controls)
+        return
+
+    if record.get("is_analyzing"):
+        _enqueue_question(record, question.strip())
+        yield _chat_frame(
+            _displayed_chat_history(record),
+            session_state,
+            _queue_status_text(record),
+            record,
+            _analysis_busy_control_updates(record),
+        )
         return
 
     source_prep_error = _prepare_record_for_question(
@@ -1266,106 +1658,57 @@ def ask_question(
         custom_key=custom_key,
     )
     if source_prep_error is not None:
-        yield chat_history, session_state, source_prep_error, _deeper_answer_updates(False), "", *_chat_control_updates(record, is_busy=False)
+        yield _chat_frame(chat_history, session_state, source_prep_error, record, _idle_control_updates(record))
         return
 
     question_text = question.strip()
     _enqueue_question(record, question_text)
 
     if record.get("is_answering"):
-        yield (
+        yield _chat_frame(
             _displayed_chat_history(record),
             session_state,
             _queue_status_text(record),
-            _deeper_answer_updates(False),
-            "",
-            *_source_control_updates(False),
-            *_analysis_action_updates(False),
-            *_question_placeholder_updates(record),
+            record,
+            _answer_busy_control_updates(record),
         )
         return
 
-    while record.get("message_queue"):
-        current = record["message_queue"][0]
-        current["status"] = "answering"
-        record["is_answering"] = True
-        record["active_message_id"] = current["id"]
-        yield (
-            _displayed_chat_history(record),
+    for chatbot_frame, chat_status, controls, deeper_visible, deeper_hint in _drain_message_queue(record):
+        yield _chat_frame(
+            chatbot_frame,
             session_state,
-            _queue_status_text(record),
-            _deeper_answer_updates(False),
-            "",
-            *_source_control_updates(False),
-            *_analysis_action_updates(False),
-            *_question_placeholder_updates(record),
+            chat_status,
+            record,
+            controls,
+            deeper_visible=deeper_visible,
+            deeper_hint=deeper_hint,
         )
 
-        try:
-            provider_client = instantiate_client(
-                record["api_config"]["provider"],
-                record["api_config"]["api_key"],
-            )
-            answer = answer_query_from_full_document(
-                provider_client,
-                record.get("vector_store"),
-                current["question"],
-                doc_text=record.get("doc_text"),
-            )
-        except Exception:  # noqa: BLE001
-            message = "We couldn't answer that question right now. Please try again."
-            _show_error(message)
-            record["chat_history"] = list(record.get("chat_history", [])) + [
-                {"role": "user", "content": current["question"]},
-                {"role": "assistant", "content": message},
-            ]
-            record["message_queue"].pop(0)
-            record["active_message_id"] = None
-            record["is_answering"] = False
-            yield (
-                _displayed_chat_history(record),
-                session_state,
-                message if not record.get("message_queue") else _queue_status_text(record),
-                _deeper_answer_updates(False),
-                "",
-                *_source_control_updates(True),
-                *_analysis_action_updates(_analysis_available(record)),
-                *_question_placeholder_updates(record),
-            )
-            continue
 
-        for partial_answer in _stream_answer_content(answer.answer, provenance=answer.provenance):
-            yield (
-                _displayed_chat_history(record, answering_content=partial_answer),
-                session_state,
-                _queue_status_text(record),
-                _deeper_answer_updates(False),
-                "",
-                *_source_control_updates(False),
-                *_analysis_action_updates(False),
-                *_question_placeholder_updates(record),
-            )
-
-        citations = [citation.model_dump() for citation in answer.citations]
-        final_answer = _format_chat_entry(answer.answer, citations, provenance=answer.provenance)
-        record["chat_history"] = list(record.get("chat_history", [])) + [
-            {"role": "user", "content": current["question"]},
-            {"role": "assistant", "content": final_answer},
-        ]
-        record["message_queue"].pop(0)
-        record["active_message_id"] = None
-        record["is_answering"] = False
-        record["pending_deeper_question"] = None
-        yield (
-            _displayed_chat_history(record),
-            session_state,
-            _queue_status_text(record),
-            _deeper_answer_updates(False),
-            "",
-            *_source_control_updates(True),
-            *_analysis_action_updates(_analysis_available(record)),
-            *_question_placeholder_updates(record),
-        )
+def drain_queued_questions_after_analysis(
+    uploaded_file: str | None,
+    url_value: str | None,
+    use_advanced: bool,
+    provider_label: str | None,
+    qwen_key: str | None,
+    custom_key: str | None,
+    session_state: dict[str, Any] | None,
+    chat_history: list[dict[str, str]] | None,
+    source_kind: str | None = None,
+):
+    yield from ask_question(
+        "",
+        uploaded_file,
+        url_value,
+        use_advanced,
+        provider_label,
+        qwen_key,
+        custom_key,
+        session_state,
+        chat_history,
+        source_kind,
+    )
 
 
 def run_deeper_answer(
@@ -1376,15 +1719,15 @@ def run_deeper_answer(
     record = _session_record(session_state)
     chat_history = chat_history or []
     if record.get("is_answering"):
-        yield chat_history, session_state, _queue_status_text(record), _deeper_answer_updates(False), "", *_chat_control_updates(record, is_busy=True)
+        yield _chat_frame(chat_history, session_state, _queue_status_text(record), record, _answer_busy_control_updates(record))
         return
     question_text = record.get("pending_deeper_question")
     if not question_text:
-        yield chat_history, session_state, "No pending question for deeper analysis.", _deeper_answer_updates(False), "", *_chat_control_updates(record, is_busy=False)
+        yield _chat_frame(chat_history, session_state, "No pending question for deeper analysis.", record, _idle_control_updates(record))
         return
 
     record["is_answering"] = True
-    yield chat_history, session_state, "Reading the full document for a deeper answer...", _deeper_answer_updates(False), "", *_chat_control_updates(record, is_busy=True)
+    yield _chat_frame(chat_history, session_state, "Reading the full document for a deeper answer...", record, _answer_busy_control_updates(record))
 
     try:
         provider_client = instantiate_client(
@@ -1401,12 +1744,20 @@ def run_deeper_answer(
         message = "We couldn't generate the deeper full-document answer right now. Please try again."
         _show_error(message)
         record["is_answering"] = False
-        yield chat_history, session_state, message, _deeper_answer_updates(True), "A deeper full-document answer is still available.", *_chat_control_updates(record, is_busy=False)
+        yield _chat_frame(
+            chat_history,
+            session_state,
+            message,
+            record,
+            _idle_control_updates(record),
+            deeper_visible=True,
+            deeper_hint="A deeper full-document answer is still available.",
+        )
         return
 
     citations = [citation.model_dump() for citation in answer.citations]
     for partial_history in _stream_chat_entry(chat_history, answer.answer, citations, provenance=answer.provenance):
-        yield partial_history, session_state, "", _deeper_answer_updates(False), "", *_chat_control_updates(record, is_busy=True)
+        yield _chat_frame(partial_history, session_state, "", record, _answer_busy_control_updates(record))
 
     chat_history = chat_history + [
         {"role": "assistant", "content": _format_chat_entry(answer.answer, citations, provenance=answer.provenance)}
@@ -1414,7 +1765,7 @@ def run_deeper_answer(
     record["chat_history"] = chat_history
     record["pending_deeper_question"] = None
     record["is_answering"] = False
-    yield chat_history, session_state, "", _deeper_answer_updates(False), "", *_chat_control_updates(record, is_busy=False)
+    yield _chat_frame(chat_history, session_state, "", record, _idle_control_updates(record))
 
 
 def reset_session(session_state: dict[str, Any] | None):
@@ -1436,7 +1787,9 @@ def reset_session(session_state: dict[str, Any] | None):
         gr.update(interactive=True),
         gr.update(interactive=True),
         *_analysis_action_updates(False),
+        _analysis_stop_updates(False),
         *_question_placeholder_updates(empty_record),
+        _answer_stop_updates(False),
         _deeper_answer_updates(False),
         "",
     )
@@ -1551,6 +1904,7 @@ def build_app() -> gr.Blocks:
                             with gr.Row():
                                 rerun_summary_button = gr.Button("↺", elem_id="rerun-summary-button", variant="secondary", interactive=False)
                                 clear_analysis_button = gr.Button("✕", elem_id="clear-analysis-button", variant="secondary", interactive=False)
+                                stop_analysis_button = gr.Button("Stop analysis", variant="stop", visible=False)
                     analysis_output = gr.Markdown(ANALYSIS_PLACEHOLDER, elem_id="analysis-output")
 
                 with gr.Group(elem_id="chat-panel"):
@@ -1565,6 +1919,7 @@ def build_app() -> gr.Blocks:
                                 show_label=False,
                             )
                         ask_button = gr.Button("Ask", scale=1, variant="primary", elem_id="ask-button")
+                    stop_answer_button = gr.Button("Stop answer", variant="stop", visible=False)
                     chat_status = gr.Markdown(elem_id="chat-status")
                     deeper_answer_button = gr.Button("Run deeper full-document answer", visible=False)
                     deeper_answer_hint = gr.Markdown("")
@@ -1601,14 +1956,13 @@ def build_app() -> gr.Blocks:
             inputs=[url_value, session_state],
             outputs=[session_state, uploaded_file, view_source_button, source_kind, chatbot, chat_status, deeper_answer_button, deeper_answer_hint],
         )
-        analyze_button.click(
+        analysis_event = analyze_button.click(
             analyze_document,
             inputs=[uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state, source_kind],
             outputs=[
                 session_state,
                 status_output,
                 analysis_output,
-                chatbot,
                 uploaded_file,
                 example_selector,
                 url_value,
@@ -1616,11 +1970,15 @@ def build_app() -> gr.Blocks:
                 reset_button,
                 rerun_summary_button,
                 clear_analysis_button,
-                question_input,
-                ask_button,
+                stop_analysis_button,
                 deeper_answer_button,
                 deeper_answer_hint,
             ],
+        )
+        analysis_drain_event = analysis_event.then(
+            drain_queued_questions_after_analysis,
+            inputs=[uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state, chatbot, source_kind],
+            outputs=[chatbot, session_state, chat_status, deeper_answer_button, deeper_answer_hint, uploaded_file, example_selector, url_value, analyze_button, reset_button, rerun_summary_button, clear_analysis_button, stop_analysis_button, question_input, ask_button, stop_answer_button],
         )
         view_source_button.click(
             None,
@@ -1633,14 +1991,13 @@ def build_app() -> gr.Blocks:
             }
             """,
         )
-        rerun_summary_button.click(
+        rerun_event = rerun_summary_button.click(
             rerun_summary,
             inputs=[uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state, source_kind],
             outputs=[
                 session_state,
                 status_output,
                 analysis_output,
-                chatbot,
                 uploaded_file,
                 example_selector,
                 url_value,
@@ -1648,11 +2005,15 @@ def build_app() -> gr.Blocks:
                 reset_button,
                 rerun_summary_button,
                 clear_analysis_button,
-                question_input,
-                ask_button,
+                stop_analysis_button,
                 deeper_answer_button,
                 deeper_answer_hint,
             ],
+        )
+        rerun_drain_event = rerun_event.then(
+            drain_queued_questions_after_analysis,
+            inputs=[uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state, chatbot, source_kind],
+            outputs=[chatbot, session_state, chat_status, deeper_answer_button, deeper_answer_hint, uploaded_file, example_selector, url_value, analyze_button, reset_button, rerun_summary_button, clear_analysis_button, stop_analysis_button, question_input, ask_button, stop_answer_button],
         )
         clear_analysis_button.click(
             clear_analysis,
@@ -1662,6 +2023,7 @@ def build_app() -> gr.Blocks:
                 status_output,
                 analysis_output,
                 chatbot,
+                chat_status,
                 uploaded_file,
                 example_selector,
                 url_value,
@@ -1669,36 +2031,83 @@ def build_app() -> gr.Blocks:
                 reset_button,
                 rerun_summary_button,
                 clear_analysis_button,
+                stop_analysis_button,
                 question_input,
                 ask_button,
+                stop_answer_button,
                 deeper_answer_button,
                 deeper_answer_hint,
             ],
         )
-        ask_button.click(
+        ask_click_event = ask_button.click(
             _stage_question,
             inputs=[question_input, session_state, chatbot],
             outputs=[queued_question, question_input, chatbot, chat_status, session_state],
             queue=False,
+            trigger_mode="multiple",
+            concurrency_limit=None,
         ).then(
             ask_question,
             inputs=[queued_question, uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state, chatbot, source_kind],
-            outputs=[chatbot, session_state, chat_status, deeper_answer_button, deeper_answer_hint, uploaded_file, example_selector, url_value, analyze_button, reset_button, rerun_summary_button, clear_analysis_button, question_input, ask_button],
+            outputs=[chatbot, session_state, chat_status, deeper_answer_button, deeper_answer_hint, uploaded_file, example_selector, url_value, analyze_button, reset_button, rerun_summary_button, clear_analysis_button, stop_analysis_button, question_input, ask_button, stop_answer_button],
         )
-        question_input.submit(
+        ask_submit_event = question_input.submit(
             _stage_question,
             inputs=[question_input, session_state, chatbot],
             outputs=[queued_question, question_input, chatbot, chat_status, session_state],
             queue=False,
+            trigger_mode="multiple",
+            concurrency_limit=None,
         ).then(
             ask_question,
             inputs=[queued_question, uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state, chatbot, source_kind],
-            outputs=[chatbot, session_state, chat_status, deeper_answer_button, deeper_answer_hint, uploaded_file, example_selector, url_value, analyze_button, reset_button, rerun_summary_button, clear_analysis_button, question_input, ask_button],
+            outputs=[chatbot, session_state, chat_status, deeper_answer_button, deeper_answer_hint, uploaded_file, example_selector, url_value, analyze_button, reset_button, rerun_summary_button, clear_analysis_button, stop_analysis_button, question_input, ask_button, stop_answer_button],
         )
-        deeper_answer_button.click(
+        deeper_answer_event = deeper_answer_button.click(
             run_deeper_answer,
             inputs=[session_state, chatbot],
-            outputs=[chatbot, session_state, chat_status, deeper_answer_button, deeper_answer_hint, uploaded_file, example_selector, url_value, analyze_button, reset_button, rerun_summary_button, clear_analysis_button, question_input, ask_button],
+            outputs=[chatbot, session_state, chat_status, deeper_answer_button, deeper_answer_hint, uploaded_file, example_selector, url_value, analyze_button, reset_button, rerun_summary_button, clear_analysis_button, stop_analysis_button, question_input, ask_button, stop_answer_button],
+        )
+        stop_analysis_button.click(
+            stop_analysis,
+            inputs=[session_state],
+            outputs=[
+                session_state,
+                status_output,
+                analysis_output,
+                chatbot,
+                chat_status,
+                uploaded_file,
+                example_selector,
+                url_value,
+                analyze_button,
+                reset_button,
+                rerun_summary_button,
+                clear_analysis_button,
+                stop_analysis_button,
+                question_input,
+                ask_button,
+                stop_answer_button,
+                deeper_answer_button,
+                deeper_answer_hint,
+            ],
+            cancels=[analysis_event, rerun_event],
+            queue=False,
+        )
+        stop_answer_button.click(
+            stop_answer,
+            inputs=[session_state, chatbot],
+            outputs=[chatbot, session_state, chat_status, deeper_answer_button, deeper_answer_hint, uploaded_file, example_selector, url_value, analyze_button, reset_button, rerun_summary_button, clear_analysis_button, stop_analysis_button, question_input, ask_button, stop_answer_button],
+            cancels=[
+                analysis_event,
+                analysis_drain_event,
+                rerun_event,
+                rerun_drain_event,
+                ask_click_event,
+                ask_submit_event,
+                deeper_answer_event,
+            ],
+            queue=False,
         )
         reset_button.click(
             reset_session,
@@ -1718,8 +2127,10 @@ def build_app() -> gr.Blocks:
                 reset_button,
                 rerun_summary_button,
                 clear_analysis_button,
+                stop_analysis_button,
                 question_input,
                 ask_button,
+                stop_answer_button,
                 deeper_answer_button,
                 deeper_answer_hint,
             ],

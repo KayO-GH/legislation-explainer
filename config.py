@@ -134,6 +134,6 @@ PROVIDER_METADATA: list[ProviderConfig] = [
 
 APP_TITLE = "Legislation Explainer"
 APP_DESCRIPTION = (
-    "A Gradio policy assistant for Ghana's NITA bill and similar public-interest legislation. "
+    "A Gradio policy assistant for public-interest legislation. "
     "Upload or link to a bill, generate a structured review, and ask grounded follow-up questions."
 )

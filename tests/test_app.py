@@ -1,4 +1,4 @@
-from app import _displayed_chat_history, _empty_session, _format_analysis, _format_chat_entry, _handle_example_source_change, _handle_url_source_change, _session_record, _stage_question, _view_source_button_update, ask_question, clear_analysis, rerun_summary, _stream_chat_entry
+from app import _displayed_chat_history, _empty_session, _format_analysis, _format_chat_entry, _handle_example_source_change, _handle_url_source_change, _session_record, _stage_question, _view_source_button_update, analyze_document, ask_question, clear_analysis, drain_queued_questions_after_analysis, rerun_summary, stop_analysis, stop_answer, _stream_chat_entry
 from services.rag_pipeline import AnalysisResult, AnswerResult, Citation, ImplementationItem
 
 
@@ -155,6 +155,148 @@ def test_ask_question_bootstraps_source_document_without_analysis(monkeypatch) -
     assert "<details><summary>Supporting snippet (1)</summary>" in frames[-1][0][-1]["content"]
 
 
+def test_analysis_start_locks_source_controls_but_keeps_question_input_enabled() -> None:
+    session_state = _empty_session()
+    generator = analyze_document(None, "https://example.com/bill.pdf", False, None, "hf_test_token", None, session_state, "url")
+
+    first_frame = next(generator)
+
+    assert first_frame[1] == "Generating analysis..."
+    assert first_frame[3]["interactive"] is False
+    assert first_frame[4]["interactive"] is False
+    assert first_frame[5]["interactive"] is False
+    assert first_frame[6]["interactive"] is False
+    assert first_frame[7]["interactive"] is False
+    assert first_frame[8]["interactive"] is False
+    assert first_frame[9]["interactive"] is False
+    assert first_frame[10]["visible"] is True
+    assert first_frame[10]["interactive"] is True
+
+
+def test_stage_question_enqueues_during_analysis() -> None:
+    session_state = _empty_session()
+    record = _session_record(session_state)
+    record["is_analyzing"] = True
+    record["source_generation"] = 3
+    record["active_analysis_generation"] = 3
+
+    staged = _stage_question("Queued during analysis", session_state, [])
+
+    assert staged[0] == ""
+    assert staged[1] == ""
+    assert staged[3] == "Queued:\n1. Queued during analysis"
+    assert record["message_queue"][0]["source_generation"] == 3
+
+
+def test_ask_question_does_not_drain_while_analysis_is_active(monkeypatch) -> None:
+    session_state = _empty_session()
+    record = _session_record(session_state)
+    record.update(
+        {
+            "api_config": {"provider": "qwen", "api_key": "hf_test_token"},
+            "vector_store": object(),
+            "doc_text": "Full bill text",
+            "is_analyzing": True,
+            "source_generation": 3,
+            "active_analysis_generation": 3,
+        }
+    )
+    calls: list[str] = []
+    monkeypatch.setattr("app.answer_query_from_full_document", lambda *args, **kwargs: calls.append("called"))
+
+    frames = list(ask_question("Will this wait?", None, None, False, None, None, None, session_state, []))
+
+    assert calls == []
+    assert len(frames) == 1
+    assert frames[0][2] == "Queued:\n1. Will this wait?"
+    assert record["is_answering"] is False
+
+
+def test_analysis_completion_drains_questions_queued_during_analysis(monkeypatch) -> None:
+    session_state = _empty_session()
+    monkeypatch.setattr("app._ingest_sources", lambda uploaded_file, url_value: "Fresh bill text")
+    monkeypatch.setattr("app.prepare_document_artifacts", lambda document_text: ("hash", ["chunk"], "vector-store"))
+    monkeypatch.setattr("app.instantiate_client", lambda provider, api_key: object())
+    monkeypatch.setattr("app.build_cached_document_artifacts", lambda **kwargs: None)
+    monkeypatch.setattr(
+        "app.generate_analysis_progress",
+        lambda provider_client, document_text: [("Generated summary", AnalysisResult(executive_summary="Summary"))],
+    )
+    calls: list[tuple[str, str | None]] = []
+
+    def fake_answer_query_from_full_document(provider_client, vector_store, question, *, doc_text=None):
+        calls.append((question, doc_text))
+        return AnswerResult(
+            answer="Queued answer",
+            citations=[Citation(ref_id=1, snippet="Fresh clause")],
+            provenance="full_document",
+        )
+
+    monkeypatch.setattr("app.answer_query_from_full_document", fake_answer_query_from_full_document)
+
+    generator = analyze_document(None, "https://example.com/bill.pdf", False, None, "hf_test_token", None, session_state, "url")
+    first_frame = next(generator)
+    assert first_frame[1] == "Generating analysis..."
+    _stage_question("Queued during analysis", session_state, [])
+    frames = list(generator)
+    drain_frames = list(
+        drain_queued_questions_after_analysis(
+            None,
+            "https://example.com/bill.pdf",
+            False,
+            None,
+            "hf_test_token",
+            None,
+            session_state,
+            [],
+            "url",
+        )
+    )
+
+    assert frames[-1][1] == ""
+    assert calls == [("Queued during analysis", "Fresh bill text")]
+    assert drain_frames[-1][0][-1]["content"].startswith("_Full-document answer._")
+    assert _session_record(session_state)["message_queue"] == []
+
+
+def test_stop_analysis_restores_committed_summary_and_preserves_waiting_queue() -> None:
+    session_state = _empty_session()
+    record = _session_record(session_state)
+    record.update(
+        {
+            "analysis": AnalysisResult(executive_summary="Old summary").model_dump(),
+            "message_queue": [{"id": "one", "question": "Queued question", "status": "queued", "source_generation": 2}],
+            "is_analyzing": True,
+            "source_generation": 2,
+            "active_analysis_generation": 2,
+        }
+    )
+
+    result = stop_analysis(session_state)
+
+    assert result[1] == "Analysis stopped. No new summary was saved."
+    assert "Old summary" in result[2]
+    assert result[4] == "Queued:\n1. Queued question"
+    assert record["message_queue"][0]["source_generation"] is None
+    assert record["is_analyzing"] is False
+
+
+def test_stop_answer_marks_active_question_cancelled() -> None:
+    session_state = _empty_session()
+    record = _session_record(session_state)
+    record["message_queue"] = [{"id": "active", "question": "Current question", "status": "answering"}]
+    record["active_message_id"] = "active"
+    record["is_answering"] = True
+
+    result = stop_answer(session_state, [{"role": "assistant", "content": "Partial streamed answer"}])
+
+    assert "Partial streamed answer" not in [item["content"] for item in result[0]]
+    assert result[0][-1]["content"] == "_Answer cancelled._"
+    assert result[2] == ""
+    assert record["message_queue"] == []
+    assert record["is_answering"] is False
+
+
 def test_ask_question_locks_source_controls_but_keeps_queue_input_enabled(monkeypatch) -> None:
     session_state = _empty_session()
     record = _session_record(session_state)
@@ -187,8 +329,9 @@ def test_ask_question_locks_source_controls_but_keeps_queue_input_enabled(monkey
     assert answering_frame[9]["interactive"] is False
     assert answering_frame[10]["interactive"] is False
     assert answering_frame[11]["interactive"] is False
-    assert answering_frame[12]["interactive"] is True
     assert answering_frame[13]["interactive"] is True
+    assert answering_frame[14]["interactive"] is True
+    assert answering_frame[15]["visible"] is True
 
     final_frame = frames[-1]
     assert final_frame[5]["interactive"] is True
@@ -196,8 +339,8 @@ def test_ask_question_locks_source_controls_but_keeps_queue_input_enabled(monkey
     assert final_frame[7]["interactive"] is True
     assert final_frame[8]["interactive"] is True
     assert final_frame[9]["interactive"] is True
-    assert final_frame[12]["interactive"] is True
     assert final_frame[13]["interactive"] is True
+    assert final_frame[14]["interactive"] is True
 
 
 def test_ask_question_clears_input_when_queued_behind_active_answer(monkeypatch) -> None:
@@ -219,7 +362,42 @@ def test_ask_question_clears_input_when_queued_behind_active_answer(monkeypatch)
 
     assert len(frames) == 1
     assert frames[0][2] == "Queued:\n1. Current question\n2. Queued follow-up"
-    assert frames[0][12]["interactive"] is True
+    assert frames[0][13]["interactive"] is True
+
+
+def test_ask_question_ignores_stale_completion_after_source_change(monkeypatch) -> None:
+    session_state = _empty_session()
+    record = _session_record(session_state)
+    record.update(
+        {
+            "api_config": {"provider": "qwen", "api_key": "hf_test_token"},
+            "vector_store": object(),
+            "doc_text": "Full bill text",
+            "chat_history": [],
+        }
+    )
+
+    monkeypatch.setattr("app.instantiate_client", lambda provider, api_key: object())
+
+    def fake_answer_query_from_full_document(provider_client, vector_store, question, *, doc_text=None):
+        _handle_example_source_change("National Information Technology Authority Bill, 2025", session_state)
+        return AnswerResult(
+            answer="Stale answer",
+            citations=[Citation(ref_id=1, snippet="Clause text")],
+            provenance="full_document",
+        )
+
+    monkeypatch.setattr("app.answer_query_from_full_document", fake_answer_query_from_full_document)
+
+    frames = list(ask_question("What does the bill require?", None, None, False, None, None, None, session_state, []))
+
+    assert len(frames) == 1
+    assert frames[0][2] == "Queued:\n1. What does the bill require?"
+    assert record["message_queue"] == []
+    assert record["chat_history"] == []
+    assert record["is_answering"] is False
+    assert record["active_message_id"] is None
+    assert record["source_generation"] == 1
 
 
 def test_url_source_change_flushes_queued_questions() -> None:
@@ -310,9 +488,9 @@ def test_clear_analysis_resets_panel_and_disables_header_actions() -> None:
     result = clear_analysis(session_state)
 
     assert result[2] == "Run an analysis to populate this section."
-    assert result[9]["interactive"] is False
     assert result[10]["interactive"] is False
-    assert result[13]["visible"] is False
+    assert result[11]["interactive"] is False
+    assert result[16]["visible"] is False
     assert record["analysis"] is None
     assert record["chat_history"] == []
     assert record["pending_deeper_question"] is None
