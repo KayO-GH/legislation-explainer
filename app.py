@@ -198,14 +198,23 @@ APP_CSS = """
 #rerun-summary-button {
     width: auto;
     min-width: 0;
-}
-#rerun-summary-button button {
     min-width: 2rem;
     width: 2rem;
     height: 2rem;
     padding: 0;
-    border-radius: 0.6rem !important;
+    border-radius: 0 !important;
     font-size: 0.95rem;
+    line-height: 1;
+}
+#clear-analysis-button {
+    width: auto;
+    min-width: 0;
+    min-width: 2rem;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border-radius: 0 !important;
+    font-size: 1rem;
     line-height: 1;
 }
 #chat-question-row {
@@ -539,6 +548,13 @@ def _deeper_answer_updates(visible: bool, label: str = "Run deeper full-document
     return gr.update(visible=visible, value=label)
 
 
+def _analysis_action_updates(enabled: bool) -> tuple[gr.update, gr.update]:
+    return (
+        gr.update(interactive=enabled),
+        gr.update(interactive=enabled),
+    )
+
+
 # Proposed future expansion: restore bring-your-own provider help text and
 # controls when the app supports non-hackathon model/provider comparison again.
 # def _provider_help_text(provider_label: str | None, use_advanced: bool) -> str:
@@ -612,8 +628,9 @@ def analyze_document(
 ):
     session_state = session_state or _empty_session()
     record = _session_record(session_state)
-    provider = _resolve_provider(use_advanced, provider_label)
-    api_key = _resolve_api_key(provider, use_advanced, qwen_key, custom_key)
+    record_api_config = record.get("api_config") or {}
+    provider = record_api_config.get("provider") or _resolve_provider(use_advanced, provider_label)
+    api_key = record_api_config.get("api_key") or _resolve_api_key(provider, use_advanced, qwen_key, custom_key)
     is_valid, error = validate_api_key(provider, api_key)
     if not is_valid:
         message = "Check the selected provider and API key, then try again."
@@ -623,6 +640,7 @@ def analyze_document(
             message,
             ANALYSIS_PLACEHOLDER,
             [],
+            *_analysis_action_updates(False),
             _deeper_answer_updates(False),
             "",
         )
@@ -650,6 +668,7 @@ def analyze_document(
             "Loaded precomputed analysis for this example bill.",
             _format_analysis(precomputed.analysis),
             [],
+            *_analysis_action_updates(True),
             _deeper_answer_updates(False),
             "",
         )
@@ -660,6 +679,7 @@ def analyze_document(
         "Loading and parsing document...",
         _analysis_stage_message("Loading and parsing document..."),
         [],
+        *_analysis_action_updates(False),
         _deeper_answer_updates(False),
         "",
     )
@@ -674,6 +694,7 @@ def analyze_document(
             message,
             ANALYSIS_PLACEHOLDER,
             [],
+            *_analysis_action_updates(False),
             _deeper_answer_updates(False),
             "",
         )
@@ -686,6 +707,7 @@ def analyze_document(
             message,
             ANALYSIS_PLACEHOLDER,
             [],
+            *_analysis_action_updates(False),
             _deeper_answer_updates(False),
             "",
         )
@@ -696,6 +718,7 @@ def analyze_document(
         "Preparing chunks and provider client...",
         _analysis_stage_message("Preparing chunks and provider client..."),
         [],
+        *_analysis_action_updates(False),
         _deeper_answer_updates(False),
         "",
     )
@@ -710,6 +733,7 @@ def analyze_document(
             message,
             ANALYSIS_PLACEHOLDER,
             [],
+            *_analysis_action_updates(False),
             _deeper_answer_updates(False),
             "",
         )
@@ -720,6 +744,7 @@ def analyze_document(
         "Building retrieval index...",
         _analysis_stage_message("Building retrieval index..."),
         [],
+        *_analysis_action_updates(False),
         _deeper_answer_updates(False),
         "",
     )
@@ -734,6 +759,7 @@ def analyze_document(
             message,
             ANALYSIS_PLACEHOLDER,
             [],
+            *_analysis_action_updates(False),
             _deeper_answer_updates(False),
             "",
         )
@@ -748,6 +774,7 @@ def analyze_document(
                 stage_message,
                 _format_analysis(partial),
                 [],
+                *_analysis_action_updates(True),
                 _deeper_answer_updates(False),
                 "",
             )
@@ -759,6 +786,7 @@ def analyze_document(
             message,
             ANALYSIS_PLACEHOLDER,
             [],
+            *_analysis_action_updates(False),
             _deeper_answer_updates(False),
             "",
         )
@@ -784,7 +812,82 @@ def analyze_document(
         }
     )
     analysis_output = _format_analysis(analysis)
-    yield session_state, "", analysis_output, [], _deeper_answer_updates(False), ""
+    yield session_state, "", analysis_output, [], *_analysis_action_updates(True), _deeper_answer_updates(False), ""
+
+
+def _rerun_record_analysis(
+    session_state: dict[str, Any],
+    record: dict[str, Any],
+    *,
+    provider: str,
+    api_key: str | None,
+) -> Any:
+    document_text = record.get("doc_text")
+    if not document_text:
+        return
+
+    yield (
+        session_state,
+        "Preparing provider client...",
+        _analysis_stage_message("Preparing provider client..."),
+        [],
+        *_analysis_action_updates(False),
+        _deeper_answer_updates(False),
+        "",
+    )
+
+    try:
+        provider_client = instantiate_client(provider, api_key or "")
+    except Exception:  # noqa: BLE001
+        message = "We couldn't connect to the selected model provider. Check your API key and settings, then try again."
+        _show_error(message)
+        yield (
+            session_state,
+            message,
+            ANALYSIS_PLACEHOLDER,
+            [],
+            *_analysis_action_updates(False),
+            _deeper_answer_updates(False),
+            "",
+        )
+        return
+
+    try:
+        analysis = AnalysisResult()
+        for stage_message, partial in generate_analysis_progress(provider_client, document_text):
+            analysis = partial
+            yield (
+                session_state,
+                stage_message,
+                _format_analysis(partial),
+                [],
+                *_analysis_action_updates(True),
+                _deeper_answer_updates(False),
+                "",
+            )
+    except Exception:  # noqa: BLE001
+        message = "We couldn't generate the bill analysis right now. Please try again."
+        _show_error(message)
+        yield (
+            session_state,
+            message,
+            ANALYSIS_PLACEHOLDER,
+            [],
+            *_analysis_action_updates(False),
+            _deeper_answer_updates(False),
+            "",
+        )
+        return
+
+    record.update(
+        {
+            "api_config": {"provider": provider, "api_key": api_key},
+            "analysis": analysis.model_dump(),
+            "chat_history": [],
+            "pending_deeper_question": None,
+        }
+    )
+    yield session_state, "", _format_analysis(analysis), [], *_analysis_action_updates(True), _deeper_answer_updates(False), ""
 
 
 def rerun_summary(
@@ -797,16 +900,64 @@ def rerun_summary(
     session_state: dict[str, Any] | None,
     source_kind: str | None = None,
 ):
+    session_state = session_state or _empty_session()
+    record = _session_record(session_state)
+    record_api_config = record.get("api_config") or {}
+    provider = record_api_config.get("provider") or _resolve_provider(use_advanced, provider_label)
+    api_key = record_api_config.get("api_key") or _resolve_api_key(provider, use_advanced, qwen_key, custom_key)
+    is_valid, _error = validate_api_key(provider, api_key)
+    if not is_valid:
+        message = "Check the selected provider and API key, then try again."
+        _show_warning(message)
+        yield (
+            session_state,
+            message,
+            ANALYSIS_PLACEHOLDER,
+            [],
+            *_analysis_action_updates(False),
+            _deeper_answer_updates(False),
+            "",
+        )
+        return
+
+    if record.get("doc_text"):
+        yield from _rerun_record_analysis(
+            session_state,
+            record,
+            provider=provider,
+            api_key=api_key,
+        )
+        return
+
     yield from analyze_document(
         uploaded_file,
         url_value,
-        source_kind,
         use_advanced,
         provider_label,
         qwen_key,
         custom_key,
         session_state,
+        source_kind,
         force_refresh=True,
+    )
+
+
+def clear_analysis(
+    session_state: dict[str, Any] | None,
+):
+    session_state = session_state or _empty_session()
+    record = _session_record(session_state)
+    record["analysis"] = None
+    record["chat_history"] = []
+    record["pending_deeper_question"] = None
+    return (
+        session_state,
+        "",
+        ANALYSIS_PLACEHOLDER,
+        [],
+        *_analysis_action_updates(False),
+        _deeper_answer_updates(False),
+        "",
     )
 
 
@@ -973,7 +1124,21 @@ def reset_session(session_state: dict[str, Any] | None):
     if session_state and session_state.get("session_id"):
         _GRADIO_SESSION_CACHE.pop(session_state["session_id"], None)
     empty = _empty_session()
-    return empty, None, None, "", None, _view_source_button_update(""), ANALYSIS_PLACEHOLDER, [], "", "", _deeper_answer_updates(False), ""
+    return (
+        empty,
+        None,
+        None,
+        "",
+        None,
+        _view_source_button_update(""),
+        ANALYSIS_PLACEHOLDER,
+        [],
+        "",
+        "",
+        *_analysis_action_updates(False),
+        _deeper_answer_updates(False),
+        "",
+    )
 
 
 def build_app() -> gr.Blocks:
@@ -1081,7 +1246,9 @@ def build_app() -> gr.Blocks:
                         with gr.Column(scale=1, min_width=0):
                             gr.Markdown("# Summary Highlights")
                         with gr.Column(scale=0, min_width=0, elem_id="rerun-summary-shell"):
-                            rerun_summary_button = gr.Button("↺", elem_id="rerun-summary-button", variant="secondary")
+                            with gr.Row():
+                                rerun_summary_button = gr.Button("↺", elem_id="rerun-summary-button", variant="secondary", interactive=False)
+                                clear_analysis_button = gr.Button("✕", elem_id="clear-analysis-button", variant="secondary", interactive=False)
                     analysis_output = gr.Markdown(ANALYSIS_PLACEHOLDER, elem_id="analysis-output")
 
                 with gr.Group(elem_id="chat-panel"):
@@ -1140,6 +1307,8 @@ def build_app() -> gr.Blocks:
                 status_output,
                 analysis_output,
                 chatbot,
+                rerun_summary_button,
+                clear_analysis_button,
                 deeper_answer_button,
                 deeper_answer_hint,
             ],
@@ -1163,6 +1332,22 @@ def build_app() -> gr.Blocks:
                 status_output,
                 analysis_output,
                 chatbot,
+                rerun_summary_button,
+                clear_analysis_button,
+                deeper_answer_button,
+                deeper_answer_hint,
+            ],
+        )
+        clear_analysis_button.click(
+            clear_analysis,
+            inputs=[session_state],
+            outputs=[
+                session_state,
+                status_output,
+                analysis_output,
+                chatbot,
+                rerun_summary_button,
+                clear_analysis_button,
                 deeper_answer_button,
                 deeper_answer_hint,
             ],
@@ -1196,6 +1381,8 @@ def build_app() -> gr.Blocks:
                 chatbot,
                 status_output,
                 chat_status,
+                rerun_summary_button,
+                clear_analysis_button,
                 deeper_answer_button,
                 deeper_answer_hint,
             ],

@@ -1,4 +1,4 @@
-from app import _empty_session, _format_analysis, _format_chat_entry, _session_record, _view_source_button_update, ask_question, rerun_summary, _stream_chat_entry
+from app import _empty_session, _format_analysis, _format_chat_entry, _session_record, _view_source_button_update, ask_question, clear_analysis, rerun_summary, _stream_chat_entry
 from services.rag_pipeline import AnalysisResult, AnswerResult, Citation, ImplementationItem
 
 
@@ -133,17 +133,67 @@ def test_ask_question_bootstraps_source_document_without_analysis(monkeypatch) -
 
 def test_rerun_summary_bypasses_precomputed_assets(monkeypatch) -> None:
     calls: list[bool] = []
+    captured_args: list[tuple[object, ...]] = []
 
     def fake_analyze_document(*args, force_refresh=False):
+        captured_args.append(args)
         calls.append(force_refresh)
-        yield ("session", "status", "analysis", [], {"visible": False}, "")
+        yield ("session", "status", "analysis", [], {"interactive": True}, {"interactive": True}, {"visible": False}, "")
 
     monkeypatch.setattr("app.analyze_document", fake_analyze_document)
 
     frames = list(rerun_summary(None, "https://example.com/bill.pdf", False, None, None, None, {"session_id": "abc"}))
 
     assert calls == [True]
+    assert captured_args[0] == (None, "https://example.com/bill.pdf", False, None, None, None, {"session_id": "abc"}, None)
     assert frames[-1][1] == "status"
+
+
+def test_rerun_summary_uses_cached_document_text(monkeypatch) -> None:
+    session_state = _empty_session()
+    record = _session_record(session_state)
+    record.update(
+        {
+            "doc_text": "Cached bill text",
+            "analysis": {"executive_summary": "Old"},
+            "api_config": {"provider": "qwen", "api_key": "hf_test_token"},
+        }
+    )
+
+    calls: list[tuple[str, str | None]] = []
+
+    def fake_rerun_record_analysis(state, current_record, *, provider, api_key):
+        calls.append((provider, api_key))
+        yield ("session", "status", "analysis", [], {"interactive": True}, {"interactive": True}, {"visible": False}, "")
+
+    monkeypatch.setattr("app._rerun_record_analysis", fake_rerun_record_analysis)
+
+    frames = list(rerun_summary(None, "https://example.com/bill.pdf", False, None, None, None, session_state))
+
+    assert calls == [("qwen", "hf_test_token")]
+    assert frames[-1][1] == "status"
+
+
+def test_clear_analysis_resets_panel_and_disables_header_actions() -> None:
+    session_state = _empty_session()
+    record = _session_record(session_state)
+    record.update(
+        {
+            "analysis": {"executive_summary": "Loaded"},
+            "chat_history": [{"role": "assistant", "content": "Answer"}],
+            "pending_deeper_question": "Question",
+        }
+    )
+
+    result = clear_analysis(session_state)
+
+    assert result[2] == "Run an analysis to populate this section."
+    assert result[4]["interactive"] is False
+    assert result[5]["interactive"] is False
+    assert result[6]["visible"] is False
+    assert record["analysis"] is None
+    assert record["chat_history"] == []
+    assert record["pending_deeper_question"] is None
 
 
 def test_view_source_button_update_tracks_url_presence() -> None:
