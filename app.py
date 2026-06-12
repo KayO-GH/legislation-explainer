@@ -786,19 +786,81 @@ def rerun_summary(
     )
 
 
+def _prepare_record_for_question(
+    record: dict[str, Any],
+    *,
+    uploaded_file: str | None,
+    url_value: str | None,
+    use_advanced: bool,
+    provider_label: str | None,
+    qwen_key: str | None,
+    custom_key: str | None,
+) -> str | None:
+    if (record.get("doc_text") or record.get("vector_store")) and record.get("api_config"):
+        return None
+
+    provider = _resolve_provider(use_advanced, provider_label)
+    api_key = _resolve_api_key(provider, use_advanced, qwen_key, custom_key)
+    is_valid, _error = validate_api_key(provider, api_key)
+    if not is_valid:
+        return "Check the selected provider and API key, then try again."
+
+    try:
+        document_text = _ingest_sources(uploaded_file, url_value)
+    except ingest.IngestionError as exc:
+        return str(exc)
+    except Exception:  # noqa: BLE001
+        return "We couldn't load that document. Check the link or upload the file directly and try again."
+
+    try:
+        _, chunks, vector_store = prepare_document_artifacts(document_text)
+    except Exception:  # noqa: BLE001
+        return "We couldn't prepare the document for question answering. Please try again."
+
+    record.clear()
+    record.update(
+        {
+            "api_config": {"provider": provider, "api_key": api_key},
+            "analysis": None,
+            "vector_store": vector_store,
+            "doc_text": document_text,
+            "chat_history": [],
+            "pending_deeper_question": None,
+            "source_url": url_value,
+        }
+    )
+    return None
+
+
 def ask_question(
     question: str | None,
+    uploaded_file: str | None,
+    url_value: str | None,
+    use_advanced: bool,
+    provider_label: str | None,
+    qwen_key: str | None,
+    custom_key: str | None,
     session_state: dict[str, Any] | None,
     chat_history: list[dict[str, str]] | None,
 ):
     session_state = session_state or _empty_session()
     record = _session_record(session_state)
     chat_history = chat_history or []
-    if (not record.get("doc_text") and not record.get("vector_store")) or not record.get("api_config"):
-        yield chat_history, session_state, "Analyze a document before asking questions.", _deeper_answer_updates(False), ""
-        return
     if not question or not question.strip():
         yield chat_history, session_state, "", _deeper_answer_updates(False), ""
+        return
+
+    source_prep_error = _prepare_record_for_question(
+        record,
+        uploaded_file=uploaded_file,
+        url_value=url_value,
+        use_advanced=use_advanced,
+        provider_label=provider_label,
+        qwen_key=qwen_key,
+        custom_key=custom_key,
+    )
+    if source_prep_error is not None:
+        yield chat_history, session_state, source_prep_error, _deeper_answer_updates(False), ""
         return
 
     question_text = question.strip()
@@ -953,7 +1015,8 @@ def build_app() -> gr.Blocks:
                 custom_key = gr.State(None)
 
                 # Proposed future expansion: restore the sidebar Model Settings
-                # section after the hackathon build is no longer pinned to Qwen.
+                # section after the hackathon build is no longer pinned to a
+                # single built-in provider.
                 # with gr.Accordion("Model Settings", open=False):
                 #     provider_help = gr.Markdown(PROVIDER_DETAILS[DEFAULT_PROVIDER])
                 #     gr.Markdown("Hugging Face Token")
@@ -1066,12 +1129,12 @@ def build_app() -> gr.Blocks:
         )
         ask_button.click(
             ask_question,
-            inputs=[question_input, session_state, chatbot],
+            inputs=[question_input, uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state, chatbot],
             outputs=[chatbot, session_state, chat_status, deeper_answer_button, deeper_answer_hint],
         ).then(lambda: "", outputs=[question_input])
         question_input.submit(
             ask_question,
-            inputs=[question_input, session_state, chatbot],
+            inputs=[question_input, uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state, chatbot],
             outputs=[chatbot, session_state, chat_status, deeper_answer_button, deeper_answer_hint],
         ).then(lambda: "", outputs=[question_input])
         deeper_answer_button.click(

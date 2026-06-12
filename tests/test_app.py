@@ -77,7 +77,7 @@ def test_ask_question_uses_full_document_answers(monkeypatch) -> None:
 
     monkeypatch.setattr("app.answer_query_from_full_document", fake_answer_query_from_full_document)
 
-    frames = list(ask_question("What does the bill require?", session_state, []))
+    frames = list(ask_question("What does the bill require?", None, None, False, None, None, None, session_state, []))
 
     assert calls == [(record["vector_store"], "Full bill text")]
     assert "Reading the full document for an answer..." == frames[0][2]
@@ -85,6 +85,50 @@ def test_ask_question_uses_full_document_answers(monkeypatch) -> None:
     assert frames[-1][3]["visible"] is False
     assert frames[-1][4] == ""
     assert record["pending_deeper_question"] is None
+
+
+def test_ask_question_bootstraps_source_document_without_analysis(monkeypatch) -> None:
+    session_state = _empty_session()
+
+    monkeypatch.setattr("app._ingest_sources", lambda uploaded_file, url_value: "Fresh source text")
+    monkeypatch.setattr(
+        "app.prepare_document_artifacts",
+        lambda document_text: ("hash", ["chunk"], "vector-store"),
+    )
+    monkeypatch.setattr("app.instantiate_client", lambda provider, api_key: object())
+
+    calls: list[tuple[object | None, str | None]] = []
+
+    def fake_answer_query_from_full_document(provider_client, vector_store, question, *, doc_text=None):
+        calls.append((vector_store, doc_text))
+        return AnswerResult(
+            answer="Direct source answer",
+            citations=[Citation(ref_id=1, snippet="Source clause")],
+            provenance="full_document",
+        )
+
+    monkeypatch.setattr("app.answer_query_from_full_document", fake_answer_query_from_full_document)
+
+    frames = list(
+        ask_question(
+            "What does the source document say?",
+            "/tmp/bill.pdf",
+            "",
+            False,
+            None,
+            "hf_test_token",
+            None,
+            session_state,
+            [],
+        )
+    )
+
+    record = _session_record(session_state)
+    assert calls == [("vector-store", "Fresh source text")]
+    assert record["doc_text"] == "Fresh source text"
+    assert record["vector_store"] == "vector-store"
+    assert record["api_config"]["provider"] == "nemotron"
+    assert "<details><summary>Supporting snippet (1)</summary>" in frames[-1][0][-1]["content"]
 
 
 def test_rerun_summary_bypasses_precomputed_assets(monkeypatch) -> None:

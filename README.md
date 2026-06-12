@@ -10,7 +10,9 @@ app_file: app.py
 pinned: false
 short_description: Simplify complex legislation that affects you!
 models:
-  - Qwen/Qwen3-14B
+  - nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16
+  - nvidia/llama-nemotron-embed-vl-1b-v2
+  - nvidia/llama-nemotron-rerank-1b-v2
 ---
 
 # Legislation Explainer
@@ -29,7 +31,7 @@ It is created for the Hugging Face Build Small Hackathon under the `Backyard AI`
 
 - Track: `Backyard AI`
 - Real user: Ghanaian citizens and digital-policy stakeholders who need a clearer view of a bill's practical effects.
-- Small-model constraint: default provider is `Qwen/Qwen3-14B:cheapest` through the Hugging Face router, staying within the hackathon's `<= 32B` model cap while giving a better speed/cost tradeoff for this app.
+- Small-model constraint: default generation uses `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16`, with Nemotron retriever and reranker models for grounded QA.
 - Required surface: Gradio app, ready for Hugging Face Spaces through `app.py`.
 - GitHub repo: https://github.com/KayO-GH/legislation-explainer
 
@@ -48,9 +50,13 @@ It is created for the Hugging Face Build Small Hackathon under the `Backyard AI`
 
 ## Model And Provider Notes
 
-The hackathon-safe default is Qwen3 14B through the Hugging Face router. Bring-your-own provider support is a proposed future expansion and is currently commented out so the hackathon build stays focused on one documented `<= 32B` model path.
+The default QA stack is now Nemotron-first:
 
-For future expansion, we will have a bring your own provider setting allowing users to connect to other models eg. from OpenAI, ANthropic, etc. if they so wish.
+- Generator: `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16`
+- Retriever: `nvidia/llama-nemotron-embed-vl-1b-v2`
+- Reranker: `nvidia/llama-nemotron-rerank-1b-v2`
+
+The generator uses an OpenAI-compatible endpoint, so it can run through the Hugging Face router when available or through a Modal-hosted / NIM-style deployment when you want a dedicated path. The retriever also uses an OpenAI-compatible embeddings endpoint. The reranker uses a separate HTTP endpoint so it can be pointed at a hosted Nemotron reranking service.
 
 ## Local Run
 
@@ -59,7 +65,16 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Set `HF_TOKEN` in your environment for the default Qwen provider.
+Set these environment variables for the default Nemotron stack:
+
+- `NEMOTRON_API_KEY`
+- `NEMOTRON_BASE_URL` optional, defaults to `https://router.huggingface.co/v1`
+- `NEMOTRON_RETRIEVER_API_KEY` optional, defaults to `NEMOTRON_API_KEY`
+- `NEMOTRON_RETRIEVER_BASE_URL` optional, defaults to `NEMOTRON_BASE_URL`
+- `NEMOTRON_RERANKER_API_KEY` optional, defaults to `NEMOTRON_API_KEY`
+- `NEMOTRON_RERANKER_URL` optional but recommended for the dedicated reranker path
+
+`HF_TOKEN` still works as a fallback credential for Hugging Face-routed Nemotron endpoints.
 
 ## Space Deployment
 

@@ -32,10 +32,14 @@ warnings.filterwarnings(
     category=FutureWarning,
 )
 
-SUPPORTED_PROVIDERS = ["qwen", "openai", "anthropic", "gemini", "cohere"]
-DEFAULT_PROVIDER: str = "qwen"
+SUPPORTED_PROVIDERS = ["nemotron", "qwen", "openai", "anthropic", "gemini", "cohere"]
+DEFAULT_PROVIDER: str = "nemotron"
+DEFAULT_NEMOTRON_MODEL = "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16"
 DEFAULT_QWEN_MODEL = "Qwen/Qwen3-14B:cheapest"
-DEFAULT_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+DEFAULT_CHUNK_TOKENIZER_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+DEFAULT_FALLBACK_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+DEFAULT_NEMOTRON_RETRIEVER_MODEL = "nvidia/llama-nemotron-embed-vl-1b-v2"
+DEFAULT_NEMOTRON_RERANKER_MODEL = "nvidia/llama-nemotron-rerank-1b-v2"
 OPENAI_REASONING_EFFORT = "medium"
 ANTHROPIC_THINKING_BUDGET = 2048
 DEFAULT_CHUNK_SIZE = 350
@@ -49,11 +53,12 @@ TOP_K_RETRIEVAL = 5
 MAX_UPLOAD_SIZE_MB = 25
 TIMEOUT_SECONDS = 30
 
-ProviderLiteral = Literal["qwen", "openai", "anthropic", "gemini", "cohere"]
+ProviderLiteral = Literal["nemotron", "qwen", "openai", "anthropic", "gemini", "cohere"]
 
 # Conservative full-document QA input budgets derived from provider/model
 # context-window docs, with headroom reserved for prompts and outputs.
 PROVIDER_FULL_DOCUMENT_QA_TOKEN_BUDGETS: dict[ProviderLiteral, int] = {
+    "nemotron": 64_000,
     "qwen": 24_000,
     "openai": 900_000,
     "anthropic": 900_000,
@@ -84,9 +89,26 @@ GEMINI_API_KEY: Optional[str] = _read_env_key("GEMINI_API_KEY")
 COHERE_API_KEY: Optional[str] = _read_env_key("COHERE_API_KEY")
 DEFAULT_COHERE_KEY: Optional[str] = _read_env_key("DEFAULT_COHERE_KEY")
 HF_TOKEN: Optional[str] = _read_env_key("HF_TOKEN")
+NEMOTRON_API_KEY: Optional[str] = _read_env_key("NEMOTRON_API_KEY") or HF_TOKEN
+NEMOTRON_BASE_URL: str = os.getenv("NEMOTRON_BASE_URL", "https://router.huggingface.co/v1").strip() or "https://router.huggingface.co/v1"
+NEMOTRON_RETRIEVER_API_KEY: Optional[str] = _read_env_key("NEMOTRON_RETRIEVER_API_KEY") or NEMOTRON_API_KEY
+NEMOTRON_RETRIEVER_BASE_URL: str = (
+    os.getenv("NEMOTRON_RETRIEVER_BASE_URL", NEMOTRON_BASE_URL).strip() or NEMOTRON_BASE_URL
+)
+NEMOTRON_RERANKER_API_KEY: Optional[str] = _read_env_key("NEMOTRON_RERANKER_API_KEY") or NEMOTRON_API_KEY
+NEMOTRON_RERANKER_URL: Optional[str] = _read_env_key("NEMOTRON_RERANKER_URL")
 
 
 PROVIDER_METADATA: list[ProviderConfig] = [
+    ProviderConfig(
+        name="nemotron",
+        key_prefix=None,
+        display_name="Nemotron Nano 30B",
+        instructions=(
+            "Use NEMOTRON_API_KEY for the generator and optionally NEMOTRON_RETRIEVER_* / "
+            "NEMOTRON_RERANKER_* settings for hosted Nemotron retrieval and reranking."
+        ),
+    ),
     ProviderConfig(
         name="qwen",
         key_prefix=None,

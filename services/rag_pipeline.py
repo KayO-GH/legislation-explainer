@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import inspect
 import json
+import math
 import re
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
@@ -32,14 +33,24 @@ from langchain_community.embeddings import SentenceTransformerEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from openai import BadRequestError, OpenAI
 from pydantic import BaseModel, Field
+import httpx
 from transformers import AutoTokenizer
 
 from config import (
     ANTHROPIC_THINKING_BUDGET,
     DEFAULT_CHUNK_OVERLAP,
     DEFAULT_CHUNK_SIZE,
-    DEFAULT_EMBEDDING_MODEL,
+    DEFAULT_CHUNK_TOKENIZER_MODEL,
+    DEFAULT_FALLBACK_EMBEDDING_MODEL,
+    DEFAULT_QWEN_MODEL,
+    DEFAULT_NEMOTRON_RETRIEVER_MODEL,
+    DEFAULT_NEMOTRON_RERANKER_MODEL,
+    NEMOTRON_RETRIEVER_API_KEY,
+    NEMOTRON_RETRIEVER_BASE_URL,
+    NEMOTRON_RERANKER_API_KEY,
+    NEMOTRON_RERANKER_URL,
     OPENAI_REASONING_EFFORT,
     PROVIDER_FULL_DOCUMENT_QA_TOKEN_BUDGETS,
     SCAN_BATCH_SIZE,
@@ -47,6 +58,7 @@ from config import (
     SCAN_CHUNK_SIZE,
     SCAN_MAX_WINDOWS,
     SCAN_TOP_K,
+    TIMEOUT_SECONDS,
     TOP_K_RETRIEVAL,
 )
 from services.precomputed_assets import PrecomputedExampleAsset, load_precomputed_asset_for_url
@@ -129,12 +141,19 @@ class AnalysisSnippet:
 
 
 @dataclass
+class NemotronRetrievalIndex:
+    chunks: list[str]
+    embeddings: list[list[float]]
+    model_name: str = DEFAULT_NEMOTRON_RETRIEVER_MODEL
+
+
+@dataclass
 class CachedDocumentArtifacts:
     document_hash: str
     document_text: str
     chunks: list[str]
     analysis: AnalysisResult
-    vector_store: FAISS | None
+    vector_store: "RetrievalIndex | None"
     analysis_snippets: list[AnalysisSnippet] = field(default_factory=list)
     source_url: str | None = None
     example_bill_id: str | None = None
@@ -143,21 +162,23 @@ class CachedDocumentArtifacts:
 
 
 _DOCUMENT_CACHE: dict[str, CachedDocumentArtifacts] = {}
+RetrievalIndex = FAISS | NemotronRetrievalIndex
 
 
 @lru_cache(maxsize=1)
-def _embedding_model(model_name: str = DEFAULT_EMBEDDING_MODEL) -> SentenceTransformerEmbeddings:
+def _fallback_embedding_model(model_name: str = DEFAULT_FALLBACK_EMBEDDING_MODEL) -> SentenceTransformerEmbeddings:
     return SentenceTransformerEmbeddings(model_name=model_name)
 
 
 @lru_cache(maxsize=1)
-def _embedding_tokenizer(model_name: str = DEFAULT_EMBEDDING_MODEL) -> TokenizerLike:
+def _embedding_tokenizer(model_name: str = DEFAULT_CHUNK_TOKENIZER_MODEL) -> TokenizerLike:
     return AutoTokenizer.from_pretrained(model_name)
 
 
-def warm_embedding_stack(model_name: str = DEFAULT_EMBEDDING_MODEL) -> None:
+def warm_embedding_stack(model_name: str = DEFAULT_CHUNK_TOKENIZER_MODEL) -> None:
     _embedding_tokenizer(model_name)
-    _embedding_model(model_name)
+    if not _nemotron_retrieval_ready():
+        _fallback_embedding_model()
 
 
 def _split_with_tokenizer(text: str, chunk_size: int, chunk_overlap: int) -> List[str]:
@@ -212,6 +233,60 @@ def _anthropic_thinking_kwargs(provider_client: ProviderClient) -> dict[str, Any
     }
 
 
+def _fallback_generation_model(provider_client: ProviderClient) -> str | None:
+    if provider_client.name == "nemotron":
+        return DEFAULT_QWEN_MODEL
+    return None
+
+
+def _is_model_not_supported_error(exc: BadRequestError) -> bool:
+    body = getattr(exc, "body", None)
+    if isinstance(body, dict):
+        error_block = body.get("error")
+        if isinstance(error_block, dict):
+            code = str(error_block.get("code", "")).strip().lower()
+            message = str(error_block.get("message", "")).strip().lower()
+        else:
+            code = str(body.get("code", "")).strip().lower()
+            message = str(body.get("message", "")).strip().lower()
+        if code == "model_not_supported":
+            return True
+        if "not supported by any provider" in message:
+            return True
+    return False
+
+
+def _chat_completion_with_fallback(
+    provider_client: ProviderClient,
+    *,
+    messages: list[dict[str, str]],
+    temperature: float = 0,
+) -> Any:
+    candidate_models = [provider_client.default_model]
+    fallback_model = _fallback_generation_model(provider_client)
+    if fallback_model and fallback_model not in candidate_models:
+        candidate_models.append(fallback_model)
+
+    last_error: Exception | None = None
+    for index, model_name in enumerate(candidate_models):
+        try:
+            return provider_client.client.chat.completions.create(
+                model=model_name,
+                messages=messages,
+                temperature=temperature,
+            )
+        except BadRequestError as exc:
+            last_error = exc
+            is_last_model = index == len(candidate_models) - 1
+            if not is_last_model and _is_model_not_supported_error(exc):
+                continue
+            raise
+
+    if last_error is not None:
+        raise last_error
+    raise RuntimeError("No candidate generation models were available.")
+
+
 def split_into_chunks(text: str, chunk_size: int = DEFAULT_CHUNK_SIZE, chunk_overlap: int = DEFAULT_CHUNK_OVERLAP) -> List[str]:
     return _split_with_tokenizer(text, chunk_size=chunk_size, chunk_overlap=chunk_overlap)
 
@@ -227,16 +302,63 @@ def split_into_scan_chunks(
 
 def build_vector_store(chunks: Iterable[str]) -> FAISS:
     docs = [Document(page_content=chunk, metadata={"chunk_id": idx}) for idx, chunk in enumerate(chunks, start=1)]
-    embeddings = _embedding_model()
+    embeddings = _fallback_embedding_model()
     return FAISS.from_documents(docs, embedding=embeddings)
+
+
+def _nemotron_retrieval_ready() -> bool:
+    return bool(NEMOTRON_RETRIEVER_BASE_URL and NEMOTRON_RETRIEVER_API_KEY and DEFAULT_NEMOTRON_RETRIEVER_MODEL)
+
+
+def _nemotron_reranker_ready() -> bool:
+    return bool(NEMOTRON_RERANKER_URL and NEMOTRON_RERANKER_API_KEY and DEFAULT_NEMOTRON_RERANKER_MODEL)
+
+
+def _embed_texts_with_nemotron(texts: list[str]) -> list[list[float]]:
+    if not texts:
+        return []
+    if not _nemotron_retrieval_ready():
+        raise RuntimeError("Nemotron retriever endpoint is not configured.")
+
+    client = OpenAI(api_key=NEMOTRON_RETRIEVER_API_KEY, base_url=NEMOTRON_RETRIEVER_BASE_URL)
+    response = client.embeddings.create(model=DEFAULT_NEMOTRON_RETRIEVER_MODEL, input=texts)
+    ordered = sorted(response.data, key=lambda item: item.index)
+    return [list(item.embedding) for item in ordered]
+
+
+def build_nemotron_retrieval_index(chunks: Iterable[str]) -> NemotronRetrievalIndex:
+    chunk_list = list(chunks)
+    return NemotronRetrievalIndex(chunks=chunk_list, embeddings=_embed_texts_with_nemotron(chunk_list))
+
+
+def build_retrieval_index(chunks: Iterable[str]) -> RetrievalIndex:
+    chunk_list = list(chunks)
+    if _nemotron_retrieval_ready():
+        try:
+            return build_nemotron_retrieval_index(chunk_list)
+        except Exception:
+            pass
+    return build_vector_store(chunk_list)
 
 
 def document_hash_for_text(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
+def _retrieval_signature() -> str:
+    return "|".join(
+        [
+            DEFAULT_CHUNK_TOKENIZER_MODEL,
+            DEFAULT_FALLBACK_EMBEDDING_MODEL,
+            DEFAULT_NEMOTRON_RETRIEVER_MODEL,
+            DEFAULT_NEMOTRON_RERANKER_MODEL if _nemotron_reranker_ready() else "no-rerank",
+            "nemotron" if _nemotron_retrieval_ready() else "fallback",
+        ]
+    )
+
+
 def document_cache_key(document_hash: str) -> str:
-    return f"{document_hash}:{DEFAULT_CHUNK_SIZE}:{DEFAULT_CHUNK_OVERLAP}:{DEFAULT_EMBEDDING_MODEL}"
+    return f"{document_hash}:{DEFAULT_CHUNK_SIZE}:{DEFAULT_CHUNK_OVERLAP}:{_retrieval_signature()}"
 
 
 def get_cached_document(document_hash: str) -> CachedDocumentArtifacts | None:
@@ -248,7 +370,9 @@ def cache_document(artifacts: CachedDocumentArtifacts) -> CachedDocumentArtifact
     return artifacts
 
 
-def save_vector_store(vector_store: FAISS, output_dir: Path) -> None:
+def save_vector_store(vector_store: RetrievalIndex, output_dir: Path) -> None:
+    if not isinstance(vector_store, FAISS):
+        raise TypeError("Only FAISS indexes can be saved locally.")
     output_dir.parent.mkdir(parents=True, exist_ok=True)
     vector_store.save_local(str(output_dir))
 
@@ -256,14 +380,14 @@ def save_vector_store(vector_store: FAISS, output_dir: Path) -> None:
 def load_vector_store(vector_store_dir: Path) -> FAISS:
     return FAISS.load_local(
         str(vector_store_dir),
-        _embedding_model(),
+        _fallback_embedding_model(),
         allow_dangerous_deserialization=True,
     )
 
 
 def hydrate_precomputed_example(asset: PrecomputedExampleAsset) -> CachedDocumentArtifacts:
     analysis = AnalysisResult.model_validate(asset.analysis_payload)
-    vector_store = build_vector_store(asset.chunks)
+    vector_store = build_retrieval_index(asset.chunks)
     artifacts = CachedDocumentArtifacts(
         document_hash=asset.bill.document_hash or document_hash_for_text(asset.document_text),
         document_text=asset.document_text,
@@ -420,9 +544,9 @@ def _generate_json_payload(
             **_openai_reasoning_kwargs(provider_client),
         )
         return _extract_openai_json(response)
-    if provider_client.name == "qwen":
-        response = provider_client.client.chat.completions.create(
-            model=provider_client.default_model,
+    if provider_client.name in {"nemotron", "qwen"}:
+        response = _chat_completion_with_fallback(
+            provider_client,
             messages=[
                 {"role": "system", "content": prompt},
                 {
@@ -607,7 +731,7 @@ def prepare_document_artifacts(
     document_text: str,
     *,
     provider_factory: Callable[[], Any] | None = None,
-) -> tuple[str, list[str], FAISS]:
+) -> tuple[str, list[str], RetrievalIndex]:
     document_hash = document_hash_for_text(document_text)
     cached = get_cached_document(document_hash)
     if cached is not None and cached.vector_store is not None:
@@ -617,7 +741,7 @@ def prepare_document_artifacts(
         chunks_future = executor.submit(split_into_chunks, document_text)
         provider_future = executor.submit(provider_factory) if provider_factory is not None else None
         chunks = chunks_future.result()
-        vector_store = build_vector_store(chunks)
+        vector_store = build_retrieval_index(chunks)
         if provider_future is not None:
             provider_future.result()
     return document_hash, chunks, vector_store
@@ -639,7 +763,7 @@ def build_cached_document_artifacts(
     document_text: str,
     chunks: list[str],
     analysis: AnalysisResult,
-    vector_store: FAISS | None,
+    vector_store: RetrievalIndex | None,
     source_url: str | None = None,
 ) -> CachedDocumentArtifacts:
     return cache_document(
@@ -747,7 +871,7 @@ def _answer_question_from_analysis_context(
 def answer_query(
     provider_client: ProviderClient,
     analysis: AnalysisResult | None,
-    vector_store: FAISS | None,
+    vector_store: RetrievalIndex | None,
     question: str,
     doc_text: str | None = None,
     allow_full_document: bool = False,
@@ -788,7 +912,7 @@ def answer_query(
 
 def answer_query_from_full_document(
     provider_client: ProviderClient,
-    vector_store: FAISS | None,
+    vector_store: RetrievalIndex | None,
     question: str,
     *,
     doc_text: str | None = None,
@@ -810,7 +934,7 @@ def answer_query_from_full_document(
             context_text, citations = scan_context
 
     if not citations and vector_store is not None:
-        context_text, citations = _retrieve_context_from_vector_store(vector_store, question)
+        context_text, citations = _retrieve_context_from_index(vector_store, question)
 
     answer = _generate_answer_from_context(provider_client, context_text, question)
     return AnswerResult(answer=answer.strip(), citations=citations, provenance="full_document")
@@ -842,9 +966,9 @@ def _answer_question_from_full_document(
             **_openai_reasoning_kwargs(provider_client),
         )
         return _extract_openai_text(response)
-    if provider_client.name == "qwen":
-        response = provider_client.client.chat.completions.create(
-            model=provider_client.default_model,
+    if provider_client.name in {"nemotron", "qwen"}:
+        response = _chat_completion_with_fallback(
+            provider_client,
             messages=[
                 {"role": "system", "content": prompt},
                 {"role": "user", "content": user_text},
@@ -884,17 +1008,110 @@ def _answer_question_from_full_document(
     return _extract_gemini_text(response)
 
 
-def _retrieve_context_from_vector_store(vector_store: FAISS, question: str) -> tuple[str, list[Citation]]:
-    retrieved_docs = vector_store.similarity_search(question, k=TOP_K_RETRIEVAL)
+def _cosine_similarity(left: list[float], right: list[float]) -> float:
+    dot_product = sum(a * b for a, b in zip(left, right))
+    left_norm = math.sqrt(sum(value * value for value in left))
+    right_norm = math.sqrt(sum(value * value for value in right))
+    if left_norm == 0 or right_norm == 0:
+        return 0.0
+    return dot_product / (left_norm * right_norm)
+
+
+def _rerank_candidates(question: str, candidates: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    if not candidates or not _nemotron_reranker_ready():
+        return candidates
+
+    headers = {"Content-Type": "application/json"}
+    if NEMOTRON_RERANKER_API_KEY:
+        headers["Authorization"] = f"Bearer {NEMOTRON_RERANKER_API_KEY}"
+
+    payload = {
+        "model": DEFAULT_NEMOTRON_RERANKER_MODEL,
+        "query": question,
+        "documents": [candidate["text"] for candidate in candidates],
+        "top_n": len(candidates),
+    }
+    try:
+        response = httpx.post(NEMOTRON_RERANKER_URL, json=payload, headers=headers, timeout=TIMEOUT_SECONDS)
+        response.raise_for_status()
+        body = response.json()
+    except Exception:
+        return candidates
+
+    results = body.get("results") or body.get("data") or []
+    if not isinstance(results, list):
+        return candidates
+
+    ranked_candidates: list[tuple[float, int, dict[str, Any]]] = []
+    for item in results:
+        if not isinstance(item, dict):
+            continue
+        index = item.get("index")
+        if not isinstance(index, int) or index < 0 or index >= len(candidates):
+            continue
+        score = item.get("relevance_score", item.get("score", 0.0))
+        try:
+            numeric_score = float(score)
+        except (TypeError, ValueError):
+            numeric_score = 0.0
+        ranked_candidates.append((numeric_score, index, candidates[index]))
+
+    if not ranked_candidates:
+        return candidates
+    ranked_candidates.sort(key=lambda item: (-item[0], item[1]))
+    return [candidate for _, _, candidate in ranked_candidates]
+
+
+def _retrieve_context_from_faiss(vector_store: FAISS, question: str) -> tuple[str, list[Citation]]:
+    retrieved_docs = vector_store.similarity_search(question, k=max(TOP_K_RETRIEVAL * 2, TOP_K_RETRIEVAL))
+    candidates = [
+        {
+            "chunk_id": idx,
+            "text": doc.page_content.strip(),
+        }
+        for idx, doc in enumerate(retrieved_docs, start=1)
+        if doc.page_content.strip()
+    ]
+    ranked_candidates = _rerank_candidates(question, candidates)[:TOP_K_RETRIEVAL]
     context_blocks: list[str] = []
     citations: list[Citation] = []
-    for idx, doc in enumerate(retrieved_docs, start=1):
-        snippet = doc.page_content.strip()
+    for idx, candidate in enumerate(ranked_candidates, start=1):
+        snippet = candidate["text"]
         context_blocks.append(f"[{idx}] {snippet}")
         citations.append(Citation(ref_id=idx, snippet=snippet))
 
     context_text = "\n\n".join(context_blocks) if context_blocks else "No context available."
     return context_text, citations
+
+
+def _retrieve_context_from_nemotron_index(vector_store: NemotronRetrievalIndex, question: str) -> tuple[str, list[Citation]]:
+    query_embedding = _embed_texts_with_nemotron([question])[0]
+    scored_candidates = [
+        {
+            "chunk_id": idx,
+            "text": chunk.strip(),
+            "score": _cosine_similarity(query_embedding, embedding),
+        }
+        for idx, (chunk, embedding) in enumerate(zip(vector_store.chunks, vector_store.embeddings), start=1)
+        if chunk.strip()
+    ]
+    scored_candidates.sort(key=lambda item: (-item["score"], item["chunk_id"]))
+    ranked_candidates = _rerank_candidates(question, scored_candidates[: max(TOP_K_RETRIEVAL * 3, TOP_K_RETRIEVAL)])[:TOP_K_RETRIEVAL]
+
+    context_blocks: list[str] = []
+    citations: list[Citation] = []
+    for ref_id, candidate in enumerate(ranked_candidates, start=1):
+        snippet = candidate["text"]
+        citations.append(Citation(ref_id=ref_id, snippet=snippet))
+        context_blocks.append(f"[{ref_id}] {snippet}")
+    context_text = "\n\n".join(context_blocks) if context_blocks else "No context available."
+    return context_text, citations
+
+
+def _retrieve_context_from_index(vector_store: RetrievalIndex, question: str) -> tuple[str, list[Citation]]:
+    if isinstance(vector_store, NemotronRetrievalIndex):
+        return _retrieve_context_from_nemotron_index(vector_store, question)
+    return _retrieve_context_from_faiss(vector_store, question)
 
 
 def _generate_answer_from_context(provider_client: ProviderClient, context_text: str, question: str) -> str:
@@ -920,9 +1137,9 @@ def _generate_answer_from_context(provider_client: ProviderClient, context_text:
             **_openai_reasoning_kwargs(provider_client),
         )
         answer = _extract_openai_text(response)
-    elif provider_client.name == "qwen":
-        response = provider_client.client.chat.completions.create(
-            model=provider_client.default_model,
+    elif provider_client.name in {"nemotron", "qwen"}:
+        response = _chat_completion_with_fallback(
+            provider_client,
             messages=[
                 {"role": "system", "content": prompt},
                 {
@@ -1093,9 +1310,9 @@ def _scan_batch(provider_client: ProviderClient, batch: list[ScanChunk], questio
             **_openai_reasoning_kwargs(provider_client),
         )
         return _extract_openai_json(response)
-    if provider_client.name == "qwen":
-        response = provider_client.client.chat.completions.create(
-            model=provider_client.default_model,
+    if provider_client.name in {"nemotron", "qwen"}:
+        response = _chat_completion_with_fallback(
+            provider_client,
             messages=[
                 {"role": "system", "content": prompt},
                 {"role": "user", "content": user_text},
