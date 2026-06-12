@@ -1,4 +1,4 @@
-from app import _empty_session, _format_analysis, _format_chat_entry, _session_record, _view_source_button_update, ask_question, clear_analysis, rerun_summary, _stream_chat_entry
+from app import _displayed_chat_history, _empty_session, _format_analysis, _format_chat_entry, _handle_url_source_change, _session_record, _view_source_button_update, ask_question, clear_analysis, rerun_summary, _stream_chat_entry
 from services.rag_pipeline import AnalysisResult, AnswerResult, Citation, ImplementationItem
 
 
@@ -80,7 +80,7 @@ def test_ask_question_uses_full_document_answers(monkeypatch) -> None:
     frames = list(ask_question("What does the bill require?", None, None, False, None, None, None, session_state, []))
 
     assert calls == [(record["vector_store"], "Full bill text")]
-    assert "Reading the full document for an answer..." == frames[0][2]
+    assert "Answering 1 of 1." == frames[0][2]
     assert "<details><summary>Supporting snippet (1)</summary>" in frames[-1][0][-1]["content"]
     assert frames[-1][3]["visible"] is False
     assert frames[-1][4] == ""
@@ -129,6 +129,70 @@ def test_ask_question_bootstraps_source_document_without_analysis(monkeypatch) -
     assert record["vector_store"] == "vector-store"
     assert record["api_config"]["provider"] == "qwen"
     assert "<details><summary>Supporting snippet (1)</summary>" in frames[-1][0][-1]["content"]
+
+
+def test_ask_question_locks_controls_during_active_answer(monkeypatch) -> None:
+    session_state = _empty_session()
+    record = _session_record(session_state)
+    record.update(
+        {
+            "api_config": {"provider": "qwen", "api_key": "hf_test_token"},
+            "vector_store": object(),
+            "doc_text": "Full bill text",
+            "chat_history": [],
+        }
+    )
+
+    monkeypatch.setattr("app.instantiate_client", lambda provider, api_key: object())
+    monkeypatch.setattr(
+        "app.answer_query_from_full_document",
+        lambda provider_client, vector_store, question, *, doc_text=None: AnswerResult(
+            answer="Full-document answer",
+            citations=[Citation(ref_id=1, snippet="Clause text")],
+            provenance="full_document",
+        ),
+    )
+
+    frames = list(ask_question("What does the bill require?", None, None, False, None, None, None, session_state, []))
+
+    answering_frame = frames[0]
+    assert answering_frame[5]["interactive"] is False
+    assert answering_frame[6]["interactive"] is False
+    assert answering_frame[7]["interactive"] is False
+    assert answering_frame[8]["interactive"] is False
+    assert answering_frame[9]["interactive"] is False
+    assert answering_frame[10]["interactive"] is False
+    assert answering_frame[11]["interactive"] is False
+    assert answering_frame[12]["interactive"] is False
+    assert answering_frame[13]["interactive"] is False
+
+    final_frame = frames[-1]
+    assert final_frame[5]["interactive"] is True
+    assert final_frame[6]["interactive"] is True
+    assert final_frame[7]["interactive"] is True
+    assert final_frame[8]["interactive"] is True
+    assert final_frame[9]["interactive"] is True
+    assert final_frame[12]["interactive"] is True
+    assert final_frame[13]["interactive"] is True
+
+
+def test_url_source_change_flushes_queued_questions() -> None:
+    session_state = _empty_session()
+    record = _session_record(session_state)
+    record["chat_history"] = [{"role": "assistant", "content": "Earlier answer"}]
+    record["message_queue"] = [{"id": "one", "question": "Queued question", "status": "queued"}]
+    record["active_message_id"] = "one"
+    record["is_answering"] = True
+    record["pending_deeper_question"] = "Need deeper answer"
+
+    result = _handle_url_source_change("https://example.com/next-bill.pdf", session_state)
+
+    assert result[5] == "Queued questions were cleared because the source changed."
+    assert result[4] == [{"role": "assistant", "content": "Earlier answer"}]
+    assert record["message_queue"] == []
+    assert record["active_message_id"] is None
+    assert record["is_answering"] is False
+    assert record["pending_deeper_question"] is None
 
 
 def test_rerun_summary_bypasses_precomputed_assets(monkeypatch) -> None:
@@ -188,12 +252,32 @@ def test_clear_analysis_resets_panel_and_disables_header_actions() -> None:
     result = clear_analysis(session_state)
 
     assert result[2] == "Run an analysis to populate this section."
-    assert result[4]["interactive"] is False
-    assert result[5]["interactive"] is False
-    assert result[6]["visible"] is False
+    assert result[9]["interactive"] is False
+    assert result[10]["interactive"] is False
+    assert result[13]["visible"] is False
     assert record["analysis"] is None
     assert record["chat_history"] == []
     assert record["pending_deeper_question"] is None
+
+
+def test_displayed_chat_history_shows_queue_placeholders() -> None:
+    session_state = _empty_session()
+    record = _session_record(session_state)
+    record["chat_history"] = [{"role": "assistant", "content": "Earlier answer"}]
+    record["message_queue"] = [
+        {"id": "one", "question": "First queued question", "status": "answering"},
+        {"id": "two", "question": "Second queued question", "status": "queued"},
+    ]
+    record["active_message_id"] = "one"
+
+    displayed = _displayed_chat_history(record)
+
+    assert displayed[0]["content"] == "Earlier answer"
+    assert displayed[1]["role"] == "user"
+    assert displayed[1]["content"] == "First queued question"
+    assert displayed[2]["content"] == "_Answering..._"
+    assert displayed[3]["content"] == "Second queued question"
+    assert displayed[4]["content"] == "_Queued._"
 
 
 def test_view_source_button_update_tracks_url_presence() -> None:
