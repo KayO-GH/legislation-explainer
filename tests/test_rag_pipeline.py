@@ -1,21 +1,16 @@
 from __future__ import annotations
 
 import json
-
-from openai import BadRequestError
-
-from config import DEFAULT_NEMOTRON_MODEL, DEFAULT_QWEN_MODEL, OPENAI_REASONING_EFFORT
+from config import DEFAULT_QWEN_MODEL, OPENAI_REASONING_EFFORT
 from services.providers import ProviderClient
 from services.providers import _PROVIDER_MODEL_MAP
 from services.rag_pipeline import (
     AnswerResult,
     AnalysisResult,
     Citation,
-    NemotronRetrievalIndex,
     ScanMatch,
     _anthropic_thinking_kwargs,
     _analysis_answer_schema,
-    _chat_completion_with_fallback,
     _full_document_budget,
     _analysis_schema,
     _extract_chat_completion_text,
@@ -224,7 +219,6 @@ def test_gemini_default_model_is_thinking_capable():
 
 
 def test_provider_defaults_use_thinking_capable_models():
-    assert _PROVIDER_MODEL_MAP["nemotron"] == DEFAULT_NEMOTRON_MODEL
     assert _PROVIDER_MODEL_MAP["openai"] == "gpt-5.5"
     assert _PROVIDER_MODEL_MAP["anthropic"] == "claude-sonnet-4-6"
     assert _PROVIDER_MODEL_MAP["cohere"] == "command-a-reasoning-08-2025"
@@ -236,53 +230,6 @@ def test_extract_chat_completion_text_strips_qwen_thinking_block():
     choice = type("Choice", (), {"message": message})()
     response = type("Response", (), {"choices": [choice]})()
     assert _extract_chat_completion_text(response) == "Final answer"
-
-
-def test_chat_completion_with_fallback_uses_qwen_when_nemotron_is_unsupported():
-    unsupported = BadRequestError(
-        message="unsupported",
-        response=type(
-            "Response",
-            (),
-            {
-                "request": None,
-                "status_code": 400,
-                "headers": {},
-                "json": lambda self: {
-                    "error": {
-                        "message": "The requested model is not supported by any provider you have enabled.",
-                        "code": "model_not_supported",
-                    }
-                },
-                "text": "",
-            },
-        )(),
-        body={
-            "error": {
-                "message": "The requested model is not supported by any provider you have enabled.",
-                "code": "model_not_supported",
-            }
-        },
-    )
-    message = type("Message", (), {"content": "Fallback answer"})()
-    choice = type("Choice", (), {"message": message})()
-    success = type("Response", (), {"choices": [choice]})()
-    client = DummyOpenAIChatClient([unsupported, success])
-    provider_client = ProviderClient(
-        name="nemotron",
-        client=client,
-        default_model=DEFAULT_NEMOTRON_MODEL,
-        api_key="dummy-api-key",
-    )
-
-    response = _chat_completion_with_fallback(
-        provider_client,
-        messages=[{"role": "user", "content": "Question"}],
-        temperature=0,
-    )
-
-    assert client.chat.completions.calls == [DEFAULT_NEMOTRON_MODEL, DEFAULT_QWEN_MODEL]
-    assert response.choices[0].message.content == "Fallback answer"
 
 
 def test_answer_query_uses_scan_context(monkeypatch):
@@ -400,34 +347,6 @@ def test_answer_query_from_full_document_uses_scan_when_full_document_too_large(
     result = answer_query_from_full_document(provider_client, None, "How does licensing work?", doc_text="Very long document")
     assert result.answer == "Scanned fallback answer"
     assert result.citations[0].snippet == "licensing rule"
-
-
-def test_retrieve_context_from_nemotron_index_uses_reranked_candidates(monkeypatch):
-    index = NemotronRetrievalIndex(
-        chunks=[
-            "Clause 1 sets startup licensing fees at a fixed annual amount.",
-            "Clause 7 defines the minister's emergency powers.",
-            "Clause 11 outlines reporting deadlines for data fiduciaries.",
-        ],
-        embeddings=[
-            [0.2, 0.1, 0.9],
-            [0.8, 0.1, 0.1],
-            [0.1, 0.9, 0.2],
-        ],
-    )
-
-    monkeypatch.setattr(
-        "services.rag_pipeline._embed_texts_with_nemotron",
-        lambda texts: [[0.0, 0.0, 1.0]],
-    )
-    monkeypatch.setattr(
-        "services.rag_pipeline._rerank_candidates",
-        lambda question, candidates: [candidates[2], candidates[0], candidates[1]],
-    )
-
-    context_text, citations = _retrieve_context_from_index(index, "What emergency powers does the minister have?")
-    assert citations[0].snippet == "Clause 7 defines the minister's emergency powers."
-    assert "[1] Clause 7 defines the minister's emergency powers." in context_text
 
 
 def test_answer_query_requests_deeper_answer_when_analysis_is_insufficient(monkeypatch):

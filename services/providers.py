@@ -13,12 +13,9 @@ from config import (
     COHERE_API_KEY,
     DEFAULT_PROVIDER,
     DEFAULT_COHERE_KEY,
-    DEFAULT_NEMOTRON_MODEL,
     GEMINI_API_KEY,
     DEFAULT_QWEN_MODEL,
     HF_TOKEN,
-    NEMOTRON_API_KEY,
-    NEMOTRON_BASE_URL,
     OPENAI_API_KEY,
     PROVIDER_METADATA,
     ProviderConfig,
@@ -37,7 +34,6 @@ class ProviderClient:
 
 
 _PROVIDER_MODEL_MAP: Dict[ProviderLiteral, str] = {
-    "nemotron": DEFAULT_NEMOTRON_MODEL,
     "qwen": DEFAULT_QWEN_MODEL,
     "openai": "gpt-5.5",
     "anthropic": "claude-sonnet-4-6",
@@ -47,7 +43,6 @@ _PROVIDER_MODEL_MAP: Dict[ProviderLiteral, str] = {
 
 
 _DEFAULT_PROVIDER_KEYS: Dict[ProviderLiteral, Optional[str]] = {
-    "nemotron": NEMOTRON_API_KEY or HF_TOKEN,
     "qwen": HF_TOKEN,
     "openai": OPENAI_API_KEY,
     "anthropic": ANTHROPIC_API_KEY,
@@ -84,9 +79,7 @@ def validate_api_key(provider: ProviderLiteral, api_key: str | None) -> tuple[bo
 
 
 def instantiate_client(provider: ProviderLiteral, api_key: str) -> ProviderClient:
-    if provider == "nemotron":
-        client = OpenAI(api_key=api_key, base_url=NEMOTRON_BASE_URL)
-    elif provider == "qwen":
+    if provider == "qwen":
         client = OpenAI(api_key=api_key, base_url="https://router.huggingface.co/v1")
     elif provider == "openai":
         client = OpenAI(api_key=api_key)

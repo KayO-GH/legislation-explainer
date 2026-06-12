@@ -54,8 +54,6 @@ The hackathon-safe default is Qwen3 14B through the Hugging Face router.
 - Default credential path: `HF_TOKEN`
 - Default provider: `qwen`
 
-Nemotron support remains optional for experimentation through the alternate provider path, but it is not the default app configuration.
-
 ## Local Run
 
 ```bash
@@ -66,15 +64,6 @@ python app.py
 Set these environment variables for the default Qwen path:
 
 - `HF_TOKEN`
-
-Optional Nemotron environment variables are still supported for non-default experimentation:
-
-- `NEMOTRON_API_KEY`
-- `NEMOTRON_BASE_URL`
-- `NEMOTRON_RETRIEVER_API_KEY`
-- `NEMOTRON_RETRIEVER_BASE_URL`
-- `NEMOTRON_RERANKER_API_KEY`
-- `NEMOTRON_RERANKER_URL`
 
 ## Space Deployment
 
