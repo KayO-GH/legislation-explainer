@@ -562,6 +562,24 @@ def _set_example_url(example_label: str | None) -> str:
     return EXAMPLE_BILL_URLS.get(example_label, "")
 
 
+def _activate_uploaded_source(uploaded_file: str | None) -> tuple[gr.update, gr.update, gr.update, str | None]:
+    if not uploaded_file:
+        return gr.update(), gr.update(), gr.update(), None
+    return gr.update(value=""), gr.update(value=None), _view_source_button_update(""), "file"
+
+
+def _activate_url_source(url_value: str | None) -> tuple[gr.update, gr.update, str | None]:
+    cleaned_url = (url_value or "").strip()
+    if not cleaned_url:
+        return gr.update(), _view_source_button_update(""), None
+    return gr.update(value=None), _view_source_button_update(cleaned_url), "url"
+
+
+def _activate_example_source(example_label: str | None) -> tuple[str, gr.update, str | None]:
+    url_value = _set_example_url(example_label)
+    return url_value, _view_source_button_update(url_value), ("url" if url_value else None)
+
+
 def _view_source_button_update(url_value: str | None) -> gr.update:
     has_url = bool(url_value and url_value.strip())
     return gr.update(value="View source ↗", interactive=has_url)
@@ -589,6 +607,7 @@ def analyze_document(
     qwen_key: str | None,
     custom_key: str | None,
     session_state: dict[str, Any] | None,
+    source_kind: str | None = None,
     force_refresh: bool = False,
 ):
     session_state = session_state or _empty_session()
@@ -609,7 +628,10 @@ def analyze_document(
         )
         return
 
-    precomputed = get_precomputed_example_artifacts(url_value)
+    active_file = uploaded_file if source_kind != "url" else None
+    active_url = url_value if source_kind != "file" else None
+
+    precomputed = get_precomputed_example_artifacts(active_url)
     if precomputed is not None and not force_refresh:
         record.clear()
         record.update(
@@ -620,7 +642,7 @@ def analyze_document(
                 "doc_text": precomputed.document_text,
                 "chat_history": [],
                 "pending_deeper_question": None,
-                "source_url": url_value,
+                "source_url": active_url,
             }
         )
         yield (
@@ -643,7 +665,7 @@ def analyze_document(
     )
 
     try:
-        document_text = _ingest_sources(uploaded_file, url_value)
+        document_text = _ingest_sources(active_file, active_url)
     except ingest.IngestionError as exc:
         message = str(exc)
         _show_warning(message)
@@ -747,7 +769,7 @@ def analyze_document(
         chunks=chunks,
         analysis=analysis,
         vector_store=vector_store,
-        source_url=url_value,
+        source_url=active_url,
     )
     record.clear()
     record.update(
@@ -758,7 +780,7 @@ def analyze_document(
             "doc_text": document_text,
             "chat_history": [],
             "pending_deeper_question": None,
-            "source_url": url_value,
+            "source_url": active_url,
         }
     )
     analysis_output = _format_analysis(analysis)
@@ -773,10 +795,12 @@ def rerun_summary(
     qwen_key: str | None,
     custom_key: str | None,
     session_state: dict[str, Any] | None,
+    source_kind: str | None = None,
 ):
     yield from analyze_document(
         uploaded_file,
         url_value,
+        source_kind,
         use_advanced,
         provider_label,
         qwen_key,
@@ -795,6 +819,7 @@ def _prepare_record_for_question(
     provider_label: str | None,
     qwen_key: str | None,
     custom_key: str | None,
+    source_kind: str | None = None,
 ) -> str | None:
     if (record.get("doc_text") or record.get("vector_store")) and record.get("api_config"):
         return None
@@ -806,7 +831,9 @@ def _prepare_record_for_question(
         return "Check the selected provider and API key, then try again."
 
     try:
-        document_text = _ingest_sources(uploaded_file, url_value)
+        active_file = uploaded_file if source_kind != "url" else None
+        active_url = url_value if source_kind != "file" else None
+        document_text = _ingest_sources(active_file, active_url)
     except ingest.IngestionError as exc:
         return str(exc)
     except Exception:  # noqa: BLE001
@@ -826,7 +853,7 @@ def _prepare_record_for_question(
             "doc_text": document_text,
             "chat_history": [],
             "pending_deeper_question": None,
-            "source_url": url_value,
+            "source_url": active_url,
         }
     )
     return None
@@ -842,6 +869,7 @@ def ask_question(
     custom_key: str | None,
     session_state: dict[str, Any] | None,
     chat_history: list[dict[str, str]] | None,
+    source_kind: str | None = None,
 ):
     session_state = session_state or _empty_session()
     record = _session_record(session_state)
@@ -854,6 +882,7 @@ def ask_question(
         record,
         uploaded_file=uploaded_file,
         url_value=url_value,
+        source_kind=source_kind,
         use_advanced=use_advanced,
         provider_label=provider_label,
         qwen_key=qwen_key,
@@ -944,12 +973,13 @@ def reset_session(session_state: dict[str, Any] | None):
     if session_state and session_state.get("session_id"):
         _GRADIO_SESSION_CACHE.pop(session_state["session_id"], None)
     empty = _empty_session()
-    return empty, None, None, "", _view_source_button_update(""), ANALYSIS_PLACEHOLDER, [], "", "", _deeper_answer_updates(False), ""
+    return empty, None, None, "", None, _view_source_button_update(""), ANALYSIS_PLACEHOLDER, [], "", "", _deeper_answer_updates(False), ""
 
 
 def build_app() -> gr.Blocks:
     with gr.Blocks(title=APP_TITLE, elem_id="app-shell") as demo:
         session_state = gr.State(_empty_session())
+        source_kind = gr.State(None)
 
         gr.Markdown(f"# {APP_TITLE}")
         gr.Markdown(APP_DESCRIPTION)
@@ -1083,18 +1113,28 @@ def build_app() -> gr.Blocks:
         #     outputs=[provider_help],
         # )
         example_selector.change(
-            lambda example_label: (
-                _set_example_url(example_label),
-                _view_source_button_update(_set_example_url(example_label)),
-            ),
+            _activate_example_source,
             inputs=[example_selector],
-            outputs=[url_value, view_source_button],
+            outputs=[url_value, view_source_button, source_kind],
         )
-        url_value.input(_view_source_button_update, inputs=[url_value], outputs=[view_source_button])
-        url_value.change(_view_source_button_update, inputs=[url_value], outputs=[view_source_button])
+        uploaded_file.change(
+            _activate_uploaded_source,
+            inputs=[uploaded_file],
+            outputs=[url_value, example_selector, view_source_button, source_kind],
+        )
+        url_value.input(
+            _activate_url_source,
+            inputs=[url_value],
+            outputs=[uploaded_file, view_source_button, source_kind],
+        )
+        url_value.change(
+            _activate_url_source,
+            inputs=[url_value],
+            outputs=[uploaded_file, view_source_button, source_kind],
+        )
         analyze_button.click(
             analyze_document,
-            inputs=[uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state],
+            inputs=[uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state, source_kind],
             outputs=[
                 session_state,
                 status_output,
@@ -1117,7 +1157,7 @@ def build_app() -> gr.Blocks:
         )
         rerun_summary_button.click(
             rerun_summary,
-            inputs=[uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state],
+            inputs=[uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state, source_kind],
             outputs=[
                 session_state,
                 status_output,
@@ -1129,12 +1169,12 @@ def build_app() -> gr.Blocks:
         )
         ask_button.click(
             ask_question,
-            inputs=[question_input, uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state, chatbot],
+            inputs=[question_input, uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state, chatbot, source_kind],
             outputs=[chatbot, session_state, chat_status, deeper_answer_button, deeper_answer_hint],
         ).then(lambda: "", outputs=[question_input])
         question_input.submit(
             ask_question,
-            inputs=[question_input, uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state, chatbot],
+            inputs=[question_input, uploaded_file, url_value, use_advanced, provider_label, qwen_key, custom_key, session_state, chatbot, source_kind],
             outputs=[chatbot, session_state, chat_status, deeper_answer_button, deeper_answer_hint],
         ).then(lambda: "", outputs=[question_input])
         deeper_answer_button.click(
@@ -1150,6 +1190,7 @@ def build_app() -> gr.Blocks:
                 uploaded_file,
                 example_selector,
                 url_value,
+                source_kind,
                 view_source_button,
                 analysis_output,
                 chatbot,
