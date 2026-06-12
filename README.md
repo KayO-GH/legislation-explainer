@@ -76,6 +76,43 @@ Set these environment variables for the default Nemotron stack:
 
 `HF_TOKEN` still works as a fallback credential for Hugging Face-routed Nemotron endpoints.
 
+## Modal Deployment For Nemotron
+
+Hugging Face currently lists no hosted Inference Provider for `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16`, so the practical path for the generator is to self-host it. This repo includes [modal_nemotron_service.py](/Users/Kwadwo/Documents/PROJECTS/HF-Build-Small/legislation-explainer/modal_nemotron_service.py), a standalone Modal deployment using SGLang's OpenAI-compatible server.
+
+1. Install and authenticate Modal locally.
+2. Create a Modal secret named `huggingface-secret` that contains your `HF_TOKEN`.
+3. From [`legislation-explainer/`](/Users/Kwadwo/Documents/PROJECTS/HF-Build-Small/legislation-explainer/), deploy:
+
+```bash
+pip install modal
+modal setup
+modal secret create huggingface-secret HF_TOKEN=hf_xxx
+modal deploy modal_nemotron_service.py
+```
+
+After deploy, point the app at the Modal endpoint:
+
+```bash
+export NEMOTRON_API_KEY=modal-placeholder-key
+export NEMOTRON_BASE_URL=https://YOUR_MODAL_URL/v1
+```
+
+Why the placeholder key works: the app's Nemotron client only needs an OpenAI-compatible key value to satisfy the SDK. The Modal service itself authenticates to Hugging Face through the Modal secret, not through the runtime app key.
+
+Recommended first use:
+
+- Keep the generator on Modal via `NEMOTRON_BASE_URL`.
+- Leave the retriever and reranker on their own hosted endpoints if you have them.
+- If you do not yet have hosted retriever or reranker coverage, the app will fall back to local MiniLM embeddings and skip hosted reranking.
+
+Useful deployment knobs:
+
+- `NEMOTRON_MODAL_GPU` defaults to `H100`
+- `NEMOTRON_MODAL_MIN_CONTAINERS` defaults to `0`
+- `NEMOTRON_MODAL_CONTEXT_LENGTH` defaults to `32768`
+- `NEMOTRON_MODAL_TARGET_INPUTS` defaults to `8`
+
 ## Space Deployment
 
 This directory is structured as a Hugging Face Space:
