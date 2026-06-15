@@ -12,6 +12,7 @@ short_description: Simplify complex legislation that affects you!
 tags:
   - track:backyard
   - sponsor:openai
+  - achievement:fieldnotes
 models:
   - Qwen/Qwen3-14B
   - sentence-transformers/all-MiniLM-L6-v2
@@ -26,8 +27,9 @@ Legislation Explainer is a Gradio app for helping regular people understand publ
 - Hugging Face Space: https://huggingface.co/spaces/build-small-hackathon/legislation-explainer
 - Live app: https://build-small-hackathon-legislation-explainer.hf.space/
 - GitHub repo: https://github.com/KayO-GH/legislation-explainer
-- Demo video: pending final submission link
+- Demo video: https://www.loom.com/share/ed7b682ab6774d5499fca4c06c290bfc
 - Social post: https://www.linkedin.com/posts/kwadwo-agyapon-ntra_rag-huggingface-gradio-activity-7470763368237244416-JseD/
+- Blog post: https://kayo-gh.github.io/building-legislation-explainer/
 
 ## Motivation
 
