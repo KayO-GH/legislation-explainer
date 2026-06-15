@@ -9,19 +9,31 @@ python_version: '3.12'
 app_file: app.py
 pinned: false
 short_description: Simplify complex legislation that affects you!
+tags:
+  - track:backyard
+  - sponsor:openai
 models:
   - Qwen/Qwen3-14B
+  - sentence-transformers/all-MiniLM-L6-v2
 ---
 
 # Legislation Explainer
 
 Legislation Explainer is a Gradio app for helping regular people understand public-interest legislation and how it affects them.
 
+## Links
+
+- Hugging Face Space: https://huggingface.co/spaces/build-small-hackathon/legislation-explainer
+- Live app: https://build-small-hackathon-legislation-explainer.hf.space/
+- GitHub repo: https://github.com/KayO-GH/legislation-explainer
+- Demo video: pending final submission link
+- Social post: pending final submission link
+
 ## Motivation
 
-In May of 2026, there was a huge public outcry online through the Ghana 🇬🇭 X (formerly twitter) community over the contents of a draft bill (the NITA bill) proposed by the nation's Ministry of Communication, Digital Technology and Innovations. The draft bill, and 14 others, had been around for well over 6 months, but being shrouded in legalese, not many regualr folks in the developer ecosystem had taken note of it. When we found out that it contained proposals for exorbitant licensing fees and taxes on revenue (yes, revenue, not profit) of startups, and restrictions on co-founding tech companies with foreign nationals, everyone panicked and things got really tense between the tech community and the ministry.
+In May 2026, the Ghana tech community on X/Twitter reacted strongly to the contents of a draft National Information Technology Authority bill proposed by the Ministry of Communication, Digital Technology and Innovations. The draft bill, and 14 others, had been public for months, but the legal language made it hard for many people in the developer ecosystem to evaluate quickly. When people noticed proposals around licensing fees, revenue-based charges, and restrictions affecting company formation, the discussion became urgent.
 
-This project is my attempt tp help civic groups, technologists, journalists, students, entrepreneurs, policy watchers, and regualr people understand legislation as soon as they come across it.
+This project is my attempt to help civic groups, technologists, journalists, students, entrepreneurs, policy watchers, and regular people understand legislation as soon as they come across it.
 
 It is created for the Hugging Face Build Small Hackathon under the `Backyard AI` track: a practical, small-model assistant for people who need to understand a real bill quickly without reading every clause first.
 
@@ -29,9 +41,17 @@ It is created for the Hugging Face Build Small Hackathon under the `Backyard AI`
 
 - Track: `Backyard AI`
 - Real user: Ghanaian citizens and digital-policy stakeholders who need a clearer view of a bill's practical effects.
-- Small-model constraint: default generation uses `Qwen/Qwen3-14B:cheapest` through the Hugging Face router, staying within the hackathon's `<= 32B` model cap while keeping deployment simple.
+- Small-model constraint: each model used by the app is individually below the hackathon's `<= 32B` cap.
 - Required surface: Gradio app, ready for Hugging Face Spaces through `app.py`.
-- GitHub repo: https://github.com/KayO-GH/legislation-explainer
+
+## Try The Demo
+
+1. Open the live app.
+2. Paste this public NITA bill URL into `Document URL`: `https://moc.gov.gh/wp-content/uploads/2023/03/NITA-NATIONAL-INFORMATION-TECHNOLOGY-AUTHORITY-BILL_-10-07-25.pdf`.
+3. Click `Run analysis` to load the precomputed example analysis.
+4. Ask a follow-up question such as `What should startup founders pay attention to first?`.
+
+_**Note:** The ministry's website does not have consistent uptime. In the event that the file cannot be accessed from the site, you can [download it from here](https://drive.google.com/file/d/1P-cvgp-bX42QU2zijRPpmnE-MNPgXuGD/view?usp=sharing). Aslo feel free to experiment with any relevant documents you have. Nothing is saved beyond a session._
 
 ## What It Does
 
@@ -48,17 +68,23 @@ It is created for the Hugging Face Build Small Hackathon under the `Backyard AI`
 
 ## Model And Provider Notes
 
-The hackathon-safe default is Qwen3 14B through the Hugging Face router.
+The hackathon-safe default is Qwen3 14B through the Hugging Face router, with a small embedding model for retrieval.
 
-- Default generator: `Qwen/Qwen3-14B:cheapest`
+- Default generator: `Qwen/Qwen3-14B`
+- Embeddings and chunk retrieval: `sentence-transformers/all-MiniLM-L6-v2`
 - Default credential path: `HF_TOKEN`
 - Default provider: `qwen`
+- Parameter disclosure: `Qwen3-14B` is under 32B, and `all-MiniLM-L6-v2` is far below the cap at ~22.7M.
+
+_A smaller Qwen model could have been used successfully, but considering the real-world importance, a model with a higher capactity for reasoning is desired._
 
 ## Local Run
 
 ```bash
-pip install -r requirements.txt
-python app.py
+# activate virtual env
+pip install -r requirements.txt   # alternatively, uv sync to install from pyproject.toml
+source .venv/bin/activate
+gradio app.py                     # alternatively, uv run gradio app.py
 ```
 
 Set these environment variables for the default Qwen path:
