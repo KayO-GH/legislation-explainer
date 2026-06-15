@@ -27,7 +27,7 @@ Legislation Explainer is a Gradio app for helping regular people understand publ
 - Live app: https://build-small-hackathon-legislation-explainer.hf.space/
 - GitHub repo: https://github.com/KayO-GH/legislation-explainer
 - Demo video: pending final submission link
-- Social post: pending final submission link
+- Social post: https://www.linkedin.com/feed/update/urn:li:activity:7470763368237244416/
 
 ## Motivation
 
